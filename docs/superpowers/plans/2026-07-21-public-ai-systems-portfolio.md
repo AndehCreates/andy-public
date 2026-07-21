@@ -55,6 +55,9 @@ it `draft`; do not fill the gap with polished speculation.
 ### Content and evidence
 
 - `docs/evidence/README.md` — sanitized evidence-inventory method and template.
+- `.local/evidence-sources.json` — ignored operator-only canonical roots for inventory work.
+- `docs/evidence/sources.md` — sanitized observed identity, remote, commit, and availability state.
+- `docs/evidence/public-review.md` — explicit human approval record consumed by public content tasks.
 - `docs/evidence/<project>.md` — one sanitized inventory for each managed project.
 - `src/content/projects/*.mdx` — nine initial project entries.
 - `src/content/case-studies/*.mdx` — Chief of Staff, LifeOS, Alpha Screener.
@@ -160,7 +163,7 @@ versions:
     "audit:content": "tsx scripts/audit-public-content.ts",
     "build:site": "astro build",
     "audit:dist": "node scripts/audit-dist.mjs",
-    "build": "npm run check && npm run test && npm run audit:content && npm run build:site && npm run audit:dist",
+    "build": "npm run check && npm run test && npm run audit:content && npm run build:site",
     "preview": "astro preview --host 127.0.0.1",
     "test:e2e": "npm run build && playwright test",
     "verify": "npm run build && npm run test:e2e"
@@ -274,7 +277,7 @@ it('runs the TypeScript test harness', () => {
 
 - [ ] **Step 5: Extend ignored generated output**
 
-Add `.playwright/`, `playwright-report/`, `test-results/`, and `coverage/` to
+Add `.local/`, `.playwright/`, `playwright-report/`, `test-results/`, and `coverage/` to
 `.gitignore`. Preserve the existing `.superpowers/` exclusion.
 
 - [ ] **Step 6: Run the scaffold gates**
@@ -328,7 +331,7 @@ describe('canPublish', () => {
 describe('validateSourcePolicy', () => {
   it('requires source links for public-source entries', () => {
     expect(validateSourcePolicy({ sourceAvailability: 'public', sourceUrls: [] }))
-      .toContain('public source URL');
+      .toContain('A public source URL is required when sourceAvailability is public.');
   });
 
   it('allows reviewed local-only narratives without a repository URL', () => {
@@ -700,6 +703,9 @@ git commit -m "feat: establish portfolio design system"
 
 **Files:**
 - Create: `docs/evidence/README.md`
+- Create: `.local/evidence-sources.json` (ignored; do not commit)
+- Create: `docs/evidence/sources.md`
+- Create: `docs/evidence/public-review.md`
 - Create: `docs/evidence/chief-of-staff.md`
 - Create: `docs/evidence/lifeos.md`
 - Create: `docs/evidence/alpha-screener.md`
@@ -710,7 +716,33 @@ git commit -m "feat: establish portfolio design system"
 - Create: `docs/evidence/android-lab.md`
 - Create: `docs/evidence/japanese-anime-inspired.md`
 
-- [ ] **Step 1: Add the inventory template and public-safety rule**
+- [ ] **Step 1: Add the authoritative local source manifest and sanitized identity record**
+
+Create the ignored `.local/evidence-sources.json` from this exact starting
+inventory. Re-check each location before reading it; do not infer a replacement
+repository when a path is unavailable.
+
+| Project ID | Local root | Public remote |
+| --- | --- | --- |
+| `project-chief-of-staff` | `D:\coding\chief-of-staff` | none; local-only |
+| `project-lifeos` | `C:\Coding\LifeOS` | `https://github.com/AndehCreates/LifeOS` |
+| `project-mathpad` | `D:\soulver\mathpad` | `https://github.com/AndehCreates/mathpad` |
+| `project-arcade` | `C:\Coding\arcade` | `https://github.com/AndehCreates/arcade` |
+| `project-alpha-screener` | `C:\Coding\alpha-screener` | `https://github.com/AndehCreates/alpha-screener` |
+| `project-adhd-tabs` | `C:\Coding\adhd-tabs` | none; local-only |
+| `project-creative-suite` | `D:\coding\creative-suite` | none; local-only |
+| `project-android-lab` | `D:\coding\android-lab\capability-studio` | none; local-only |
+| `project-japanese-anime-inspired` | `D:\coding\japanese-anime-inspired` | `https://github.com/AndehCreates/japanese-anime-inspired` |
+
+Create committed `docs/evidence/sources.md` without local roots. For every
+project, record `available`, `missing`, or `identity-mismatch`, source
+availability, observed public remote identity when one exists, inspected
+commit, and inspection date. A missing or mismatched source blocks that
+project's public approval but does not stop inventory work on the other rows.
+The ignored local manifest is an operator aid and must never enter Git or the
+static output.
+
+- [ ] **Step 2: Add the inventory template and public-safety rule**
 
 Every evidence document contains:
 
@@ -735,7 +767,7 @@ private logs, or copied secrets. Refer to local evidence by stable project ID,
 remote URL when public, file basename, commit, test command, or sanitized
 summary.
 
-- [ ] **Step 2: Inventory the three flagship systems read-only**
+- [ ] **Step 3: Inventory the three flagship systems read-only**
 
 For Chief of Staff, LifeOS, and Alpha Screener:
 
@@ -748,13 +780,13 @@ For Chief of Staff, LifeOS, and Alpha Screener:
 5. mark `publicReview` approved only after the committed inventory passes the
    sanitizer.
 
-- [ ] **Step 3: Inventory the six supporting projects read-only**
+- [ ] **Step 4: Inventory the six supporting projects read-only**
 
 Repeat the same bounded process for MathPad, Arcade, ADHD Tabs, Creative Suite,
 Android Lab, and Japanese Anime Inspired. A smaller inventory is acceptable
 when the project has less verified material.
 
-- [ ] **Step 4: Audit the evidence documents**
+- [ ] **Step 5: Audit the evidence documents**
 
 Extend `scripts/audit-public-content.ts` to scan `docs/evidence/**/*.md` with
 the same sanitizer. Run:
@@ -767,18 +799,38 @@ rg -n "TODO|TBD|lorem|placeholder" docs/evidence
 Expected: zero sanitizer findings and no placeholder markers. Unsupported
 claims are explicitly listed rather than silently omitted from the inventory.
 
-- [ ] **Step 5: Human claim review checkpoint**
+- [ ] **Step 6: Create the explicit public-review artifact and stop for approval**
 
-Present a compact inventory table with project, source availability, strongest
-capabilities, verified validation, limitations, and proposed public surface.
-Do not write public project copy until the table is reviewed.
+Create `docs/evidence/public-review.md` with one row per project and these
+required fields:
 
-- [ ] **Step 6: Commit**
+- project ID;
+- evidence inventory path;
+- source availability and observed commit;
+- proposed visibility (`internal`, `draft`, `listed`, or `featured`);
+- proposed `publicReview` state;
+- approved public framing and capability tags;
+- approved public links and media;
+- explicitly excluded claims/details;
+- reviewer and review date.
+
+Populate every row as `publicReview: pending`, present the compact table to the
+user, and **stop execution before Task 6**. Task 6 has no fallback path and may
+not begin until the user explicitly approves or revises the table.
+
+- [ ] **Step 7: Record approval and commit the evidence gate**
+
+After explicit user approval, update only the approved rows to
+`publicReview: approved`, record `reviewer: user` and the review date, rerun the
+content audit, and commit:
 
 ```powershell
 git add docs/evidence scripts/audit-public-content.ts
 git commit -m "docs: inventory portfolio evidence"
 ```
+
+Task 6 consumes `docs/evidence/public-review.md`. Projects left pending must
+remain `internal` or `draft` and cannot produce public routes.
 
 ---
 
@@ -1208,6 +1260,7 @@ git commit -m "feat: complete career and metadata surfaces"
 - Create: `tests/e2e/no-javascript.spec.ts`
 - Create: `tests/e2e/responsive.spec.ts`
 - Modify: `playwright.config.ts`
+- Modify: `package.json`
 
 - [ ] **Step 1: Write a failing static-output audit fixture**
 
@@ -1227,6 +1280,12 @@ Walk `dist/**/*.html`, collect local links and referenced local media, verify
 targets exist, and scan rendered HTML for sanitizer patterns plus internal/draft
 markers. Report all failures together and exit nonzero. Export the pure function
 for tests and keep CLI invocation in the same module.
+
+After the script exists, update `package.json` so the release build becomes:
+
+```json
+"build": "npm run check && npm run test && npm run audit:content && npm run build:site && npm run audit:dist"
+```
 
 - [ ] **Step 4: Run the audit test and verify GREEN**
 
