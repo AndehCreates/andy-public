@@ -63,4 +63,4 @@ Pending public review: “Chief of Staff is a deliberately thin coordination lay
 
 ## Review date and public-review decision
 
-Reviewed 2026-07-21. `publicationState: draft`; `sourceAvailability: local-only`; `publicReview: pending`.
+Reviewed 2026-07-21. `publicationState: featured`; `sourceAvailability: local-only`; `publicReview: approved by user`; sanitized narrative is authorized without a repository link.

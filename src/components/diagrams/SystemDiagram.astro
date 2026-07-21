@@ -1,0 +1,53 @@
+---
+export interface DiagramNode {
+  label: string;
+  description: string;
+}
+
+export interface DiagramEdge {
+  from: string;
+  to: string;
+  label?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  nodes: DiagramNode[];
+  edges: DiagramEdge[];
+}
+
+const { title, description, nodes, edges } = Astro.props;
+---
+
+<section class="system-diagram" aria-labelledby={`${title.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}-diagram-title`}>
+  <header>
+    <p class="system-diagram__eyebrow">System diagram</p>
+    <h3 id={`${title.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}-diagram-title`}>{title}</h3>
+    <p>{description}</p>
+  </header>
+  <div class="system-diagram__visual" aria-hidden="true">
+    <div class="system-diagram__nodes">{nodes.map((node) => <div class="system-diagram__node">{node.label}</div>)}</div>
+    <div class="system-diagram__edges">{edges.map((edge) => <span>{edge.from} → {edge.to}{edge.label ? ` · ${edge.label}` : ''}</span>)}</div>
+  </div>
+  <div class="system-diagram__text">
+    <h4>Components</h4>
+    <ul>{nodes.map((node) => <li><strong>{node.label}:</strong> {node.description}</li>)}</ul>
+    <h4>Relationships</h4>
+    <ol>{edges.map((edge) => <li><strong>{edge.from}</strong> to <strong>{edge.to}</strong>{edge.label ? `: ${edge.label}.` : '.'}</li>)}</ol>
+  </div>
+</section>
+
+<style>
+  .system-diagram { margin-block: var(--space-7); padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-sunken); }
+  .system-diagram__eyebrow { margin: 0 0 var(--space-2); color: var(--accent-system); font-size: var(--text-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .system-diagram h3, .system-diagram h4, .system-diagram p { margin: 0; }
+  .system-diagram header > p:last-child { margin-top: var(--space-2); color: var(--text-secondary); }
+  .system-diagram__visual { display: grid; gap: var(--space-3); margin-top: var(--space-5); padding: var(--space-4); border-radius: var(--radius-sm); background: var(--surface-raised); }
+  .system-diagram__nodes { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: var(--space-2); }
+  .system-diagram__node { padding: var(--space-3); border: var(--border-width) solid var(--accent-system); border-radius: var(--radius-sm); color: var(--text-primary); font-size: var(--text-sm); font-weight: 700; text-align: center; }
+  .system-diagram__edges { display: flex; flex-wrap: wrap; gap: var(--space-2); color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .system-diagram__text { margin-top: var(--space-5); }
+  .system-diagram__text h4 + :is(ul, ol) { margin-top: var(--space-2); }
+  .system-diagram__text h4:not(:first-child) { margin-top: var(--space-4); }
+</style>

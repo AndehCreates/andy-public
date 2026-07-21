@@ -1,0 +1,72 @@
+---
+id: case-study-chief-of-staff
+title: Chief of Staff
+summary: A thin coordination layer for AI-assisted software work that makes authority, verification, and recovery visible.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [ai-systems, evaluation-reliability, knowledge-context]
+relatedIds: [projects:project-chief-of-staff]
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 1
+projectId: project-chief-of-staff
+status: published
+---
+
+import DecisionBlock from '@/components/content/DecisionBlock.astro';
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## What it solves
+
+Chief of Staff explores how AI-assisted software work can stay legible across projects and workers without taking ownership away from the systems that already govern runtime, durable context, and source code. It is designed for people who need progress to remain reviewable when work is uncertain, blocked, or handed off.
+
+## System design
+
+<SystemDiagram
+  title="Authority-bounded coordination"
+  description="Coordination observes and records work while the systems that own policy, context, execution, and code retain their authority."
+  nodes={[
+    { label: 'Governance', description: 'Defines the conditions and approvals for consequential work.' },
+    { label: 'Durable context', description: 'Retains memory and handoff records.' },
+    { label: 'Coordination', description: 'Classifies lifecycle state and requests work without replacing other authorities.' },
+    { label: 'Runtime and workers', description: 'Own admission, leases, and execution.' },
+    { label: 'Project repositories', description: 'Remain the source of code and release truth.' },
+  ]}
+  edges={[
+    { from: 'Governance', to: 'Coordination', label: 'sets boundaries' },
+    { from: 'Durable context', to: 'Coordination', label: 'provides handoff state' },
+    { from: 'Coordination', to: 'Runtime and workers', label: 'requests bounded work' },
+    { from: 'Runtime and workers', to: 'Project repositories', label: 'operates within repository guards' },
+    { from: 'Coordination', to: 'Durable context', label: 'records recoverable state' },
+  ]}
+/>
+
+## Key decisions and tradeoffs
+
+<DecisionBlock kind="decision" title="Keep authority distributed">
+  Typed lifecycle states make admission, execution, verification, human review, and handoff observable. The control plane coordinates those decisions rather than becoming a replacement registry, scheduler, memory system, or repository authority.
+</DecisionBlock>
+
+<DecisionBlock kind="tradeoff" title="Require independent verification">
+  A worker-reported result is not treated as completion on its own. The added review point slows automatic closure, but it makes the evidence required for completion explicit.
+</DecisionBlock>
+
+## Validation
+
+Deterministic fixtures and offline tests exercised normal completion, stale leases, human-waiting decisions, recovery, and handoff projections. Fixture validation and contract checks confirmed the modeled lifecycle can distinguish accepted work from stale or blocked work without mutating live infrastructure.
+
+<DecisionBlock kind="limitation" title="Offline evidence is not live operations">
+  Current validation does not establish live runtime, worker, durable-context, or repository integration. It also does not support claims about fleet operation, releases, throughput, or reliability metrics.
+</DecisionBlock>
+
+## Human value
+
+The intended value is more legible and recoverable AI-assisted work: clear ownership at consequential boundaries, visible verification expectations, and a state that can be resumed instead of silently discarded.
+
+## What comes next
+
+<DecisionBlock kind="next" title="Validate the live-admission boundary deliberately">
+  The next validation step is a prepared live-admission boundary with explicit operator acknowledgement, while preserving recoverable states whenever work is uncertain or blocked.
+</DecisionBlock>

@@ -1,0 +1,35 @@
+---
+type Kind = 'decision' | 'tradeoff' | 'validation' | 'limitation' | 'next';
+
+interface Props {
+  kind: Kind;
+  title: string;
+}
+
+const { kind, title } = Astro.props;
+const labels: Record<Kind, string> = {
+  decision: 'Decision',
+  tradeoff: 'Tradeoff',
+  validation: 'Validation',
+  limitation: 'Limitation',
+  next: 'Next step',
+};
+---
+
+<aside class:list={['decision-block', `decision-block--${kind}`]} aria-label={`${labels[kind]}: ${title}`}>
+  <p class="decision-block__kind">{labels[kind]}</p>
+  <h3>{title}</h3>
+  <div><slot /></div>
+</aside>
+
+<style>
+  .decision-block { margin-block: var(--space-6); padding: var(--space-4); border: var(--border-width) solid var(--border-subtle); border-left-width: 3px; border-radius: var(--radius-md); background: var(--surface-raised); }
+  .decision-block__kind { margin: 0 0 var(--space-2); color: var(--text-muted); font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .decision-block h3 { margin: 0; font-size: var(--text-lg); }
+  .decision-block > div { margin-top: var(--space-3); }
+  .decision-block--decision { border-left-color: var(--accent-system); }
+  .decision-block--tradeoff { border-left-color: var(--accent-human); }
+  .decision-block--validation { border-left-color: var(--state-verified); }
+  .decision-block--limitation { border-left-color: var(--text-muted); }
+  .decision-block--next { border-left-color: var(--accent-system); }
+</style>

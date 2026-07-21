@@ -1,0 +1,72 @@
+---
+id: case-study-alpha-screener
+title: Alpha Screener
+summary: A human-reviewed market research workspace that makes signal quality, uncertainty, and the next evidence to inspect visible.
+visibility: featured
+publicReview: approved
+sourceAvailability: public
+sourceUrls: [https://github.com/AndehCreates/alpha-screener]
+capabilities: [decision-intelligence, evaluation-reliability, ai-systems]
+relatedIds: [projects:project-alpha-screener]
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 3
+projectId: project-alpha-screener
+status: published
+---
+
+import DecisionBlock from '@/components/content/DecisionBlock.astro';
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## What it solves
+
+Alpha Screener is a research and decision-support workspace for examining market opportunities with visible confidence, uncertainty, and evidence. It helps a person decide what to inspect next rather than presenting opaque recommendations or automated actions.
+
+## System design
+
+<SystemDiagram
+  title="Evidence-gated decision support"
+  description="Inputs are validated before deterministic scoring and research views make uncertainty and the next review step visible to a human decision-maker."
+  nodes={[
+    { label: 'Market inputs', description: 'Provide measured, derived, or proxy information for research.' },
+    { label: 'Validation and trust gates', description: 'Check data quality, confidence, and whether advisory context is appropriate.' },
+    { label: 'Deterministic scoring', description: 'Ranks candidates independently from optional advisory context.' },
+    { label: 'Research evidence views', description: 'Show confidence, uncertainty, and supporting information to inspect.' },
+    { label: 'Human review', description: 'Retains the decision to advance, reject, or continue research.' },
+  ]}
+  edges={[
+    { from: 'Market inputs', to: 'Validation and trust gates', label: 'checks evidence quality' },
+    { from: 'Validation and trust gates', to: 'Deterministic scoring', label: 'permits eligible inputs' },
+    { from: 'Deterministic scoring', to: 'Research evidence views', label: 'ranks starting points' },
+    { from: 'Research evidence views', to: 'Human review', label: 'supports inspection' },
+    { from: 'Validation and trust gates', to: 'Human review', label: 'surfaces blockers and uncertainty' },
+  ]}
+/>
+
+## Key decisions and tradeoffs
+
+<DecisionBlock kind="decision" title="Keep deterministic scoring separate from advisory context">
+  Deterministic scoring remains available independently of optional advisory context. Advisory context can be suppressed when trust is invalid, confidence is low, market conditions are stressed, or a user preference requires it.
+</DecisionBlock>
+
+<DecisionBlock kind="tradeoff" title="Treat research state as evidence, not permission">
+  Proxy-versus-full analysis differences are labeled explicitly, and exploratory, candidate, and proof-ready research states stay distinct. This prevents a promising research result from being presented as ready for action.
+</DecisionBlock>
+
+## Validation
+
+Focused tests cover uncertainty, readiness, and signal-trust behavior, including insufficient-sample blocking, non-positive-edge rejection, readiness alignment, cost-eliminated candidates, and signal-promotion guardrails. Source inspection also confirmed server-side validation and read-only research modules.
+
+<DecisionBlock kind="limitation" title="Research evidence has practical limits">
+  Market data can be incomplete, stale, provider-dependent, derived, or proxy-based. The system is not investment advice, a vendor-certified model, a live-order execution system, or a performance claim.
+</DecisionBlock>
+
+## Human value
+
+The workspace is intended to reduce decision overload by showing a ranked starting point, the evidence to inspect next, uncertainty signals, and clear invalidation context instead of hiding uncertainty behind a recommendation.
+
+## What comes next
+
+<DecisionBlock kind="next" title="Expand bounded outcome validation">
+  Extend validation around live-data conditions and outcome research without weakening evidence gates or the requirement for human review.
+</DecisionBlock>

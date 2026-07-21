@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { featuredEntries } from '@/lib/content/queries';
+import { capabilities } from '@/lib/content/taxonomy';
+
+const studies = featuredEntries((await getCollection('caseStudies')).map((entry) => ({
+  visibility: entry.data.visibility,
+  publicReview: entry.data.publicReview,
+  title: entry.data.title,
+  ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
+  entry,
+}))).map(({ entry }) => entry);
+---
+
+<BaseLayout
+  title="Case studies | Andy — AI Systems"
+  description="Three evidence-led case studies of systems designed around visible decisions, human control, and bounded validation."
+  canonicalPath="/case-studies/"
+>
+  <section class="case-studies container" aria-labelledby="case-studies-heading">
+    <header class="case-studies__header">
+      <p>Evidence-led systems work</p>
+      <h1 id="case-studies-heading">Case studies</h1>
+      <p>Each study traces the problem, system design, key decisions, validation boundary, human value, and the next question worth testing.</p>
+    </header>
+    <div class="case-studies__grid">
+      {studies.map((study) => (
+        <article class="case-study-card">
+          <p>{capabilities[study.data.capabilities.at(0) ?? 'ai-systems']}</p>
+          <h2><a href={`/case-studies/${study.id}/`}>{study.data.title}</a></h2>
+          <p>{study.data.summary}</p>
+          <a href={`/work/${study.data.projectId.replace('project-', '')}/`}>View related project</a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .case-studies { padding-block: var(--space-8); }
+  .case-studies__header { display: grid; max-width: 48rem; gap: var(--space-4); margin-bottom: var(--space-7); }
+  .case-studies__header > p { margin: 0; color: var(--text-secondary); font-size: var(--text-lg); }
+  .case-studies__header > p:first-child { color: var(--accent-system); font-size: var(--text-sm); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  h1, h2 { margin: 0; color: var(--text-primary); }
+  h1 { font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
+  .case-studies__grid { display: grid; gap: var(--space-4); }
+  .case-study-card { display: grid; align-content: start; gap: var(--space-3); padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .case-study-card p { margin: 0; color: var(--text-secondary); }
+  .case-study-card > p:first-child { color: var(--accent-human); font-size: var(--text-sm); font-weight: 700; }
+  .case-study-card a { color: var(--accent-system); }
+  @media (min-width: 48rem) { .case-studies__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

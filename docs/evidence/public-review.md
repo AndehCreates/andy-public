@@ -1,8 +1,7 @@
 # Public review matrix
 
-All rows are pending human review. Proposed visibility is a starting editorial
-disposition, not authorization to publish. Approved links/media remain empty
-until explicitly reviewed.
+Rows below record the completed human review. Visibility remains the publication
+selector: approved draft rows stay excluded from public routes.
 
 | Project ID | Evidence inventory | Source availability / commit | Proposed visibility | Public review | Approved framing / capability tags | Approved links and media | Explicitly excluded claims/details | Reviewer / date |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

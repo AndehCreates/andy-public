@@ -1,0 +1,53 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import CapabilityTag from '@/components/content/CapabilityTag.astro';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { featuredEntries } from '@/lib/content/queries';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('caseStudies');
+  const studies = featuredEntries(entries.map((entry) => ({
+    visibility: entry.data.visibility,
+    publicReview: entry.data.publicReview,
+    title: entry.data.title,
+    ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
+    entry,
+  })));
+
+  return studies.map(({ entry }) => ({ params: { slug: entry.id }, props: { study: entry } }));
+}
+
+interface Props {
+  study: CollectionEntry<'caseStudies'>;
+}
+
+const { study } = Astro.props;
+const { Content } = await render(study);
+const sourceLinks = study.data.sourceAvailability === 'public'
+  ? study.data.sourceUrls.map((href) => ({ label: 'Project source', href }))
+  : [];
+---
+
+<ArticleLayout
+  title={study.data.title}
+  description={study.data.summary}
+  canonicalPath={`/case-studies/${study.id}/`}
+  updatedAt={study.data.updatedAt}
+  sources={sourceLinks}
+>
+  <div class="case-study-meta">
+    <p>Flagship case study</p>
+    <ul aria-label="Capabilities">
+      {study.data.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
+    </ul>
+  </div>
+  <Content />
+  <p class="related-project"><a href={`/work/${study.data.projectId.replace('project-', '')}/`}>View the related project</a></p>
+</ArticleLayout>
+
+<style>
+  .case-study-meta { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); padding-bottom: var(--space-5); border-bottom: var(--border-width) solid var(--border-subtle); }
+  .case-study-meta p { margin: 0; color: var(--state-verified); font-size: var(--text-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .case-study-meta ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; list-style: none; }
+  .related-project { margin-top: var(--space-7); }
+</style>

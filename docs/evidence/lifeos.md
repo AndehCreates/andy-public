@@ -60,4 +60,4 @@ Pending public review: “LifeOS explores software as external executive support
 
 ## Review date and public-review decision
 
-Reviewed 2026-07-21. `publicationState: draft`; `sourceAvailability: public`; `publicReview: pending`.
+Reviewed 2026-07-21. `publicationState: featured`; `sourceAvailability: public`; `publicReview: approved by user`; reviewed narrative and approved repository link are authorized.

@@ -1,0 +1,71 @@
+---
+id: case-study-lifeos
+title: LifeOS
+summary: A local-first continuity workspace for making work state, context, and re-entry visible after interruption.
+visibility: featured
+publicReview: approved
+sourceAvailability: public
+sourceUrls: [https://github.com/AndehCreates/LifeOS]
+capabilities: [knowledge-context, product-engineering, human-centered-design]
+relatedIds: [projects:project-lifeos]
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 2
+projectId: project-lifeos
+status: published
+---
+
+import DecisionBlock from '@/components/content/DecisionBlock.astro';
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## What it solves
+
+LifeOS is a local-first workspace for externalizing work, time, commitments, and context so returning after interruption does not depend on remembering every open loop. It is aimed at people who need a calm way to re-enter work rather than another generic task list.
+
+## System design
+
+<SystemDiagram
+  title="Continuity through explicit product contracts"
+  description="The interface and domain behavior share product contracts while local persistence and synchronization preserve a user-owned working state."
+  nodes={[
+    { label: 'Workspace interface', description: 'Presents planning, focus, capture, transition, and re-entry flows.' },
+    { label: 'Domain contracts', description: 'Define shared behavior for tasks, commitments, projects, people, routines, journals, and activity.' },
+    { label: 'Local persistence', description: 'Keeps durable workspace state close to the user.' },
+    { label: 'Synchronization', description: 'Carries shared state through the existing sync architecture.' },
+    { label: 'User-confirmed interventions', description: 'Keeps high-consequence or ambiguous adjustments under user control.' },
+  ]}
+  edges={[
+    { from: 'Workspace interface', to: 'Domain contracts', label: 'uses shared behaviors' },
+    { from: 'Domain contracts', to: 'Local persistence', label: 'stores durable state' },
+    { from: 'Local persistence', to: 'Synchronization', label: 'shares state when appropriate' },
+    { from: 'Domain contracts', to: 'User-confirmed interventions', label: 'proposes consequential changes' },
+  ]}
+/>
+
+## Key decisions and tradeoffs
+
+<DecisionBlock kind="decision" title="Extend the existing state and sync model">
+  The design builds on existing state and synchronization surfaces through explicit domain contracts instead of introducing a replacement orchestrator or persistence model.
+</DecisionBlock>
+
+<DecisionBlock kind="tradeoff" title="Make consequential automation confirmable">
+  High-consequence or ambiguous automation is represented as a user-confirmed intervention with a safe timeout disposition. This asks for attention at important moments in exchange for preserving user control.
+</DecisionBlock>
+
+## Validation
+
+The inspected codebase includes typed application-state and planning contracts, local-first persistence and synchronization surfaces, and a verified type check. Source inspection also confirmed contracts for adjustment proposals, delegated policies, and human interventions.
+
+<DecisionBlock kind="limitation" title="Scenario validation remains open">
+  This evidence does not establish production deployment, cross-device reliability, accessibility outcomes, or completed end-to-end user scenarios. Local persistence and synchronization still need continued conflict and durability validation.
+</DecisionBlock>
+
+## Human value
+
+LifeOS is intended to lower the cognitive cost of planning and returning to work by making context, time, next actions, and recovery paths visible rather than requiring someone to keep that state in memory.
+
+## What comes next
+
+<DecisionBlock kind="next" title="Test real interruption and re-entry scenarios">
+  Continue scenario-based validation for interruption recovery, synchronization conflicts, and durable re-entry flows while keeping the workspace humane under changing circumstances.
+</DecisionBlock>
