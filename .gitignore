@@ -1,7 +1,12 @@
 .superpowers/
+.local/
+.playwright/
 node_modules/
 dist/
 .astro/
+playwright-report/
+test-results/
+coverage/
 docs/evidence/source-map.local.*
 .DS_Store
 *.log
