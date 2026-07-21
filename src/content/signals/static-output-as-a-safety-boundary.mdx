@@ -1,0 +1,19 @@
+---
+id: static-output-as-a-safety-boundary
+title: Static output as a safety boundary
+summary: A resource note on why static delivery makes public content easier to inspect, audit, and keep separate from private runtime state.
+visibility: listed
+publicReview: approved
+sourceAvailability: public
+sourceUrls: [https://docs.astro.build/en/guides/on-demand-rendering/]
+capabilities: [product-engineering, evaluation-reliability, knowledge-context]
+relatedIds: [handbook:grounded-knowledge, systems:reliable-ai-work]
+publishedAt: 2026-07-16
+updatedAt: 2026-07-21
+order: 2
+kind: resource
+---
+
+[Astro's static and on-demand rendering guide](https://docs.astro.build/en/guides/on-demand-rendering/) is useful because it makes the delivery boundary explicit: content can be built and inspected before it is served.
+
+For this portfolio, that boundary supports a public-content audit and keeps the published site separate from local sources and operational state. The resource matters as a design reference, not as a claim that static output removes the need for editorial review.

@@ -1,0 +1,42 @@
+---
+id: evaluation-driven-development
+title: Evaluation-driven development
+summary: Treat tests, replay, observed behavior, and explicit failure modes as the basis for confidence rather than an impressive demo alone.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [evaluation-reliability, ai-systems, decision-intelligence]
+relatedIds: [systems:reliable-ai-work, projects:project-alpha-screener]
+publishedAt: 2026-07-17
+updatedAt: 2026-07-21
+order: 4
+topic: validation
+---
+
+## Principle
+
+Confidence should come from behavior that can be checked: a test, a replayable scenario, an inspection of output, or a clearly recorded limitation.
+
+## When it matters
+
+This matters whenever a system summarizes evidence, coordinates work, ranks options, or makes a claim that could look convincing while being wrong, stale, or incomplete.
+
+## Reusable pattern
+
+Write the expected behavior before implementation, run narrow checks close to the changed boundary, and keep explicit states for blocked, inconclusive, and failed outcomes. Pair automation with a human-readable account of what was checked.
+
+## Failure mode
+
+A demo succeeds on a happy path and is treated as validation. Missing inputs, stale state, recovery, and uncertainty remain untested until a real user encounters them.
+
+## Practical checklist
+
+- Define the behavior and failure condition before building.
+- Use the smallest repeatable check that can disprove the claim.
+- Test uncertainty, stale state, and recovery paths.
+- State what the evidence does not establish.
+
+## Related public systems
+
+[Alpha Screener](/work/alpha-screener/) uses explicit evidence gates, while [Reliable AI work](/systems/reliable-ai-work/) makes independent evaluation part of the workflow.

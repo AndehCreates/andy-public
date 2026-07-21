@@ -72,3 +72,52 @@ test('publishes public system maps with text explanations, legends, and validate
     await expect.poll(() => page.locator('.system-relations a').count()).toBeGreaterThanOrEqual(2);
   }
 });
+
+test('publishes approved handbook principles, Signal Library entries, and a newest-first public RSS feed', async ({ page }) => {
+  await page.goto('/handbook/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Engineering handbook' })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 2, name: 'Knowledge & context systems' })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 2, name: 'Human-centered design' })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 2, name: 'Product engineering' })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 2, name: 'Evaluation & reliability' })).toHaveCount(1);
+  await expect(page.locator('.handbook__group').filter({ has: page.getByRole('heading', { level: 2, name: 'Knowledge & context systems' }) })).toContainText('Grounded knowledge');
+
+  await page.goto('/handbook/grounded-knowledge/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Grounded knowledge' })).toHaveCount(1);
+  for (const section of ['Principle', 'When it matters', 'Reusable pattern', 'Failure mode', 'Practical checklist', 'Related public systems']) {
+    await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
+  }
+
+  await page.goto('/signals/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Signal Library' })).toHaveCount(1);
+  const signalGroups = [
+    ['Resource', 'Static output as a safety boundary'],
+    ['Homelab', 'Local-first recovery notes'],
+    ['Field notes', 'Evaluation is product work'],
+    ['Experiments', 'Bounded interface experiment'],
+  ] as const;
+  for (const [kind, title] of signalGroups) {
+    await expect(page.getByRole('heading', { level: 2, name: kind })).toHaveCount(1);
+    await expect(page.getByRole('heading', { level: 2, name: kind }).locator('..')).toContainText(title);
+  }
+
+  await page.goto('/signals/evaluation-as-product-work/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Evaluation is product work' })).toHaveCount(1);
+
+  const feed = await page.request.get('/rss.xml');
+  expect(feed.ok()).toBe(true);
+  const xml = await feed.text();
+  expect(xml).toContain('Evaluation is product work');
+  expect(xml).toContain('Grounded knowledge');
+  expect(xml).not.toContain('Schema seed');
+  expect(xml.indexOf('Evaluation is product work')).toBeLessThan(xml.indexOf('Grounded knowledge'));
+});
+
+test('renders public labels and prose without mojibake', async ({ page }) => {
+  await page.goto('/signals/');
+  await expect(page.getByText('Field note - Evaluation & reliability', { exact: true })).toBeVisible();
+
+  await page.goto('/systems/software-for-cognition/');
+  await expect(page.locator('main')).toContainText('path back into work for a person');
+  await expect(page.locator('main')).not.toContainText(/â|Â/);
+});

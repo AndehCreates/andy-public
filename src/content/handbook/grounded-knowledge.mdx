@@ -1,0 +1,42 @@
+---
+id: grounded-knowledge
+title: Grounded knowledge
+summary: Build important outputs from inspectable sources, durable context, and visible system state rather than plausible recollection.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [knowledge-context, ai-systems, evaluation-reliability]
+relatedIds: [systems:reliable-ai-work, projects:project-chief-of-staff]
+publishedAt: 2026-07-20
+updatedAt: 2026-07-21
+order: 1
+topic: knowledge systems
+---
+
+## Principle
+
+Important output should trace to a trusted source, durable context, or inspectable system state. A concise answer with visible grounding is more useful than a confident answer that cannot be checked.
+
+## When it matters
+
+Use this principle when a decision depends on prior work, changing evidence, or details that cannot safely live in a single conversation or a person's memory.
+
+## Reusable pattern
+
+Keep the authoritative record close to the work, state what evidence was used, and preserve a handoff when the work pauses. Treat generated summaries as views over that record, not as a replacement authority.
+
+## Failure mode
+
+An assistant or workflow produces a fluent conclusion from stale notes, partial context, or an unverified assumption. The result sounds complete but gives the next reviewer no way to find the missing basis.
+
+## Practical checklist
+
+- Identify the source of record before composing an output.
+- Make uncertainty and missing evidence visible.
+- Link decisions back to the relevant context or state.
+- Preserve a recoverable handoff when work cannot be completed.
+
+## Related public systems
+
+The [Reliable AI work](/systems/reliable-ai-work/) map and [Chief of Staff](/work/chief-of-staff/) show how durable context and independent review can keep an AI-assisted workflow inspectable.

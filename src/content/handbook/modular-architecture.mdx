@@ -1,0 +1,42 @@
+---
+id: modular-architecture
+title: Modular architecture
+summary: Give components clear responsibilities so context, runtime, storage, and product authority remain replaceable and understandable.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [product-engineering, knowledge-context, ai-systems]
+relatedIds: [systems:software-for-cognition, projects:project-lifeos]
+publishedAt: 2026-07-18
+updatedAt: 2026-07-21
+order: 3
+topic: system boundaries
+---
+
+## Principle
+
+Each component should own a narrow, explicit responsibility. A system becomes easier to change when no module silently claims the authority of its neighbors.
+
+## When it matters
+
+Use modular boundaries when a product joins UI state, durable records, synchronization, model-assisted work, or multiple runtimes that will evolve at different speeds.
+
+## Reusable pattern
+
+Name the authority for every durable concern, define the handoff between modules, and extend the existing boundary before introducing a new control layer. Prefer a small adapter over duplicated state.
+
+## Failure mode
+
+A new coordinator becomes the unofficial source of truth, repeats persistence logic, or reaches across layers directly. Changes then require synchronized edits in places that cannot be reasoned about independently.
+
+## Practical checklist
+
+- Name the source of truth for each durable record.
+- Give each interface one accountable responsibility.
+- Keep adapters explicit at runtime and storage boundaries.
+- Test a change at the boundary where it belongs.
+
+## Related public systems
+
+[LifeOS](/work/lifeos/) extends existing state and synchronization surfaces, and [Software for cognition](/systems/software-for-cognition/) connects visible context with deliberate re-entry.

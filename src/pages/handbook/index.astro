@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { publicEntries } from '@/lib/content/queries';
+import { capabilities, type CapabilityId } from '@/lib/content/taxonomy';
+
+const handbook = publicEntries((await getCollection('handbook')).map((entry) => ({
+  title: entry.data.title,
+  visibility: entry.data.visibility,
+  publicReview: entry.data.publicReview,
+  ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
+  entry,
+}))).map(({ entry }) => entry);
+const handbookGroups = (Object.entries(capabilities) as [CapabilityId, string][])
+  .map(([capability, title]) => ({
+    capability,
+    title,
+    entries: handbook.filter((entry) => entry.data.capabilities.at(0) === capability),
+  }))
+  .filter((group) => group.entries.length > 0);
+---
+
+<BaseLayout title="Engineering handbook | Andy — AI Systems" description="Reusable principles, patterns, failure modes, and practical checklists for reliable AI and software systems." canonicalPath="/handbook/">
+  <section class="handbook container" aria-labelledby="handbook-heading">
+    <header>
+      <p>Reusable engineering thinking</p>
+      <h1 id="handbook-heading">Engineering handbook</h1>
+      <p>Principles for building systems that remain grounded, reviewable, modular, and testable as their context changes.</p>
+    </header>
+    <div class="handbook__groups">
+      {handbookGroups.map((group) => <section class="handbook__group" aria-labelledby={`handbook-${group.capability}`}>
+        <header>
+          <h2 id={`handbook-${group.capability}`}>{group.title}</h2>
+          <p>{group.entries.map((entry) => entry.data.topic).join(' · ')}</p>
+        </header>
+        <div class="handbook__grid">
+          {group.entries.map((entry) => <article>
+            <p>{entry.data.topic}</p>
+            <h3><a href={`/handbook/${entry.id}/`}>{entry.data.title}</a></h3>
+            <p>{entry.data.summary}</p>
+            <a href={`/handbook/${entry.id}/`}>Read the principle</a>
+          </article>)}
+        </div>
+      </section>)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .handbook { padding-block: var(--space-8); }
+  header, article { display: grid; gap: var(--space-3); }
+  .handbook > header { max-width: 48rem; margin-bottom: var(--space-7); }
+  header p, article p { margin: 0; color: var(--text-secondary); }
+  .handbook > header > p:first-child, article > p:first-child { color: var(--accent-system); font-size: var(--text-sm); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  h1, h2, h3 { margin: 0; color: var(--text-primary); }
+  h1 { font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
+  h2 { font-size: var(--text-xl); }
+  .handbook__groups { display: grid; gap: var(--space-7); }
+  .handbook__group > header { margin-bottom: var(--space-4); }
+  .handbook__group > header p { color: var(--text-muted); font-size: var(--text-sm); text-transform: capitalize; }
+  .handbook__grid { display: grid; gap: var(--space-4); }
+  article { align-content: start; padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
+  article a { color: var(--accent-system); }
+  @media (min-width: 48rem) { .handbook__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
