@@ -88,7 +88,7 @@ modes, diagrams, and practical checklists.
 | Home | Positioning, principles, selected systems, the Signal Library, and opportunity call to action |
 | Work | Filterable atlas of projects using market-facing capability tags |
 | Project page | Concise overview, visuals, status, capabilities, links, and related systems |
-| Case study | Deeper explanation of what a system solves, how it works, decisions, validation, value, and next steps |
+| Case studies | Index and deeper explanations of what systems solve, how they work, decisions, validation, value, and next steps |
 | Systems | Cross-project maps that explain recurring architecture and design patterns |
 | Handbook | Principles, patterns, tradeoffs, failure modes, and engineering checklists |
 | Signal Library | Curated resources, homelab notes, experiments, tools, and broader interests |
@@ -148,8 +148,22 @@ stories become homepage features.
 | Japanese Anime Inspired | Learning systems and product experimentation |
 
 Chief of Staff, ADHD Tabs, Creative Suite, and Android Lab are currently
-local-only. Publication, remote creation, or repository linking is a separate
-human-approved action and is not implied by including them in the site.
+local-only. Source-code publication, remote creation, or repository linking is
+a separate human-approved action and is not implied by including them in the
+site.
+
+This design approves public-safe narrative coverage of those projects once the
+specific content passes public-source review. A public project page or case
+study may describe goals, architecture, decisions, validation summaries, and
+sanitized diagrams without a public repository link. It must not expose local
+paths, secrets, private hostnames, operational credentials, private logs, or
+unreviewed implementation details. Publishing source code, creating a remote,
+or linking a repository remains a separate explicit action.
+
+Chief of Staff may therefore ship in V1 as a reviewed public narrative and
+sanitized case study without publishing its local repository. Its case study
+focuses on authority boundaries, lifecycle design, reliability mechanisms, and
+validation rather than sensitive operational configuration.
 
 ### Capability vocabulary
 
@@ -247,11 +261,35 @@ capability tags, dates, related content, source links, media, and optional
 featured placement. Collection-specific schemas add only the fields that the
 surface needs.
 
+### Publication and source state
+
+Every content record has an explicit `visibility` state:
+
+| State | Build and route behavior |
+| --- | --- |
+| `internal` | Never included in public collection queries, generated routes, metadata, sitemaps, feeds, or related-content indexes |
+| `draft` | Available for local editorial preview only and excluded from production output and public indexes |
+| `listed` | Generates a public page and may appear in the relevant atlas or collection index, but is not eligible for homepage placement |
+| `featured` | Meets all public requirements, generates a public page, and may appear in curated homepage or featured-system placements |
+
+Every project and case study also declares `sourceAvailability` as `public`,
+`local-only`, or `mixed`.
+
+- Public source links are required only when `sourceAvailability` is `public`.
+- `local-only` and `mixed` entries may publish without a repository URL after
+  explicit public-source review and may use only reviewed narrative and media.
+- `listed` and `featured` entries require `publicReview: approved`.
+- A local-only entry cannot become public merely by changing `visibility`; the
+  public-review field and sanitized-content checks must also pass.
+- Relationship validation must not allow a public page to reveal the slug,
+  title, link, or metadata of an `internal` record.
+
 ### Route model
 
 - `/`
 - `/work`
 - `/work/[slug]`
+- `/case-studies`
 - `/case-studies/[slug]`
 - `/systems`
 - `/systems/[slug]`
@@ -297,7 +335,10 @@ No runtime fetch is required for core V1 content.
   error that names the artifact and field.
 - Duplicate slugs, unknown tags, invalid relationships, missing required media,
   and broken internal links block release.
-- Draft, private, or unreviewed material is excluded from public routes.
+- `internal`, `draft`, or unreviewed material is excluded from public routes,
+  indexes, related-content projections, metadata, sitemaps, and feeds.
+- A `listed` or `featured` local-only entry without `publicReview: approved`
+  fails the production build even when all other fields are valid.
 - External links degrade to ordinary links; previews or embellishments must not
   be required to understand the content.
 - Missing optional media falls back to a designed text presentation.
