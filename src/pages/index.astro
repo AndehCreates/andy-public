@@ -1,12 +1,16 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Andy &mdash; AI Systems</title>
-  </head>
-  <body>
-    <main>
-      <h1>Software that strengthens human capability.</h1>
-    </main>
-  </body>
-</html>
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+  <section class="home-hero container" aria-labelledby="home-title">
+    <h1 id="home-title">Software that strengthens human capability.</h1>
+    <p>A public portfolio about building software and AI systems that strengthen human capability.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .home-hero { display: grid; align-content: center; min-height: min(70vh, 48rem); gap: var(--space-5); padding-block: var(--space-8); }
+  h1 { max-width: 15ch; margin: 0; font-size: var(--text-3xl); line-height: 1; letter-spacing: -0.045em; }
+  p { max-width: 42rem; margin: 0; color: var(--text-secondary); font-size: var(--text-lg); }
+</style>

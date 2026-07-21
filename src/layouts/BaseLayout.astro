@@ -1,0 +1,27 @@
+---
+import DocumentHead from '@/components/meta/DocumentHead.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  robots?: string;
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head><DocumentHead {...Astro.props} /></head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader />
+    <main id="main-content"><slot /></main>
+    <SiteFooter />
+  </body>
+</html>
+

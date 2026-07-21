@@ -1,0 +1,17 @@
+---
+import { site } from '@/config/site';
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>&copy; {new Date().getFullYear()} {site.title}</p>
+    <p>Software that strengthens human capability.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: var(--border-width) solid var(--border-subtle); color: var(--text-muted); font-size: var(--text-sm); }
+  .site-footer__inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); padding-block: var(--space-6); }
+  .site-footer p { margin: 0; }
+</style>
+
