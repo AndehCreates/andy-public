@@ -1,0 +1,17 @@
+# Public review matrix
+
+All rows are pending human review. Proposed visibility is a starting editorial
+disposition, not authorization to publish. Approved links/media remain empty
+until explicitly reviewed.
+
+| Project ID | Evidence inventory | Source availability / commit | Proposed visibility | Public review | Approved framing / capability tags | Approved links and media | Explicitly excluded claims/details | Reviewer / date |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| project-chief-of-staff | chief-of-staff.md | local-only / 884ecb0 | featured | approved | Authority-bounded AI work coordination; AI systems, evaluation and reliability, knowledge and context | None | Repository link, host topology, service endpoints, live fleet or performance claims | user / 2026-07-21 |
+| project-lifeos | lifeos.md | public / 7f50ad1 | featured | approved | Human-centered continuity system; knowledge and context, product engineering, human-centered design | https://github.com/AndehCreates/LifeOS | Personal tasks, contacts, journals, schedules, clinical/productivity claims | user / 2026-07-21 |
+| project-alpha-screener | alpha-screener.md | public / 787aaef | featured | approved | Human-reviewed decision research; decision intelligence, evaluation and reliability, AI systems | https://github.com/AndehCreates/alpha-screener | Investment advice, accounts, positions, live performance or profitability claims | user / 2026-07-21 |
+| project-mathpad | mathpad.md | public / 6704730 | listed | approved | Calculation notebook and semantic editor; product engineering, knowledge and context | https://github.com/AndehCreates/mathpad | Commercial parity, adoption, performance claims | user / 2026-07-21 |
+| project-arcade | arcade.md | public / 0490ff0 | listed | approved | Deterministic simulation workbench; interactive and creative systems, product engineering | https://github.com/AndehCreates/arcade | Player, commercial, balance, accessibility-certification claims | user / 2026-07-21 |
+| project-adhd-tabs | adhd-tabs.md | local-only / 60b897b | draft | approved | Reversible attention-support workflow; human-centered design, knowledge and context | None | Clinical efficacy, diagnosis, recommendation metrics, repository link | user / 2026-07-21 |
+| project-creative-suite | creative-suite.md | local-only / 53824f1 | draft | approved | Accessible creative-preview gallery; interactive and creative systems, product engineering | None | Creator adoption, hosting, external media or repository link | user / 2026-07-21 |
+| project-android-lab | android-lab.md | local-only / 1f3186b | draft | approved | Device-sensor learning workbench; local infrastructure and edge, product engineering | None | Hardware validation, device IDs, production release or repository link | user / 2026-07-21 |
+| project-japanese-anime-inspired | japanese-anime-inspired.md | public / 6ebf6e8 | draft | approved | Audio-first language-learning design; human-centered design, interactive and creative systems | None | Shipped app, learning outcomes, audio provenance, anime IP association | user / 2026-07-21 |

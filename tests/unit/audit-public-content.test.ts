@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { auditEntries, isAuditableContentFile } from '../../scripts/audit-public-content';
+import { auditEntries, auditEvidenceDocuments, isAuditableContentFile } from '../../scripts/audit-public-content';
 import { canonicalRelationId } from '../../src/lib/content/relations';
 
 it('excludes underscored fixture filenames from the standalone content audit', () => {
@@ -37,4 +37,13 @@ it('accepts a public relationship that resolves through a canonical authored ID'
       body: 'Public-safe system narrative.',
     },
   ])).not.toThrow();
+});
+
+it('groups evidence sanitizer findings by file and rule', () => {
+  expect(() => auditEvidenceDocuments([
+    {
+      filePath: 'docs/evidence/example.md',
+      content: 'Observed locally at C:\\private\\example.',
+    },
+  ])).toThrowError(/Evidence document audit failed:\n- docs\/evidence\/example\.md: windows-path: C:\\private\\example/);
 });

@@ -30,6 +30,11 @@ export type AuditedEntry = {
   body: string;
 };
 
+export type EvidenceDocument = {
+  filePath: string;
+  content: string;
+};
+
 export function isAuditableContentFile(filePath: string): boolean {
   return !basename(filePath).startsWith('_');
 }
@@ -87,9 +92,27 @@ export function auditEntries(entries: AuditedEntry[]): void {
   if (violations.length) throw new Error(`Public content audit failed:\n${violations.map((violation) => `- ${violation}`).join('\n')}`);
 }
 
+export function auditEvidenceDocuments(documents: EvidenceDocument[]): void {
+  const violations = documents.flatMap(({ filePath, content }) =>
+    findPublicContentRisks(content).map((finding) => `${filePath.replaceAll('\\', '/')}: ${finding.rule}: ${finding.excerpt}`),
+  );
+
+  if (violations.length) throw new Error(`Evidence document audit failed:\n${violations.map((violation) => `- ${violation}`).join('\n')}`);
+}
+
+async function readEvidenceDocuments(): Promise<EvidenceDocument[]> {
+  const files = await fg('docs/evidence/**/*.md', { cwd: process.cwd(), absolute: true });
+
+  return Promise.all(files.map(async (filePath) => ({
+    filePath: filePath.slice(process.cwd().length + 1).replaceAll('\\', '/'),
+    content: await readFile(filePath, 'utf8'),
+  })));
+}
+
 async function audit(): Promise<void> {
   const entries = await readEntries();
   auditEntries(entries);
+  auditEvidenceDocuments(await readEvidenceDocuments());
 
   for (const [collection] of collectionDirectories) {
     const counts = entries.filter((entry) => entry.collection === collection).reduce<Record<string, number>>((accumulator, entry) => {
