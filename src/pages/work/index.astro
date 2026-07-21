@@ -1,9 +1,8 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
-import CollectionIndex from '@/components/content/CollectionIndex.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { byOrderThenTitle, publicEntries } from '@/lib/content/queries';
-import type { ProjectCardViewModel } from '@/components/content/ProjectCard.astro';
+import ProjectFilter, { type ProjectFilterProject } from '@/components/interactive/ProjectFilter';
 
 function projectForPublication(entry: CollectionEntry<'projects'>) {
   const { visibility, publicReview, title, order } = entry.data;
@@ -12,7 +11,7 @@ function projectForPublication(entry: CollectionEntry<'projects'>) {
 
 const projects = publicEntries((await getCollection('projects')).map(projectForPublication))
   .sort(byOrderThenTitle)
-  .map(({ entry }): ProjectCardViewModel => ({
+  .map(({ entry }): ProjectFilterProject => ({
     slug: entry.id,
     title: entry.data.title,
     summary: entry.data.summary,
@@ -26,9 +25,5 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
   description="A project atlas of reviewed software and AI systems built around visible context, reliable decisions, and human control."
   canonicalPath="/work/"
 >
-  <CollectionIndex
-    heading="Project atlas"
-    description="Reviewed systems and experiments, organized around the capabilities they make concrete."
-    projects={projects}
-  />
+  <ProjectFilter client:idle projects={projects} />
 </BaseLayout>
