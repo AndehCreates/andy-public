@@ -30,7 +30,7 @@ it('uses BaseLayout for the homepage shell', async () => {
   const source = await readFile(resolve(process.cwd(), 'src/pages/index.astro'), 'utf8');
 
   expect(source).toContain("import BaseLayout from '@/layouts/BaseLayout.astro';");
-  expect(source).toContain('<BaseLayout>');
+  expect(source).toMatch(/<BaseLayout(?:\s|>)/);
   expect(source).toContain('<h1 id="home-title">Software that strengthens human capability.</h1>');
   expect(source).not.toContain('<!doctype html>');
 });

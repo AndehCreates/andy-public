@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { byOrderThenTitle, featuredEntries, publicEntries } from '../../src/lib/content/queries';
+import { approvedHomepageFeaturedProjects, byOrderThenTitle, featuredEntries, publicEntries } from '../../src/lib/content/queries';
 
 const entries = [
   { id: 'draft', title: 'Draft', visibility: 'draft' as const, publicReview: 'approved' as const },
@@ -15,6 +15,21 @@ it('selects only approved listed and featured entries for public indexes', () =>
 
 it('selects only approved featured entries for homepage placements', () => {
   expect(featuredEntries(entries).map(({ id }) => id)).toEqual(['featured']);
+});
+
+it('keeps homepage project features to the approved flagship set', () => {
+  const projects = [
+    { id: 'chief-of-staff', title: 'Chief of Staff', visibility: 'featured' as const, publicReview: 'approved' as const, order: 1 },
+    { id: 'lifeos', title: 'LifeOS', visibility: 'featured' as const, publicReview: 'approved' as const, order: 2 },
+    { id: 'alpha-screener', title: 'Alpha Screener', visibility: 'featured' as const, publicReview: 'approved' as const, order: 3 },
+    { id: 'future-feature', title: 'Future feature', visibility: 'featured' as const, publicReview: 'approved' as const, order: 0 },
+  ];
+
+  expect(approvedHomepageFeaturedProjects(projects).map(({ id }) => id)).toEqual([
+    'chief-of-staff',
+    'lifeos',
+    'alpha-screener',
+  ]);
 });
 
 it('sorts entries by explicit order and then title deterministically', () => {
