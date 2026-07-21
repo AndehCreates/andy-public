@@ -1,0 +1,32 @@
+---
+id: project-lifeos
+title: LifeOS
+summary: A local-first workspace that makes work state, commitments, context, and recovery visible after interruption.
+visibility: featured
+publicReview: approved
+sourceAvailability: public
+sourceUrls: [https://github.com/AndehCreates/LifeOS]
+capabilities: [knowledge-context, product-engineering, human-centered-design]
+relatedIds: []
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 2
+projectId: project-lifeos
+status: active
+---
+
+## Scope
+
+LifeOS is a human-centered continuity system for externalizing work, time, context, transitions, and recovery so the next action does not depend on fragile working memory.
+
+## Decisions and tradeoffs
+
+The architecture extends existing state and synchronization surfaces through explicit domain contracts rather than adding a replacement orchestrator or persistence model. Consequential or ambiguous automation is represented as a user-confirmed intervention with a safe timeout disposition.
+
+## Validation and limits
+
+The inspected codebase has typed state contracts, local-first persistence and synchronization surfaces, and a verified type check. It does not establish production deployment, cross-device reliability, accessibility outcomes, or completed end-to-end scenarios.
+
+## Next
+
+Continue scenario-based validation for interruption recovery, synchronization conflicts, and durable re-entry flows.

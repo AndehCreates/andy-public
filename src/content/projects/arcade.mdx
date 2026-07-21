@@ -1,0 +1,32 @@
+---
+id: project-arcade
+title: Arcade Workbench
+summary: A deterministic interactive-systems workbench for playable simulations, restart-safe tuning, and inspectable behavior.
+visibility: listed
+publicReview: approved
+sourceAvailability: public
+sourceUrls: [https://github.com/AndehCreates/arcade]
+capabilities: [interactive-creative-systems, product-engineering]
+relatedIds: []
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 5
+projectId: project-arcade
+status: experimental
+---
+
+## Scope
+
+Arcade Workbench pairs deterministic canvas simulations with a shared tuning and telemetry shell so interactive behavior can be played, observed, and refined.
+
+## Decisions and tradeoffs
+
+Game modes share simulation contracts while retaining their own surfaces. Tuning changes remain pending until an explicit restart, preserving active-run determinism, and visibility design avoids leaking hidden actor state.
+
+## Validation and limits
+
+Repository scripts cover formatting, static checks, type checks, unit tests, builds, and browser tests. The inventory inspected those gates but did not rerun them, and the evidence supports an experiment and workbench rather than a released game product.
+
+## Next
+
+Use reviewed gameplay captures and continued deterministic scenario testing to guide subsequent interactive-system refinements.

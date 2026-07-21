@@ -1,0 +1,54 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import CapabilityTag from '@/components/content/CapabilityTag.astro';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { publicEntries } from '@/lib/content/queries';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects');
+  const projects = publicEntries(entries.map((entry) => {
+    const { visibility, publicReview, title, order, id } = entry.data;
+    return { visibility, publicReview, title, id, ...(order === undefined ? {} : { order }) };
+  }));
+
+  return projects.map((project) => {
+    const entry = entries.find((candidate) => candidate.data.id === project.id);
+    if (!entry) throw new Error(`Missing project entry for ${project.id}.`);
+    return {
+      params: { slug: entry.id },
+      props: { project: entry },
+    };
+  });
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const updatedAt = project.data.updatedAt;
+const sourceLinks = project.data.sourceUrls.map((href) => ({ label: 'Project source', href }));
+---
+
+<ArticleLayout
+  title={project.data.title}
+  description={project.data.summary}
+  canonicalPath={`/work/${project.id}/`}
+  updatedAt={updatedAt}
+  sources={sourceLinks}
+>
+  <div class="project-meta">
+    <p class="project-meta__status">{project.data.status}</p>
+    <ul class="project-meta__capabilities" aria-label="Capabilities">
+      {project.data.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
+    </ul>
+  </div>
+  <Content />
+</ArticleLayout>
+
+<style>
+  .project-meta { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); padding-bottom: var(--space-5); border-bottom: var(--border-width) solid var(--border-subtle); }
+  .project-meta__status { margin: 0; color: var(--state-verified); font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .project-meta__capabilities { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; list-style: none; }
+</style>

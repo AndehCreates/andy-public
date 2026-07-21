@@ -1,0 +1,32 @@
+---
+id: project-mathpad
+title: MathPad
+summary: A local-first calculation notebook for readable multi-line work with semantic results, units, context, and feedback.
+visibility: listed
+publicReview: approved
+sourceAvailability: public
+sourceUrls: [https://github.com/AndehCreates/mathpad]
+capabilities: [product-engineering, knowledge-context]
+relatedIds: []
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 4
+projectId: project-mathpad
+status: experimental
+---
+
+## Scope
+
+MathPad explores a local-first calculation workspace for arithmetic, variables, units, functions, and date or time expressions across durable sheets and working copies.
+
+## Decisions and tradeoffs
+
+A revisioned semantic document is shared through library-neutral editor ports, separating workspace-document state from the calculation-engine session. The design prioritizes coherent parsing, diagnostics, result alignment, and accessible state communication over unsupported claims of parity.
+
+## Validation and limits
+
+The repository defines lint, automated-test, stress-test, build, and dependency-audit gates, with coverage for keyboard navigation among recent tests. Inventory review did not rerun the full release gate, and characterization evidence does not establish complete compatibility with another calculation product.
+
+## Next
+
+Run the documented automated and browser checks together on a release candidate, then assess reviewed interface captures.

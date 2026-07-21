@@ -1,0 +1,32 @@
+---
+id: project-chief-of-staff
+title: Chief of Staff
+summary: A coordination layer for AI-assisted software work that preserves clear authority, independent verification, and human control.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [ai-systems, evaluation-reliability, knowledge-context]
+relatedIds: []
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 1
+projectId: project-chief-of-staff
+status: active
+---
+
+## Scope
+
+Chief of Staff explores a deliberately thin control plane for coordinating durable AI-assisted software work without replacing the systems that govern runtime, memory, or source code.
+
+## Decisions and tradeoffs
+
+Typed lifecycle states make admission, execution, verification, human review, and handoff observable. Repository guards and independent verification prevent a worker-reported result from becoming completion by itself. The tradeoff is intentional: the system coordinates existing authorities instead of centralizing them.
+
+## Validation and limits
+
+Deterministic fixtures and offline tests cover normal completion, stale leases, human-waiting decisions, recovery, and handoff projections. This is not evidence of live runtime integration, fleet operation, or completed releases; those remain explicit next validation steps.
+
+## Next
+
+Validate the prepared live-admission boundary only with explicit operator acknowledgement and preserve recoverable states when work is uncertain or blocked.

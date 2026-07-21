@@ -1,0 +1,37 @@
+---
+import CapabilityTag from './CapabilityTag.astro';
+import type { CapabilityId } from '@/lib/content/taxonomy';
+
+export interface ProjectCardViewModel {
+  slug: string;
+  title: string;
+  summary: string;
+  status: string;
+  capabilities: CapabilityId[];
+}
+
+interface Props {
+  project: ProjectCardViewModel;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-card">
+  <p class="project-card__status">{project.status}</p>
+  <h2><a href={`/work/${project.slug}/`}>{project.title}</a></h2>
+  <p class="project-card__summary">{project.summary}</p>
+  <ul class="project-card__capabilities" aria-label="Capabilities">
+    {project.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
+  </ul>
+</article>
+
+<style>
+  .project-card { display: grid; align-content: start; gap: var(--space-3); min-height: 100%; padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .project-card__status { margin: 0; color: var(--state-verified); font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  h2 { margin: 0; font-size: var(--text-xl); line-height: 1.15; }
+  h2 a { text-decoration: none; }
+  h2 a:hover { text-decoration: underline; }
+  .project-card__summary { margin: 0; color: var(--text-secondary); }
+  .project-card__capabilities { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-1) 0 0; list-style: none; }
+</style>

@@ -1,0 +1,34 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import CollectionIndex from '@/components/content/CollectionIndex.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { byOrderThenTitle, publicEntries } from '@/lib/content/queries';
+import type { ProjectCardViewModel } from '@/components/content/ProjectCard.astro';
+
+function projectForPublication(entry: CollectionEntry<'projects'>) {
+  const { visibility, publicReview, title, order } = entry.data;
+  return { visibility, publicReview, title, ...(order === undefined ? {} : { order }), entry };
+}
+
+const projects = publicEntries((await getCollection('projects')).map(projectForPublication))
+  .sort(byOrderThenTitle)
+  .map(({ entry }): ProjectCardViewModel => ({
+    slug: entry.id,
+    title: entry.data.title,
+    summary: entry.data.summary,
+    status: entry.data.status,
+    capabilities: entry.data.capabilities,
+  }));
+---
+
+<BaseLayout
+  title="Work | Andy — AI Systems"
+  description="A project atlas of reviewed software and AI systems built around visible context, reliable decisions, and human control."
+  canonicalPath="/work/"
+>
+  <CollectionIndex
+    heading="Project atlas"
+    description="Reviewed systems and experiments, organized around the capabilities they make concrete."
+    projects={projects}
+  />
+</BaseLayout>
