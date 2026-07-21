@@ -1,0 +1,85 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { publicEntries } from '@/lib/content/queries';
+
+const collectionRoute = {
+  projects: '/work/',
+  caseStudies: '/case-studies/',
+  handbook: '/handbook/',
+  signals: '/signals/',
+  systems: '/systems/',
+} as const;
+
+type RelatedEntry = { id: string; title: string; href: string };
+
+async function relatedPublicEntries(ids: string[]): Promise<RelatedEntry[]> {
+  const [projects, caseStudies, handbook, signals, systems] = await Promise.all([
+    getCollection('projects'),
+    getCollection('caseStudies'),
+    getCollection('handbook'),
+    getCollection('signals'),
+    getCollection('systems'),
+  ]);
+  const collections = { projects, caseStudies, handbook, signals, systems };
+
+  return ids.flatMap((relatedId) => {
+    const separator = relatedId.indexOf(':');
+    const collectionName = relatedId.slice(0, separator) as keyof typeof collections;
+    const authoredId = relatedId.slice(separator + 1);
+    const entry = collections[collectionName]?.find((candidate) => candidate.data.id === authoredId);
+
+    if (!entry || !collectionRoute[collectionName]) return [];
+    const isPublic = publicEntries([{
+      title: entry.data.title,
+      visibility: entry.data.visibility,
+      publicReview: entry.data.publicReview,
+    }]).length === 1;
+
+    return isPublic ? [{ id: relatedId, title: entry.data.title, href: `${collectionRoute[collectionName]}${entry.id}/` }] : [];
+  });
+}
+
+export async function getStaticPaths() {
+  const entries = await getCollection('systems');
+  const systems = publicEntries(entries.map((entry) => ({
+    title: entry.data.title,
+    visibility: entry.data.visibility,
+    publicReview: entry.data.publicReview,
+    ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
+    entry,
+  })));
+
+  return systems.map(({ entry }) => ({ params: { slug: entry.id }, props: { system: entry } }));
+}
+
+interface Props {
+  system: CollectionEntry<'systems'>;
+}
+
+const { system } = Astro.props;
+const { Content } = await render(system);
+const related = await relatedPublicEntries(system.data.relatedIds);
+---
+
+<ArticleLayout
+  title={system.data.title}
+  description={system.data.summary}
+  canonicalPath={`/systems/${system.id}/`}
+  updatedAt={system.data.updatedAt}
+>
+  <Content />
+  <aside class="system-relations" aria-labelledby="related-public-work">
+    <h2 id="related-public-work">Related public work</h2>
+    <ul>
+      {related.map((entry) => <li><a href={entry.href}>{entry.title}</a></li>)}
+    </ul>
+  </aside>
+</ArticleLayout>
+
+<style>
+  .system-relations { margin-top: var(--space-7); padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .system-relations h2 { margin: 0; color: var(--text-primary); font-size: var(--text-lg); }
+  .system-relations ul { display: grid; gap: var(--space-2); margin: var(--space-3) 0 0; padding-left: var(--space-4); }
+  .system-relations a { color: var(--accent-system); }
+</style>

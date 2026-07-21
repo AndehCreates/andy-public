@@ -53,3 +53,22 @@ test('keeps the local-only Chief of Staff study free of source links and private
   await expect(page.getByRole('link', { name: 'Project source' })).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText(/[A-Z]:\\|localhost|127\.0\.0\.1|https?:\/\/[^\s]*(?:internal|private|local)/i);
 });
+
+test('publishes public system maps with text explanations, legends, and validated relations', async ({ page }) => {
+  await page.goto('/systems/');
+  await expect(page.getByRole('heading', { level: 1, name: 'System maps' })).toHaveCount(1);
+
+  for (const system of [
+    { slug: 'reliable-ai-work', title: 'Reliable AI work' },
+    { slug: 'software-for-cognition', title: 'Software for cognition' },
+    { slug: 'intelligence-at-the-edge', title: 'Intelligence at the edge' },
+  ]) {
+    await page.goto(`/systems/${system.slug}/`);
+    await expect(page.getByRole('heading', { level: 1, name: system.title })).toHaveCount(1);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`/systems/${system.slug}/$`));
+    await expect(page.getByRole('heading', { level: 2, name: 'How to read this map' })).toHaveCount(1);
+    await expect(page.getByRole('heading', { level: 2, name: 'Map legend' })).toHaveCount(1);
+    await expect(page.getByRole('heading', { level: 2, name: 'Related public work' })).toHaveCount(1);
+    await expect.poll(() => page.locator('.system-relations a').count()).toBeGreaterThanOrEqual(2);
+  }
+});

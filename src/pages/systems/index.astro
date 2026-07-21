@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { publicEntries } from '@/lib/content/queries';
+import { capabilities } from '@/lib/content/taxonomy';
+
+const systems = publicEntries((await getCollection('systems')).map((entry) => ({
+  visibility: entry.data.visibility,
+  publicReview: entry.data.publicReview,
+  title: entry.data.title,
+  ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
+  entry,
+}))).map(({ entry }) => entry);
+---
+
+<BaseLayout
+  title="System maps | Andy — AI Systems"
+  description="Cross-project maps of reliable AI work, software for cognition, and intelligence at the edge."
+  canonicalPath="/systems/"
+>
+  <section class="systems container" aria-labelledby="systems-heading">
+    <header class="systems__header">
+      <p>Cross-project connections</p>
+      <h1 id="systems-heading">System maps</h1>
+      <p>These maps connect public work through shared responsibilities and decisions. Each is readable as text and keeps operational details out of the public view.</p>
+    </header>
+    <div class="systems__grid">
+      {systems.map((system) => (
+        <article class="system-card">
+          <p>{capabilities[system.data.capabilities.at(0) ?? 'ai-systems']}</p>
+          <h2><a href={`/systems/${system.id}/`}>{system.data.title}</a></h2>
+          <p>{system.data.summary}</p>
+          <a href={`/systems/${system.id}/`}>Read the map</a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .systems { padding-block: var(--space-8); }
+  .systems__header { display: grid; max-width: 48rem; gap: var(--space-4); margin-bottom: var(--space-7); }
+  .systems__header > p { margin: 0; color: var(--text-secondary); font-size: var(--text-lg); }
+  .systems__header > p:first-child { color: var(--accent-system); font-size: var(--text-sm); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  h1, h2 { margin: 0; color: var(--text-primary); }
+  h1 { font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
+  .systems__grid { display: grid; gap: var(--space-4); }
+  .system-card { display: grid; align-content: start; gap: var(--space-3); padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .system-card p { margin: 0; color: var(--text-secondary); }
+  .system-card > p:first-child { color: var(--accent-human); font-size: var(--text-sm); font-weight: 700; }
+  .system-card a { color: var(--accent-system); }
+  @media (min-width: 48rem) { .systems__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

@@ -1,0 +1,50 @@
+---
+id: reliable-ai-work
+title: Reliable AI work
+summary: A cross-project map of the boundaries that keep AI-assisted work reviewable, recoverable, and grounded in visible evidence.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [ai-systems, evaluation-reliability, knowledge-context]
+relatedIds: [projects:project-chief-of-staff, caseStudies:case-study-chief-of-staff]
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 1
+systemId: reliable-ai-work
+---
+
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## How to read this map
+
+This map follows the decisions that make AI-assisted work dependable. Human judgment sets the boundary; durable context preserves what matters between sessions; orchestration requests bounded work; evaluation checks what happened; and recovery keeps uncertain work legible instead of treating it as silently complete. The text below describes the relationships independently of the diagram.
+
+<SystemDiagram
+  title="Reliable AI work"
+  description="A public-safe view of how reviewable AI-assisted work moves between human judgment, context, execution, evaluation, and recovery."
+  nodes={[
+    { label: 'Human judgment', description: 'Sets consequential boundaries and reviews uncertain outcomes.' },
+    { label: 'Durable context', description: 'Retains the task state and handoff record needed to continue.' },
+    { label: 'Bounded orchestration', description: 'Requests work without replacing the authority of the systems involved.' },
+    { label: 'Independent evaluation', description: 'Checks evidence before completion is accepted.' },
+    { label: 'Recovery', description: 'Preserves incomplete or blocked work for deliberate re-entry.' },
+  ]}
+  edges={[
+    { from: 'Human judgment', to: 'Bounded orchestration', label: 'sets boundaries' },
+    { from: 'Durable context', to: 'Bounded orchestration', label: 'provides state' },
+    { from: 'Bounded orchestration', to: 'Independent evaluation', label: 'produces evidence' },
+    { from: 'Independent evaluation', to: 'Recovery', label: 'keeps uncertainty visible' },
+    { from: 'Recovery', to: 'Durable context', label: 'records re-entry state' },
+  ]}
+/>
+
+## Map legend
+
+- **Nodes** are responsibilities, not a claim about a particular runtime or deployment.
+- **Arrows** show an accountable handoff of context, evidence, or a decision.
+- **Recovery paths** keep blocked or inconclusive work available for review and re-entry.
+
+## What this connects
+
+Reliable AI work depends on distributed authority rather than a single system declaring itself complete. The connected public work explores that posture through explicit lifecycle state, evaluation boundaries, and a recoverable handoff record. It does not claim unattended operation or a universal automation pattern.

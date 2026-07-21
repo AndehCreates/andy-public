@@ -1,0 +1,50 @@
+---
+id: intelligence-at-the-edge
+title: Intelligence at the edge
+summary: A cross-project map of how local workloads, models, devices, and sensors can remain inspectable at the human boundary.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [product-engineering, interactive-creative-systems, knowledge-context]
+relatedIds: [projects:project-mathpad, projects:project-arcade]
+publishedAt: 2026-07-21
+updatedAt: 2026-07-21
+order: 3
+systemId: intelligence-at-the-edge
+---
+
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## How to read this map
+
+This map is a design lens for intelligence close to the people and devices it serves. A local workload can combine models, device input, and sensor observations, but the useful boundary is still the person who can inspect state, understand limits, and choose the next action. The text explains the map without depending on the visual.
+
+<SystemDiagram
+  title="Intelligence at the edge"
+  description="A public-safe view of local workloads, models, devices, sensors, and human review without exposing deployment topology."
+  nodes={[
+    { label: 'Local workload', description: 'Keeps a bounded task close to the interface and available inputs.' },
+    { label: 'Models', description: 'Offer bounded interpretation or generation with explicit limits.' },
+    { label: 'Devices', description: 'Present results and collect intentional interaction.' },
+    { label: 'Sensors', description: 'Provide observations that need validation and context.' },
+    { label: 'Human review', description: 'Interprets outputs and decides whether to act.' },
+  ]}
+  edges={[
+    { from: 'Sensors', to: 'Local workload', label: 'provides observations' },
+    { from: 'Models', to: 'Local workload', label: 'supports bounded processing' },
+    { from: 'Local workload', to: 'Devices', label: 'presents state' },
+    { from: 'Devices', to: 'Human review', label: 'makes interaction visible' },
+    { from: 'Human review', to: 'Local workload', label: 'sets the next action' },
+  ]}
+/>
+
+## Map legend
+
+- **Nodes** name responsibilities that may be combined or separated in a real implementation.
+- **Arrows** show a direction of information or intentional control, not a network connection.
+- **Human review** is the decision boundary for interpreting uncertain observations or model output.
+
+## What this connects
+
+The connected public work explores inspectable local state and deterministic interactive behavior. The map intentionally omits host names, addresses, device inventories, topology, and operational access details; it is a public design view, not an infrastructure diagram.
