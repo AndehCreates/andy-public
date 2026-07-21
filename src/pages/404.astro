@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page not found | Andy - AI Systems"
+  description="The requested page is not available. Explore public work, systems, and the Signal Library instead."
+  canonicalPath="/404/"
+  robots="noindex"
+  imageAlt="Page not found on Andy - AI Systems."
+>
+  <section class="not-found container" aria-labelledby="not-found-heading">
+    <p class="not-found__code">404</p>
+    <h1 id="not-found-heading">Page not found</h1>
+    <p>The page you requested is not available. You can continue with the public work and notes below.</p>
+    <nav aria-label="Suggested destinations">
+      <a href="/work/">Work</a>
+      <a href="/systems/">Systems</a>
+      <a href="/signals/">Signal Library</a>
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found { display: grid; justify-items: start; gap: var(--space-4); min-height: 55vh; align-content: center; padding-block: var(--space-8); }
+  .not-found__code { color: var(--accent-signal); font-family: var(--font-mono); font-size: var(--text-lg); }
+  h1 { color: var(--text-primary); font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
+  .not-found > p:not(.not-found__code) { max-width: 38rem; color: var(--text-secondary); font-size: var(--text-lg); }
+  nav { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+  nav a { padding: var(--space-2) var(--space-3); border: var(--border-width) solid var(--border-strong); border-radius: var(--radius-sm); color: var(--accent-system); text-decoration: none; }
+</style>

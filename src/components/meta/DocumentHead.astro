@@ -6,6 +6,7 @@ interface Props {
   description?: string;
   canonicalPath?: string;
   image?: string;
+  imageAlt?: string;
   type?: 'website' | 'article';
   robots?: string;
 }
@@ -14,7 +15,8 @@ const {
   title = site.title,
   description = site.description,
   canonicalPath = Astro.url.pathname,
-  image,
+  image = '/social-card.svg',
+  imageAlt = 'Andy - AI Systems. Software that strengthens human capability.',
   type = 'website',
   robots,
 } = Astro.props;
@@ -35,8 +37,9 @@ const imageUrl = image ? new URL(image, canonical).href : undefined;
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical.href} />
 {imageUrl && <meta property="og:image" content={imageUrl} />}
+{imageUrl && <meta property="og:image:alt" content={imageAlt} />}
 <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 {imageUrl && <meta name="twitter:image" content={imageUrl} />}
-
+{imageUrl && <meta name="twitter:image:alt" content={imageAlt} />}

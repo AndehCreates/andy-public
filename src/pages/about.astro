@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About Andy | AI Systems"
+  description="A nontraditional path into human-centered software and AI systems that strengthen human capability."
+  canonicalPath="/about/"
+  imageAlt="About Andy and a practice of building human-centered AI systems."
+>
+  <section class="about prose-container" aria-labelledby="about-heading">
+    <header>
+      <p class="eyebrow">About</p>
+      <h1 id="about-heading">About Andy</h1>
+      <p class="lede">I build software and AI systems that strengthen human capability by making context, uncertainty, and decisions easier to see.</p>
+    </header>
+
+    <div class="about__body">
+      <section aria-labelledby="path-heading">
+        <h2 id="path-heading">A nontraditional path</h2>
+        <p>My path into software has been driven by sustained curiosity about how systems work: development tools, state, interfaces, and the conditions that make complex work more reliable. That has led to hands-on systems work across AI coordination, local-first product design, decision support, and interactive software.</p>
+      </section>
+      <section aria-labelledby="focus-heading">
+        <h2 id="focus-heading">What I focus on</h2>
+        <p>I am especially interested in software that respects human cognition. The strongest systems make important context legible, preserve agency for consequential choices, and help people recover when work is interrupted or information is incomplete.</p>
+      </section>
+      <section aria-labelledby="collaboration-heading">
+        <h2 id="collaboration-heading">Working with strong teams</h2>
+        <p>I want to contribute that systems perspective with teams that care about rigorous engineering, clear product thinking, and software with real human value. The work in this portfolio is the primary record of that practice.</p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about { padding-block: var(--space-8); }
+  .about header { display: grid; gap: var(--space-4); margin-bottom: var(--space-8); }
+  .eyebrow { color: var(--accent-system); font-size: var(--text-sm); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  h1, h2 { color: var(--text-primary); }
+  h1 { font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
+  h2 { font-size: var(--text-xl); }
+  .lede { color: var(--text-secondary); font-size: var(--text-xl); line-height: 1.5; }
+  .about__body { display: grid; gap: var(--space-7); }
+  .about__body section { display: grid; gap: var(--space-3); }
+  .about__body p { color: var(--text-secondary); }
+</style>

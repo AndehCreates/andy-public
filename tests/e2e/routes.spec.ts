@@ -121,3 +121,46 @@ test('renders public labels and prose without mojibake', async ({ page }) => {
   await expect(page.locator('main')).toContainText('path back into work for a person');
   await expect(page.locator('main')).not.toContainText(/â|Â/);
 });
+
+test('publishes honest career surfaces with route-specific social metadata', async ({ page }) => {
+  const careerRoutes = [
+    {
+      path: '/about/',
+      heading: 'About Andy',
+      title: 'About Andy | AI Systems',
+      description: /nontraditional path|human capability/i,
+      canonical: /\/about\/$/,
+      imageAlt: 'About Andy and a practice of building human-centered AI systems.',
+    },
+    {
+      path: '/resume/',
+      heading: 'Resume',
+      title: 'Resume | Andy - AI Systems',
+      description: /systems|software/i,
+      canonical: /\/resume\/$/,
+      imageAlt: 'Andy - AI Systems resume, with capabilities and selected systems.',
+    },
+  ] as const;
+
+  for (const route of careerRoutes) {
+    await page.goto(route.path);
+    await expect(page.getByRole('heading', { level: 1, name: route.heading })).toHaveCount(1);
+    await expect(page).toHaveTitle(route.title);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', route.description);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', route.canonical);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/social-card\.svg$/);
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', route.imageAlt);
+    await expect(page.locator('main')).not.toContainText(/employer|university|degree/i);
+  }
+
+  const notFound = await page.goto('/not-a-real-route/');
+  expect(notFound?.status()).toBe(404);
+  await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toHaveCount(1);
+  await expect(page).toHaveTitle('Page not found | Andy - AI Systems');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/404\/$/);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/social-card\.svg$/);
+  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', 'Page not found on Andy - AI Systems.');
+  for (const label of ['Work', 'Systems', 'Signal Library']) {
+    await expect(page.getByRole('navigation', { name: 'Suggested destinations' }).getByRole('link', { name: label, exact: true })).toHaveCount(1);
+  }
+});
