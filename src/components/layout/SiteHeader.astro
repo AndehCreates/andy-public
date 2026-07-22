@@ -2,13 +2,15 @@
 import { isActiveNavigationPath, site } from '@/config/site';
 
 const currentPath = Astro.url.pathname;
+const primaryNavigation = site.navigation.filter((item) => ['Home', 'Work', 'Systems', 'About'].includes(item.label));
+const secondaryNavigation = site.navigation.filter((item) => !primaryNavigation.includes(item));
 ---
 
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/" aria-label={`${site.title} home`}>{site.title}</a>
-    <nav aria-label="Primary navigation">
-      <ul class="site-header__nav">
+    <nav class="site-header__desktop-nav" aria-label="Primary navigation">
+      <ul class="site-header__nav site-header__nav--desktop">
         {site.navigation.map((item) => (
           <li>
             <a href={item.href} aria-current={isActiveNavigationPath(currentPath, item.href) ? 'page' : undefined}>{item.label}</a>
@@ -16,7 +18,25 @@ const currentPath = Astro.url.pathname;
         ))}
       </ul>
     </nav>
-    <p class="site-header__opportunity">{site.opportunityLabel}</p>
+    <nav class="site-header__mobile-nav" aria-label="Primary navigation">
+      <ul class="site-header__primary-nav">
+        {primaryNavigation.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isActiveNavigationPath(currentPath, item.href) ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <details class="site-header__more">
+        <summary>More</summary>
+        <ul class="site-header__secondary-nav">
+          {secondaryNavigation.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActiveNavigationPath(currentPath, item.href) ? 'page' : undefined}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </nav>
   </div>
 </header>
 
@@ -25,14 +45,25 @@ const currentPath = Astro.url.pathname;
   .site-header__inner { display: grid; gap: var(--space-2); padding-block: var(--space-3); }
   .site-header__brand { display: inline-flex; align-items: center; width: fit-content; color: var(--text-primary); font-size: var(--text-lg); font-weight: 750; letter-spacing: -0.025em; text-decoration: none; }
   .site-header nav { min-width: 0; }
-  .site-header__nav { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: 0; list-style: none; }
-  .site-header__nav a { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; min-height: 2.75rem; padding-inline: var(--space-2); border: var(--border-width) solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: var(--text-sm); font-weight: 650; text-decoration: none; }
-  .site-header__nav a:hover { border-color: var(--border-subtle); background: var(--surface-raised); color: var(--text-primary); }
-  .site-header__nav a[aria-current='page'] { border-color: var(--border-strong); background: var(--surface-overlay); color: var(--text-primary); box-shadow: inset 0 -2px 0 var(--accent-system); }
-  .site-header__opportunity { align-self: center; width: fit-content; margin: 0; color: var(--text-muted); font-size: var(--text-xs); }
+  .site-header__nav, .site-header__primary-nav, .site-header__secondary-nav { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: 0; list-style: none; }
+  .site-header__nav a, .site-header__primary-nav a, .site-header__secondary-nav a, .site-header__more summary { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; min-height: 2.75rem; padding-inline: var(--space-2); border: var(--border-width) solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: var(--text-sm); font-weight: 650; text-decoration: none; transition: background-color var(--motion-base) var(--motion-ease), border-color var(--motion-base) var(--motion-ease), color var(--motion-base) var(--motion-ease), transform var(--motion-fast) var(--motion-ease); }
+  .site-header__nav a:hover, .site-header__primary-nav a:hover, .site-header__secondary-nav a:hover, .site-header__more summary:hover { border-color: var(--border-subtle); background: var(--surface-raised); color: var(--text-primary); }
+  .site-header__nav a:active, .site-header__primary-nav a:active, .site-header__secondary-nav a:active, .site-header__more summary:active { transform: translateY(1px); }
+  .site-header__nav a[aria-current='page'], .site-header__primary-nav a[aria-current='page'], .site-header__secondary-nav a[aria-current='page'] { border-color: var(--border-strong); background: var(--surface-overlay); color: var(--text-primary); box-shadow: inset 0 -2px 0 var(--accent-system); }
+  .site-header__desktop-nav { display: none; }
+  .site-header__mobile-nav { display: grid; gap: var(--space-2); }
+  .site-header__more { width: fit-content; }
+  .site-header__more summary { cursor: pointer; list-style: none; }
+  .site-header__more summary::-webkit-details-marker { display: none; }
+  .site-header__more summary::after { content: '+'; margin-left: var(--space-1); color: var(--accent-system); }
+  .site-header__more[open] summary::after { content: '−'; }
+  .site-header__more:not([open]) .site-header__secondary-nav { display: none; }
+  .site-header__more[open] .site-header__secondary-nav { margin-top: var(--space-2); animation: navigation-reveal var(--motion-base) var(--motion-ease) both; }
+  @keyframes navigation-reveal { from { transform: translateY(-.25rem); } to { transform: translateY(0); } }
   @media (min-width: 64rem) {
-    .site-header__inner { grid-template-columns: minmax(11rem, auto) 1fr auto; align-items: center; gap: var(--space-5); padding-block: var(--space-4); }
+    .site-header__inner { grid-template-columns: minmax(11rem, auto) 1fr; align-items: center; gap: var(--space-5); padding-block: var(--space-4); }
     .site-header__nav { justify-content: center; gap: var(--space-1); }
-    .site-header__opportunity { padding: var(--space-1) var(--space-2); border-left: 2px solid var(--state-verified); }
+    .site-header__desktop-nav { display: block; }
+    .site-header__mobile-nav { display: none; }
   }
 </style>
