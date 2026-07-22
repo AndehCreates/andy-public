@@ -15,6 +15,26 @@ test('preserves reachable public content and navigation across supported viewpor
   }
 });
 
+test('keeps the complete static navigation visible, wrapping, and operable at 375 pixels', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('/work/');
+
+  const navigation = page.getByRole('navigation', { name: 'Primary navigation' });
+  const links = navigation.getByRole('link');
+  await expect(links).toHaveCount(7);
+
+  for (const link of await links.all()) {
+    await expect(link).toBeVisible();
+    const bounds = await link.boundingBox();
+    expect(bounds, 'navigation link should be rendered').not.toBeNull();
+    expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    expect(bounds!.width).toBeGreaterThanOrEqual(44);
+  }
+
+  await expect(page.getByRole('link', { name: 'Work', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test('keeps long-form code and table content horizontally reachable', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('/handbook/evaluation-driven-development/');

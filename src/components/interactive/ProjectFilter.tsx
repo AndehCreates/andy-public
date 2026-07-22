@@ -6,7 +6,10 @@ export interface ProjectFilterProject {
   slug: string;
   title: string;
   summary: string;
-  status: string;
+  status: 'active' | 'stable' | 'experimental' | 'archived';
+  workHook: string;
+  visualMark: 'authority' | 'continuity' | 'evidence' | 'semantic-document' | 'deterministic-simulation';
+  technicalDifferentiator: string;
   capabilities: readonly CapabilityId[];
 }
 
@@ -17,6 +20,13 @@ interface Props {
 function projectCountLabel(count: number) {
   return `${count} ${count === 1 ? 'project' : 'projects'} shown`;
 }
+
+const statusDisplayCopy: Record<ProjectFilterProject['status'], string> = {
+  active: 'Active system',
+  stable: 'Stable system',
+  experimental: 'Exploratory system',
+  archived: 'Archived system',
+};
 
 interface State {
   selectedCapability: CapabilityId | null;
@@ -38,7 +48,7 @@ export default class ProjectFilter extends Component<Props, State> {
       <header className="collection-index__header">
         <p className="collection-index__eyebrow">Work</p>
         <h1 id="collection-heading">Project atlas</h1>
-        <p>Reviewed systems and experiments, organized around the capabilities they make concrete.</p>
+        <p>Reviewed systems with different jobs: coordinate AI work, preserve continuity, evaluate uncertain evidence, keep calculations coherent, and make simulations inspectable.</p>
         <p className="collection-index__count" role="status" aria-live="polite">
           {projectCountLabel(visibleProjects.length)}
         </p>
@@ -65,10 +75,15 @@ export default class ProjectFilter extends Component<Props, State> {
 
       <div className="collection-index__grid">
         {visibleProjects.map((project) => (
-          <article className="project-card" key={project.slug}>
-            <p className="project-card__status">{project.status}</p>
-            <h2><a href={`/work/${project.slug}/`}>{project.title}</a></h2>
+          <article className="project-card" key={project.slug} aria-labelledby={`project-${project.slug}-title`}>
+            <div className="project-card__meta">
+              <span className="project-card__mark" data-visual-mark={project.visualMark} aria-hidden="true" />
+              <p className="project-card__status">{statusDisplayCopy[project.status]}</p>
+            </div>
+            <h2 id={`project-${project.slug}-title`}><a href={`/work/${project.slug}/`}>{project.title}</a></h2>
+            <p className="project-card__hook">{project.workHook}</p>
             <p className="project-card__summary">{project.summary}</p>
+            <p className="project-card__differentiator"><span>Technical idea</span>{project.technicalDifferentiator}</p>
             <ul className="project-card__capabilities" aria-label="Capabilities">
               {project.capabilities.map((capability) => <li key={capability}><span className="capability-tag">{capabilities[capability]}</span></li>)}
             </ul>

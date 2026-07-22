@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import ProjectFilter from '@/components/interactive/ProjectFilter';
 
 const projects = [
@@ -11,6 +11,9 @@ const projects = [
     title: 'Chief of Staff',
     summary: 'A coordination layer for AI-assisted software work.',
     status: 'active',
+    workHook: 'Keep AI-assisted work authority-bounded and recoverable.',
+    visualMark: 'authority',
+    technicalDifferentiator: 'Typed lifecycle states keep coordination separate from runtime authority.',
     capabilities: ['ai-systems', 'evaluation-reliability'],
   },
   {
@@ -18,16 +21,24 @@ const projects = [
     title: 'LifeOS',
     summary: 'A local-first workspace for visible work state.',
     status: 'active',
+    workHook: 'Preserve context and make re-entry explicit.',
+    visualMark: 'continuity',
+    technicalDifferentiator: 'Domain contracts extend the existing local-first state model.',
     capabilities: ['knowledge-context', 'product-engineering'],
   },
   {
     slug: 'mathpad',
     title: 'MathPad',
     summary: 'A focused mathematical workbench.',
-    status: 'active',
+    status: 'experimental',
+    workHook: 'Keep multi-line calculations readable as expressions change.',
+    visualMark: 'semantic-document',
+    technicalDifferentiator: 'A revisioned semantic document aligns parsing, diagnostics, and results.',
     capabilities: ['product-engineering'],
   },
 ] as const;
+
+afterEach(cleanup);
 
 describe('ProjectFilter', () => {
   it('shows all projects, filters by capability, clears the filter, and announces the result count', async () => {
@@ -48,6 +59,22 @@ describe('ProjectFilter', () => {
 
     expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(3);
     expect(screen.getByRole('status').textContent).toBe('3 projects shown');
+  });
+
+  it('distinguishes every project by purpose, technical idea, visual mark, and display status', () => {
+    render(<ProjectFilter projects={[...projects]} />);
+
+    for (const project of projects) {
+      const card = screen.getByRole('article', { name: project.title });
+      expect(card.textContent).toContain(project.workHook);
+      expect(card.textContent).toContain(project.technicalDifferentiator);
+      expect(card.querySelector(`[data-visual-mark="${project.visualMark}"]`)).not.toBeNull();
+    }
+
+    expect(screen.getAllByText('Active system')).toHaveLength(2);
+    expect(screen.getByText('Exploratory system')).not.toBeNull();
+    expect(screen.queryByText(/^active$/i)).toBeNull();
+    expect(screen.queryByText(/^experimental$/i)).toBeNull();
   });
 
   it('keeps capability tags visually distinct in the filter island', () => {

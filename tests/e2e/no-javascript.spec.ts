@@ -11,6 +11,9 @@ test('keeps navigation and public reading surfaces available without JavaScript'
 
   await page.goto('/work/');
   await expect(page.locator('.project-card')).toHaveCount(5);
+  await expect(page.locator('.project-card [data-visual-mark]')).toHaveCount(5);
+  await expect(page.locator('.project-card__hook')).toHaveCount(5);
+  await expect(page.locator('.project-card__differentiator')).toHaveCount(5);
 
   await page.goto('/case-studies/chief-of-staff/');
   await expect(page.locator('[data-case-study-hero]')).toContainText('Coordinate AI-assisted work');
