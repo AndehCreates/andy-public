@@ -57,3 +57,15 @@ test('respects reduced motion preferences', async ({ page }) => {
     : Number.parseFloat(transitionDuration) * 1_000;
   expect(durationInMilliseconds).toBeLessThanOrEqual(10);
 });
+
+test('gives system diagrams one authoritative semantic representation', async ({ page }) => {
+  await page.goto('/case-studies/chief-of-staff/');
+
+  const diagram = page.locator('.system-diagram');
+  await expect(diagram).toHaveAttribute('aria-labelledby');
+  await expect(diagram).toHaveAttribute('aria-describedby');
+  await expect(diagram.locator('.system-diagram__visual')).toHaveAttribute('aria-hidden', 'true');
+  await expect(diagram.locator('.system-diagram__text')).toHaveCount(1);
+  await expect(diagram.locator('.system-diagram__relationship')).toHaveCount(5);
+  await expect(diagram.locator('.system-diagram__relationship').first()).toContainText('sets boundaries');
+});

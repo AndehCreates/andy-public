@@ -27,3 +27,22 @@ test('keeps long-form code and table content horizontally reachable', async ({ p
     expect(metrics.scrollWidth).toBeGreaterThanOrEqual(metrics.clientWidth);
   }
 });
+
+test('reflows diagrams into an ordered relationship sequence without internal scrolling', async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto('/case-studies/chief-of-staff/');
+
+  const diagram = page.locator('.system-diagram');
+  await expect(diagram.locator('.system-diagram__visual')).toBeHidden();
+  await expect(diagram.locator('.system-diagram__relationships')).toHaveCSS('display', 'grid');
+  await expect(diagram.locator('.system-diagram__relationship').first()).toContainText('sets boundaries');
+  await expect(diagram.locator('.system-diagram__relationship').last()).toContainText('records recoverable state');
+
+  const metrics = await diagram.evaluate((element) => ({
+    clientWidth: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+    overflowX: getComputedStyle(element).overflowX,
+  }));
+  expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth);
+  expect(metrics.overflowX).not.toBe('scroll');
+});
