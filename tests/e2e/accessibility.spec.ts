@@ -71,3 +71,11 @@ test('gives system diagrams one authoritative semantic representation', async ({
   await expect(diagram.locator('.system-diagram__relationship')).toHaveCount(5);
   await expect(diagram.locator('.system-diagram__relationship').first()).toContainText('sets boundaries');
 });
+
+test('keeps compact diagram components available to assistive technology', async ({ page }) => {
+  await page.goto('/');
+
+  const compactDiagram = page.locator('.home-hero .system-diagram--compact');
+  await expect(compactDiagram.locator('.system-diagram__components')).not.toHaveCSS('display', 'none');
+  await expect(compactDiagram.locator('.system-diagram__components li')).toHaveCount(4);
+});

@@ -64,3 +64,26 @@ test('keeps each flagship opening ahead of long-form sections without horizontal
     }
   }
 });
+
+test('prioritizes the homepage position and flagship action before its visual on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/');
+
+  const hero = page.locator('.home-hero');
+  const position = hero.locator('.home-hero__position');
+  const primaryAction = hero.getByRole('link', { name: 'Explore the flagship systems', exact: true });
+  const visual = hero.locator('.home-hero__visual');
+
+  expect(await position.evaluate((element) => element.compareDocumentPosition(document.querySelector('.home-hero__visual')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+  expect(await primaryAction.evaluate((element) => element.compareDocumentPosition(document.querySelector('.home-hero__visual')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+
+  for (const action of await hero.locator('a').all()) {
+    const bounds = await action.boundingBox();
+    expect(bounds, 'hero action should be rendered').not.toBeNull();
+    expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    expect(bounds!.width).toBeGreaterThanOrEqual(44);
+  }
+
+  await expect(visual).toContainText('Human-owned decisions');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
