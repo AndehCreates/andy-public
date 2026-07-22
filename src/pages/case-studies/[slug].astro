@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import CapabilityTag from '@/components/content/CapabilityTag.astro';
 import CaseStudyHero from '@/components/content/CaseStudyHero.astro';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { canPublish } from '@/lib/content/publication';
 import { featuredEntries } from '@/lib/content/queries';
 
 export async function getStaticPaths() {
@@ -10,7 +11,9 @@ export async function getStaticPaths() {
     getCollection('caseStudies'),
     getCollection('projects'),
   ]);
-  const projectsById = new Map(projects.map((project) => [project.data.id, project]));
+  const projectsById = new Map(
+    projects.filter((project) => canPublish(project.data)).map((project) => [project.data.id, project]),
+  );
   const studies = featuredEntries(entries.map((entry) => ({
     visibility: entry.data.visibility,
     publicReview: entry.data.publicReview,
@@ -21,7 +24,11 @@ export async function getStaticPaths() {
 
   return studies.map(({ entry }) => {
     const project = projectsById.get(entry.data.projectId);
-    if (!project) throw new Error(`Case study ${entry.id} references missing project ${entry.data.projectId}.`);
+    if (!project) {
+      throw new Error(
+        `Case study ${entry.id} references a missing or unpublished project ${entry.data.projectId}.`,
+      );
+    }
     return { params: { slug: entry.id }, props: { study: entry, project } };
   });
 }

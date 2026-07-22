@@ -44,6 +44,38 @@ it('accepts a public relationship that resolves through a canonical authored ID'
   ])).not.toThrow();
 });
 
+it('rejects a public case study whose related project is not approved for public content', () => {
+  expect(() => auditEntries([
+    {
+      id: canonicalRelationId('caseStudies', 'chief-of-staff'),
+      collection: 'caseStudies',
+      visibility: 'featured',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      projectId: 'project-chief-of-staff',
+      title: 'Chief of Staff',
+      summary: 'A reviewed case study that depends on an approved project presentation.',
+      body: 'Public-safe case study narrative.',
+    },
+    {
+      id: canonicalRelationId('projects', 'project-chief-of-staff'),
+      collection: 'projects',
+      visibility: 'listed',
+      publicReview: 'pending',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      title: 'Chief of Staff',
+      summary: 'A pending project record that must not be joined into a public case study.',
+      body: 'Pending project narrative.',
+    },
+  ])).toThrowError(
+    /caseStudies:chief-of-staff: project: Project "project-chief-of-staff" is not approved for public content\./,
+  );
+});
+
 it('groups evidence sanitizer findings by file and rule', () => {
   expect(() => auditEvidenceDocuments([
     {

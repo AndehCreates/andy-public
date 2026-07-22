@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  diagramConfigurationSchema,
   evidenceSummarySchema,
   projectPresentationSchema,
   type ProjectPresentationInput,
 } from '../../src/lib/content/presentation';
 
-const flagshipPresentation: ProjectPresentationInput = {
+const flagshipPresentation = {
   visibility: 'featured',
   publicReview: 'approved',
   workHook: 'Keep coordination authority-bounded and reviewable.',
@@ -32,7 +33,7 @@ const flagshipPresentation: ProjectPresentationInput = {
       { from: 'governance', to: 'coordination', label: 'sets boundaries' },
     ],
   },
-};
+} satisfies ProjectPresentationInput;
 
 describe('project presentation schema', () => {
   it('accepts complete approved presentation data for a featured flagship', () => {
@@ -66,6 +67,26 @@ describe('project presentation schema', () => {
 
   it('allows an approved local-only flagship without source or media fields', () => {
     expect(projectPresentationSchema.safeParse(flagshipPresentation).success).toBe(true);
+  });
+
+  it('rejects duplicate diagram node IDs', () => {
+    expect(diagramConfigurationSchema.safeParse({
+      ...flagshipPresentation.diagram,
+      nodes: [
+        ...flagshipPresentation.diagram.nodes,
+        { id: 'governance', label: 'Duplicate governance', description: 'Must not overwrite the configured node.' },
+      ],
+    }).success).toBe(false);
+  });
+
+  it.each([
+    { visualMark: 'continuity' },
+    { diagram: { ...flagshipPresentation.diagram, variant: 'continuity-reentry' } },
+  ])('rejects mismatched featured flagship visual language: %#', (overrides) => {
+    expect(projectPresentationSchema.safeParse({
+      ...flagshipPresentation,
+      ...overrides,
+    }).success).toBe(false);
   });
 
   it('does not require presentation completeness for non-public content', () => {

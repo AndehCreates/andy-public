@@ -9,7 +9,7 @@ test('publishes the Work atlas and a reviewed project route with complete metada
 
   await expect(page.getByRole('heading', { level: 1, name: 'Chief of Staff' })).toHaveCount(1);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/work\/chief-of-staff\/$/);
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /coordination/i);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /coordinates AI-assisted software work/i);
   await expect(page.getByText('AI systems & orchestration', { exact: true })).toBeVisible();
   await expect(page.getByText('Updated July 21, 2026', { exact: true })).toBeVisible();
 });

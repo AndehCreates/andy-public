@@ -26,6 +26,7 @@ export type AuditedEntry = {
   sourceAvailability: SourceAvailability;
   sourceUrls: string[];
   relatedIds: string[];
+  projectId?: string;
   title: string;
   summary: string;
   body: string;
@@ -68,6 +69,7 @@ function asEntry(collection: ContentCollectionName, parsed: matter.GrayMatterFil
     sourceAvailability: data.sourceAvailability as SourceAvailability,
     sourceUrls: toStringArray(data.sourceUrls),
     relatedIds: toStringArray(data.relatedIds),
+    ...(collection === 'caseStudies' && typeof data.projectId === 'string' ? { projectId: data.projectId } : {}),
     title: typeof data.title === 'string' ? data.title : '',
     summary: typeof data.summary === 'string' ? data.summary : '',
     body: parsed.content,
@@ -109,6 +111,16 @@ export function auditEntries(entries: AuditedEntry[]): void {
       }
     }
     for (const rule of validatePublicRelations(entry, records)) violations.push(`${entry.id}: relation: ${rule}`);
+
+    if (canPublish(entry) && entry.collection === 'caseStudies') {
+      const project = entry.projectId ? records.get(canonicalRelationId('projects', entry.projectId)) : undefined;
+
+      if (!entry.projectId || !project) {
+        violations.push(`${entry.id}: project: Project "${entry.projectId ?? ''}" does not exist.`);
+      } else if (!canPublish(project)) {
+        violations.push(`${entry.id}: project: Project "${entry.projectId}" is not approved for public content.`);
+      }
+    }
   }
 
   if (violations.length) throw new Error(`Public content audit failed:\n${violations.map((violation) => `- ${violation}`).join('\n')}`);

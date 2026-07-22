@@ -30,7 +30,8 @@ test('presents the approved homepage narrative in order', async ({ page }) => {
 });
 
 test('opens with Andy\'s systems practice, one flagship action, and a meaningful signal map', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 720 });
+  const desktopViewport = { width: 1280, height: 720 };
+  await page.setViewportSize(desktopViewport);
   await page.goto('/');
 
   const hero = page.locator('.home-hero');
@@ -46,10 +47,13 @@ test('opens with Andy\'s systems practice, one flagship action, and a meaningful
   await expect(signalMap).toContainText('Evidence');
   await expect(signalMap).toContainText('Human-owned decisions');
 
-  for (const element of [primaryAction, signalMap]) {
+  for (const [name, element] of [
+    ['primary action', primaryAction],
+    ['signal map', signalMap],
+  ] as const) {
     const bounds = await element.boundingBox();
-    expect(bounds, 'hero element should be rendered').not.toBeNull();
-    expect(bounds!.y).toBeLessThan(720);
+    expect(bounds, `${name} should be rendered`).not.toBeNull();
+    expect(bounds!.y + bounds!.height, `${name} should fit fully within the desktop viewport`).toBeLessThanOrEqual(desktopViewport.height);
   }
 });
 
