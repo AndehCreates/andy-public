@@ -14,5 +14,16 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:4322',
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: /no-javascript\.spec\.ts/,
+    },
+    {
+      name: 'chromium-no-js',
+      use: { ...devices['Desktop Chrome'], javaScriptEnabled: false },
+      testMatch: /no-javascript\.spec\.ts/,
+    },
+  ],
 });

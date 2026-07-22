@@ -10,10 +10,10 @@
     "audit:content": "tsx scripts/audit-public-content.ts",
     "build:site": "astro build",
     "audit:dist": "node scripts/audit-dist.mjs",
-    "build": "npm run check && npm run test && npm run audit:content && npm run build:site",
+    "build": "npm run check && npm run test && npm run audit:content && npm run build:site && npm run audit:dist",
     "preview": "astro preview --host 127.0.0.1",
     "test:e2e": "npm run build && playwright test",
-    "verify": "npm run build && npm run test:e2e"
+    "verify": "npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/check": "0.9.9",
