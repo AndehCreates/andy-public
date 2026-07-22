@@ -13,16 +13,17 @@ interface Props {
   updatedAt?: Date | string;
   sources?: Source[];
   tableOfContents?: TocItem[];
+  variant?: 'default' | 'case-study';
 }
 
-const { title, updatedAt, sources = [], tableOfContents = [] } = Astro.props;
+const { title, updatedAt, sources = [], tableOfContents = [], variant = 'default' } = Astro.props;
 const updatedLabel = updatedAt
   ? new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(updatedAt))
   : undefined;
 ---
 
 <BaseLayout {...Astro.props} type="article">
-  <article class="article prose-container">
+  <article class:list={['article', variant === 'case-study' ? 'article--case-study container' : 'prose-container']}>
     <header class="article__header">
       <h1>{title}</h1>
       {(updatedLabel || sources.length > 0) && (
@@ -38,6 +39,7 @@ const updatedLabel = updatedAt
         {Astro.slots.has('toc') ? <slot name="toc" /> : <ol>{tableOfContents.map((item) => <li class:list={{ 'article__toc--nested': item.depth > 2 }}><a href={`#${item.slug}`}>{item.text}</a></li>)}</ol>}
       </aside>
     )}
+    {Astro.slots.has('lead') && <div class="article__lead"><slot name="lead" /></div>}
     <div class="prose"><slot /></div>
     {Astro.slots.has('related') && <aside class="article__related"><slot name="related" /></aside>}
   </article>
@@ -53,4 +55,10 @@ const updatedLabel = updatedAt
   .article__toc h2 { margin: 0 0 var(--space-3); color: var(--text-primary); font-size: var(--text-base); }
   .article__toc ol { margin: 0; padding-left: var(--space-4); }
   .article__toc--nested { margin-left: var(--space-3); }
+  .article--case-study .article__header,
+  .article--case-study > .prose,
+  .article--case-study .article__related { width: min(100%, var(--prose-width)); margin-inline: auto; }
+  .article--case-study .article__lead { width: 100%; }
+  .article--case-study { padding-top: var(--space-6); }
+  .article--case-study .article__header { margin-bottom: var(--space-5); }
 </style>

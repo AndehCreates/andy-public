@@ -1,12 +1,17 @@
 ---
+import type { FlagshipTheme } from '@/lib/content/presentation';
+
 type Kind = 'decision' | 'tradeoff' | 'validation' | 'limitation' | 'next';
+type Emphasis = 'standard' | 'evidence';
 
 interface Props {
   kind: Kind;
   title: string;
+  theme?: FlagshipTheme;
+  emphasis?: Emphasis;
 }
 
-const { kind, title } = Astro.props;
+const { kind, title, theme, emphasis = 'standard' } = Astro.props;
 const labels: Record<Kind, string> = {
   decision: 'Decision',
   tradeoff: 'Tradeoff',
@@ -16,7 +21,15 @@ const labels: Record<Kind, string> = {
 };
 ---
 
-<aside class:list={['decision-block', `decision-block--${kind}`]} aria-label={`${labels[kind]}: ${title}`}>
+<aside
+  class:list={[
+    'decision-block',
+    `decision-block--${kind}`,
+    theme && `decision-block--theme-${theme}`,
+    emphasis === 'evidence' && 'decision-block--evidence-emphasis',
+  ]}
+  aria-label={`${labels[kind]}: ${title}`}
+>
   <p class="decision-block__kind">{labels[kind]}</p>
   <h3>{title}</h3>
   <div><slot /></div>
@@ -32,4 +45,11 @@ const labels: Record<Kind, string> = {
   .decision-block--validation { border-left-color: var(--state-verified); }
   .decision-block--limitation { border-left-color: var(--text-muted); }
   .decision-block--next { border-left-color: var(--accent-system); }
+  .decision-block--theme-authority { --decision-theme: var(--accent-authority); }
+  .decision-block--theme-continuity { --decision-theme: var(--accent-continuity); }
+  .decision-block--theme-evidence { --decision-theme: var(--accent-evidence); }
+  .decision-block[class*='decision-block--theme-'].decision-block--decision,
+  .decision-block[class*='decision-block--theme-'].decision-block--next { border-left-color: var(--decision-theme); }
+  .decision-block--evidence-emphasis { background: color-mix(in srgb, var(--accent-evidence) 7%, var(--surface-raised)); }
+  .decision-block--evidence-emphasis .decision-block__kind { color: var(--accent-evidence); }
 </style>

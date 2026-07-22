@@ -1,7 +1,7 @@
 ---
 id: project-alpha-screener
 title: Alpha Screener
-summary: A human-reviewed research workspace that makes signal quality, uncertainty, and the next evidence to inspect visible.
+summary: Ranks market-research starting points while exposing data trust, proxy inputs, uncertainty, and the evidence required before further review.
 visibility: featured
 publicReview: approved
 sourceAvailability: public
@@ -13,20 +13,71 @@ updatedAt: 2026-07-21
 order: 3
 projectId: project-alpha-screener
 status: active
+workHook: Expose uncertainty and promotion gates before a research result advances.
+visualMark: evidence
+technicalDifferentiator: Deterministic scoring stays separate from optional advisory context while explicit evidence gates keep research states distinct.
+caseStudyHook: Rank what to inspect next without hiding data quality, uncertainty, or promotion gates.
+theme: evidence
+artifactLabels: [Input trust, Evidence gate, Human review]
+pivotalDecision: Keep deterministic scoring separate from advisory context and treat research state as evidence rather than permission.
+evidenceSummary:
+  evidenceMethod: test-execution
+  evidenceState: validated-within-scope
+  evidenceScope: Focused uncertainty, readiness, signal-trust, and promotion-guardrail tests.
+diagram:
+  variant: evidence-gates
+  title: Evidence-gated decision support
+  description: Inputs are validated before deterministic scoring and research views make uncertainty and the next review step visible to a human decision-maker.
+  nodes:
+    - id: market-inputs
+      label: Market inputs
+      description: Provide measured, derived, or proxy information for research.
+    - id: validation-trust-gates
+      label: Validation and trust gates
+      description: Check data quality, confidence, and whether advisory context is appropriate.
+    - id: deterministic-scoring
+      label: Deterministic scoring
+      description: Ranks candidates independently from optional advisory context.
+    - id: research-evidence-views
+      label: Research evidence views
+      description: Show confidence, uncertainty, and supporting information to inspect.
+    - id: human-review
+      label: Human review
+      description: Retains the decision to advance, reject, or continue research.
+  edges:
+    - from: market-inputs
+      to: validation-trust-gates
+      label: checks evidence quality
+    - from: validation-trust-gates
+      to: deterministic-scoring
+      label: permits eligible inputs
+    - from: deterministic-scoring
+      to: research-evidence-views
+      label: ranks starting points
+    - from: research-evidence-views
+      to: human-review
+      label: supports inspection
+    - from: validation-trust-gates
+      to: human-review
+      label: surfaces blockers and uncertainty
 ---
 
-## Scope
+## What it solves
 
 Alpha Screener is a research and decision-support workspace for examining market opportunities with visible confidence, uncertainty, and evidence instead of opaque recommendations.
 
-## Decisions and tradeoffs
+## Who it helps
+
+It is designed for a researcher deciding what to inspect next when inputs may be incomplete, stale, provider-dependent, derived, or proxy-based.
+
+## Design choice and tradeoff
 
 Deterministic scoring remains separate from optional advisory context. The system labels proxy-versus-full analysis differences and uses explicit evidence gates so exploratory research is not presented as trade-ready.
 
-## Validation and limits
+## Validation boundary
 
 Focused tests cover uncertainty, readiness, and signal-trust rules, including insufficient-sample blocking and invalid readiness alignment. Market data can be incomplete, stale, provider-dependent, derived, or proxy-based; this is not investment advice, live-order execution, or a performance claim.
 
-## Next
+## Next step
 
 Extend bounded validation around live-data conditions and outcome research without weakening human review or evidence gates.

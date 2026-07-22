@@ -1,7 +1,7 @@
 ---
 id: case-study-chief-of-staff
 title: Chief of Staff
-summary: A thin coordination layer for AI-assisted software work that makes authority, verification, and recovery visible.
+summary: How a thin coordination layer keeps AI-assisted work reviewable without taking authority from runtime, context, or source repositories.
 visibility: featured
 publicReview: approved
 sourceAvailability: local-only
@@ -16,32 +16,14 @@ status: published
 ---
 
 import DecisionBlock from '@/components/content/DecisionBlock.astro';
-import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
 
 ## What it solves
 
-Chief of Staff explores how AI-assisted software work can stay legible across projects and workers without taking ownership away from the systems that already govern runtime, durable context, and source code. It is designed for people who need progress to remain reviewable when work is uncertain, blocked, or handed off.
+Coordination becomes hard to trust when it obscures who owns admission, execution, verification, or release truth. Chief of Staff explores how AI-assisted software work can stay legible across projects and workers without taking ownership away from the systems that already govern runtime, durable context, and source code. It is designed for people who need progress to remain reviewable when work is uncertain, blocked, or handed off.
 
 ## System design
 
-<SystemDiagram
-  title="Authority-bounded coordination"
-  description="Coordination observes and records work while the systems that own policy, context, execution, and code retain their authority."
-  nodes={[
-    { label: 'Governance', description: 'Defines the conditions and approvals for consequential work.' },
-    { label: 'Durable context', description: 'Retains memory and handoff records.' },
-    { label: 'Coordination', description: 'Classifies lifecycle state and requests work without replacing other authorities.' },
-    { label: 'Runtime and workers', description: 'Own admission, leases, and execution.' },
-    { label: 'Project repositories', description: 'Remain the source of code and release truth.' },
-  ]}
-  edges={[
-    { from: 'Governance', to: 'Coordination', label: 'sets boundaries' },
-    { from: 'Durable context', to: 'Coordination', label: 'provides handoff state' },
-    { from: 'Coordination', to: 'Runtime and workers', label: 'requests bounded work' },
-    { from: 'Runtime and workers', to: 'Project repositories', label: 'operates within repository guards' },
-    { from: 'Coordination', to: 'Durable context', label: 'records recoverable state' },
-  ]}
-/>
+Coordination observes and records work while governance defines consequential boundaries, durable context retains handoff state, runtime and workers own admission and execution, and project repositories remain the source of code and release truth.
 
 ## Key decisions and tradeoffs
 

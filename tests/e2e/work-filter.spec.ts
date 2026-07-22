@@ -31,3 +31,29 @@ test('keeps the complete Work list available without JavaScript', async ({ brows
 
   await context.close();
 });
+
+test('presents five distinct project purposes, technical ideas, and lifecycle labels before filtering', async ({ page }) => {
+  await page.goto('/work/');
+
+  const cards = page.locator('.project-card');
+  await expect(cards).toHaveCount(5);
+  await expect(cards.locator('[data-visual-mark]')).toHaveCount(5);
+  await expect(cards.locator('.project-card__hook')).toHaveCount(5);
+  await expect(cards.locator('.project-card__differentiator')).toHaveCount(5);
+
+  const marks = await cards.locator('[data-visual-mark]').evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute('data-visual-mark')),
+  );
+  expect(new Set(marks).size).toBe(5);
+
+  await expect(cards.filter({ hasText: 'Chief of Staff' }).locator('.project-card__status')).toHaveText('Active system');
+  await expect(cards.filter({ hasText: 'MathPad' }).locator('.project-card__status')).toHaveText('Exploratory system');
+});
+
+test('announces and emphasizes the active Work navigation item', async ({ page }) => {
+  await page.goto('/work/');
+
+  const workLink = page.getByRole('link', { name: 'Work', exact: true });
+  await expect(workLink).toHaveAttribute('aria-current', 'page');
+  await expect(workLink).toHaveCSS('color', 'rgb(242, 245, 251)');
+});
