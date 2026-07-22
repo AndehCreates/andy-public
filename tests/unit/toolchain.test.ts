@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { expect, it } from 'vitest';
 
 it('runs the TypeScript test harness', () => {
@@ -33,4 +35,20 @@ it('uses BaseLayout for the homepage shell', async () => {
   expect(source).toMatch(/<BaseLayout(?:\s|>)/);
   expect(source).toContain('<h1 id="home-title">Software that strengthens human capability.</h1>');
   expect(source).not.toContain('<!doctype html>');
+});
+
+it('isolates Vite optimized dependencies between development and production', () => {
+  const configUrl = pathToFileURL(resolve(process.cwd(), 'astro.config.mjs')).href;
+  const readCacheDir = (nodeEnv: 'development' | 'production') =>
+    execFileSync(
+      process.execPath,
+      ['--input-type=module', '--eval', `import config from '${configUrl}'; console.log(config.vite.cacheDir);`],
+      {
+        encoding: 'utf8',
+        env: { ...process.env, NODE_ENV: nodeEnv },
+      },
+    ).trim();
+
+  expect(readCacheDir('development')).toBe('node_modules/.vite-development');
+  expect(readCacheDir('production')).toBe('node_modules/.vite-production');
 });
