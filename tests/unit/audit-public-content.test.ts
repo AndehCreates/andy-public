@@ -1,5 +1,10 @@
 import { expect, it } from 'vitest';
-import { auditEntries, auditEvidenceDocuments, isAuditableContentFile } from '../../scripts/audit-public-content';
+import {
+  auditEntries,
+  auditEvidenceDocuments,
+  collectProjectPresentationStrings,
+  isAuditableContentFile,
+} from '../../scripts/audit-public-content';
 import { canonicalRelationId } from '../../src/lib/content/relations';
 
 it('excludes underscored fixture filenames from the standalone content audit', () => {
@@ -46,4 +51,27 @@ it('groups evidence sanitizer findings by file and rule', () => {
       content: 'Observed locally at C:\\private\\example.',
     },
   ])).toThrowError(/Evidence document audit failed:\n- docs\/evidence\/example\.md: windows-path: C:\\private\\example/);
+});
+
+it('scans nested public presentation strings with the existing sanitizer rules', () => {
+  expect(() => auditEntries([
+    {
+      id: canonicalRelationId('projects', 'chief-of-staff'),
+      collection: 'projects',
+      visibility: 'featured',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      title: 'Chief of Staff',
+      summary: 'A reviewed orchestration system with explicit operator controls.',
+      body: 'Public-safe project narrative.',
+      presentationStrings: collectProjectPresentationStrings({
+        workHook: 'Coordinate work without replacing existing authority.',
+        diagram: {
+          description: 'Diagram provenance: C:\\private\\coordination.',
+        },
+      }),
+    },
+  ])).toThrowError(/projects:chief-of-staff: windows-path: C:\\private\\coordination/);
 });

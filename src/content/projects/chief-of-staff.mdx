@@ -1,7 +1,7 @@
 ---
 id: project-chief-of-staff
 title: Chief of Staff
-summary: A coordination layer for AI-assisted software work that preserves clear authority, independent verification, and human control.
+summary: Coordinates AI-assisted software work through typed lifecycles, repository guards, and independent verification without becoming the runtime or source of truth.
 visibility: featured
 publicReview: approved
 sourceAvailability: local-only
@@ -13,20 +13,71 @@ updatedAt: 2026-07-21
 order: 1
 projectId: project-chief-of-staff
 status: active
+workHook: Authority-bounded coordination for recoverable AI-assisted work.
+visualMark: authority
+technicalDifferentiator: Typed lifecycle states and independent verification keep coordination separate from runtime, context, and repository authority.
+caseStudyHook: Coordinate AI-assisted work without taking authority from the systems that execute it.
+theme: authority
+artifactLabels: [Governance, Coordination, Human review]
+pivotalDecision: Keep runtime, context, and repository authority distributed rather than centralizing them in the coordination layer.
+evidenceSummary:
+  evidenceMethod: test-execution
+  evidenceState: validated-within-scope
+  evidenceScope: Deterministic offline fixtures for lifecycle completion, stale leases, human-waiting decisions, recovery, and handoff projections.
+diagram:
+  variant: authority-boundaries
+  title: Authority-bounded coordination
+  description: Coordination observes and records work while the systems that own policy, context, execution, and code retain their authority.
+  nodes:
+    - id: governance
+      label: Governance
+      description: Defines the conditions and approvals for consequential work.
+    - id: durable-context
+      label: Durable context
+      description: Retains memory and handoff records.
+    - id: coordination
+      label: Coordination
+      description: Classifies lifecycle state and requests work without replacing other authorities.
+    - id: runtime-workers
+      label: Runtime and workers
+      description: Own admission, leases, and execution.
+    - id: project-repositories
+      label: Project repositories
+      description: Remain the source of code and release truth.
+  edges:
+    - from: governance
+      to: coordination
+      label: sets boundaries
+    - from: durable-context
+      to: coordination
+      label: provides handoff state
+    - from: coordination
+      to: runtime-workers
+      label: requests bounded work
+    - from: runtime-workers
+      to: project-repositories
+      label: operates within repository guards
+    - from: coordination
+      to: durable-context
+      label: records recoverable state
 ---
 
-## Scope
+## What it solves
 
 Chief of Staff explores a deliberately thin control plane for coordinating durable AI-assisted software work without replacing the systems that govern runtime, memory, or source code.
 
-## Decisions and tradeoffs
+## Who it helps
+
+It is designed for people coordinating work across projects and workers who need progress, ownership, and recovery state to remain reviewable when execution is uncertain, blocked, or handed off.
+
+## Design choice and tradeoff
 
 Typed lifecycle states make admission, execution, verification, human review, and handoff observable. Repository guards and independent verification prevent a worker-reported result from becoming completion by itself. The tradeoff is intentional: the system coordinates existing authorities instead of centralizing them.
 
-## Validation and limits
+## Validation boundary
 
 Deterministic fixtures and offline tests cover normal completion, stale leases, human-waiting decisions, recovery, and handoff projections. This is not evidence of live runtime integration, fleet operation, or completed releases; those remain explicit next validation steps.
 
-## Next
+## Next step
 
 Validate the prepared live-admission boundary only with explicit operator acknowledgement and preserve recoverable states when work is uncertain or blocked.

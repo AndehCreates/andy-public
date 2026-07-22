@@ -1,7 +1,7 @@
 ---
 id: project-mathpad
 title: MathPad
-summary: A local-first calculation notebook for readable multi-line work with semantic results, units, context, and feedback.
+summary: Keeps parsing, results, diagnostics, and editor behavior coherent through a shared revisioned semantic document.
 visibility: listed
 publicReview: approved
 sourceAvailability: public
@@ -13,20 +13,27 @@ updatedAt: 2026-07-21
 order: 4
 projectId: project-mathpad
 status: experimental
+workHook: Keep multi-line calculations readable as expressions and results change.
+visualMark: semantic-document
+technicalDifferentiator: A revisioned semantic document connects parsing, diagnostics, result alignment, and editor behavior through library-neutral ports.
 ---
 
-## Scope
+## What it solves
 
 MathPad explores a local-first calculation workspace for arithmetic, variables, units, functions, and date or time expressions across durable sheets and working copies.
 
-## Decisions and tradeoffs
+## Who it helps
+
+It is designed for people working through multi-line calculations who need readable results, units, context, and error feedback to remain connected as the document changes.
+
+## Design choice and tradeoff
 
 A revisioned semantic document is shared through library-neutral editor ports, separating workspace-document state from the calculation-engine session. The design prioritizes coherent parsing, diagnostics, result alignment, and accessible state communication over unsupported claims of parity.
 
-## Validation and limits
+## Validation boundary
 
 The repository defines lint, automated-test, stress-test, build, and dependency-audit gates, with coverage for keyboard navigation among recent tests. Inventory review did not rerun the full release gate, and characterization evidence does not establish complete compatibility with another calculation product.
 
-## Next
+## Next step
 
 Run the documented automated and browser checks together on a release candidate, then assess reviewed interface captures.

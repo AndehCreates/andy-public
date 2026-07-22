@@ -1,7 +1,7 @@
 ---
 id: project-arcade
 title: Arcade Workbench
-summary: A deterministic interactive-systems workbench for playable simulations, restart-safe tuning, and inspectable behavior.
+summary: Makes playable simulation behavior reproducible through seeded runs, restart-only tuning, shared contracts, and visible telemetry.
 visibility: listed
 publicReview: approved
 sourceAvailability: public
@@ -13,20 +13,27 @@ updatedAt: 2026-07-21
 order: 5
 projectId: project-arcade
 status: experimental
+workHook: Make playable simulation behavior observable and reproducible.
+visualMark: deterministic-simulation
+technicalDifferentiator: Seeded runs, restart-only tuning, shared simulation contracts, and visible telemetry preserve active-run determinism.
 ---
 
-## Scope
+## What it solves
 
 Arcade Workbench pairs deterministic canvas simulations with a shared tuning and telemetry shell so interactive behavior can be played, observed, and refined.
 
-## Decisions and tradeoffs
+## Who it helps
+
+It is designed for builders exploring and debugging interactive systems who need tuning changes, simulation state, and run behavior to remain observable and reproducible.
+
+## Design choice and tradeoff
 
 Game modes share simulation contracts while retaining their own surfaces. Tuning changes remain pending until an explicit restart, preserving active-run determinism, and visibility design avoids leaking hidden actor state.
 
-## Validation and limits
+## Validation boundary
 
 Repository scripts cover formatting, static checks, type checks, unit tests, builds, and browser tests. The inventory inspected those gates but did not rerun them, and the evidence supports an experiment and workbench rather than a released game product.
 
-## Next
+## Next step
 
 Use reviewed gameplay captures and continued deterministic scenario testing to guide subsequent interactive-system refinements.

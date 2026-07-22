@@ -1,7 +1,7 @@
 ---
 id: project-lifeos
 title: LifeOS
-summary: A local-first workspace that makes work state, commitments, context, and recovery visible after interruption.
+summary: Turns tasks, commitments, context, and recovery paths into a local-first continuity workspace designed for re-entry after interruption.
 visibility: featured
 publicReview: approved
 sourceAvailability: public
@@ -13,20 +13,68 @@ updatedAt: 2026-07-21
 order: 2
 projectId: project-lifeos
 status: active
+workHook: Preserve context and make re-entry after interruption explicit.
+visualMark: continuity
+technicalDifferentiator: Explicit domain contracts extend the existing local-first state and synchronization model without introducing a replacement authority.
+caseStudyHook: Make interruption recovery a first-class product behavior instead of relying on recall.
+theme: continuity
+artifactLabels: [Interruption, Preserved context, Re-entry]
+pivotalDecision: Extend the existing state and synchronization model through explicit domain contracts.
+evidenceSummary:
+  evidenceMethod: static-check
+  evidenceState: validated-within-scope
+  evidenceScope: TypeScript type check for the inspected application-state and planning contracts.
+diagram:
+  variant: continuity-reentry
+  title: Continuity through explicit product contracts
+  description: The interface and domain behavior share product contracts while local persistence and synchronization preserve a user-owned working state.
+  nodes:
+    - id: workspace-interface
+      label: Workspace interface
+      description: Presents planning, focus, capture, transition, and re-entry flows.
+    - id: domain-contracts
+      label: Domain contracts
+      description: Define shared behavior for tasks, commitments, projects, people, routines, journals, and activity.
+    - id: local-persistence
+      label: Local persistence
+      description: Keeps durable workspace state close to the user.
+    - id: synchronization
+      label: Synchronization
+      description: Carries shared state through the existing sync architecture.
+    - id: user-confirmed-interventions
+      label: User-confirmed interventions
+      description: Keeps high-consequence or ambiguous adjustments under user control.
+  edges:
+    - from: workspace-interface
+      to: domain-contracts
+      label: uses shared behaviors
+    - from: domain-contracts
+      to: local-persistence
+      label: stores durable state
+    - from: local-persistence
+      to: synchronization
+      label: shares state when appropriate
+    - from: domain-contracts
+      to: user-confirmed-interventions
+      label: proposes consequential changes
 ---
 
-## Scope
+## What it solves
 
 LifeOS is a human-centered continuity system for externalizing work, time, context, transitions, and recovery so the next action does not depend on fragile working memory.
 
-## Decisions and tradeoffs
+## Who it helps
+
+It is designed for people who need to return to work without reconstructing every open loop from memory, especially when plans, commitments, and context change across interruptions.
+
+## Design choice and tradeoff
 
 The architecture extends existing state and synchronization surfaces through explicit domain contracts rather than adding a replacement orchestrator or persistence model. Consequential or ambiguous automation is represented as a user-confirmed intervention with a safe timeout disposition.
 
-## Validation and limits
+## Validation boundary
 
 The inspected codebase has typed state contracts, local-first persistence and synchronization surfaces, and a verified type check. It does not establish production deployment, cross-device reliability, accessibility outcomes, or completed end-to-end scenarios.
 
-## Next
+## Next step
 
 Continue scenario-based validation for interruption recovery, synchronization conflicts, and durable re-entry flows.

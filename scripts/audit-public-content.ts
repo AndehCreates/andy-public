@@ -6,6 +6,7 @@ import matter from 'gray-matter';
 import { canonicalRelationId, validatePublicRelations } from '../src/lib/content/relations';
 import { canPublish, type PublicReview, type SourceAvailability, type Visibility, validateSourcePolicy } from '../src/lib/content/publication';
 import { findPublicContentRisks } from '../src/lib/content/sanitization';
+import { projectPresentationFieldNames } from '../src/lib/content/presentation';
 import type { ContentCollectionName } from '../src/lib/content/types';
 
 const contentRoot = resolve(process.cwd(), 'src/content');
@@ -28,6 +29,7 @@ export type AuditedEntry = {
   title: string;
   summary: string;
   body: string;
+  presentationStrings?: string[];
 };
 
 export type EvidenceDocument = {
@@ -41,6 +43,17 @@ export function isAuditableContentFile(filePath: string): boolean {
 
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+}
+
+function collectStrings(value: unknown): string[] {
+  if (typeof value === 'string') return [value];
+  if (Array.isArray(value)) return value.flatMap(collectStrings);
+  if (value && typeof value === 'object') return Object.values(value).flatMap(collectStrings);
+  return [];
+}
+
+export function collectProjectPresentationStrings(data: Record<string, unknown>): string[] {
+  return projectPresentationFieldNames.flatMap((field) => collectStrings(data[field]));
 }
 
 function asEntry(collection: ContentCollectionName, parsed: matter.GrayMatterFile<string>): AuditedEntry {
@@ -58,6 +71,7 @@ function asEntry(collection: ContentCollectionName, parsed: matter.GrayMatterFil
     title: typeof data.title === 'string' ? data.title : '',
     summary: typeof data.summary === 'string' ? data.summary : '',
     body: parsed.content,
+    presentationStrings: collectProjectPresentationStrings(data),
   };
 }
 
@@ -82,7 +96,13 @@ export function auditEntries(entries: AuditedEntry[]): void {
   for (const entry of entries) {
     if (canPublish(entry)) {
       for (const rule of validateSourcePolicy(entry)) violations.push(`${entry.id}: source-policy: ${rule}`);
-      for (const finding of findPublicContentRisks([entry.title, entry.summary, ...entry.sourceUrls, entry.body].join('\n'))) {
+      for (const finding of findPublicContentRisks([
+        entry.title,
+        entry.summary,
+        ...entry.sourceUrls,
+        ...(entry.presentationStrings ?? []),
+        entry.body,
+      ].join('\n'))) {
         violations.push(`${entry.id}: ${finding.rule}: ${finding.excerpt}`);
       }
     }
