@@ -1,11 +1,16 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import CapabilityTag from '@/components/content/CapabilityTag.astro';
+import CaseStudyHero from '@/components/content/CaseStudyHero.astro';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
 import { featuredEntries } from '@/lib/content/queries';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('caseStudies');
+  const [entries, projects] = await Promise.all([
+    getCollection('caseStudies'),
+    getCollection('projects'),
+  ]);
+  const projectsById = new Map(projects.map((project) => [project.data.id, project]));
   const studies = featuredEntries(entries.map((entry) => ({
     visibility: entry.data.visibility,
     publicReview: entry.data.publicReview,
@@ -14,14 +19,19 @@ export async function getStaticPaths() {
     entry,
   })));
 
-  return studies.map(({ entry }) => ({ params: { slug: entry.id }, props: { study: entry } }));
+  return studies.map(({ entry }) => {
+    const project = projectsById.get(entry.data.projectId);
+    if (!project) throw new Error(`Case study ${entry.id} references missing project ${entry.data.projectId}.`);
+    return { params: { slug: entry.id }, props: { study: entry, project } };
+  });
 }
 
 interface Props {
   study: CollectionEntry<'caseStudies'>;
+  project: CollectionEntry<'projects'>;
 }
 
-const { study } = Astro.props;
+const { study, project } = Astro.props;
 const { Content } = await render(study);
 const sourceLinks = study.data.sourceAvailability === 'public'
   ? study.data.sourceUrls.map((href) => ({ label: 'Project source', href }))
@@ -34,20 +44,26 @@ const sourceLinks = study.data.sourceAvailability === 'public'
   canonicalPath={`/case-studies/${study.id}/`}
   updatedAt={study.data.updatedAt}
   sources={sourceLinks}
+  variant="case-study"
 >
-  <div class="case-study-meta">
-    <p>Flagship case study</p>
-    <ul aria-label="Capabilities">
-      {study.data.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
-    </ul>
-  </div>
+  <CaseStudyHero
+    slot="lead"
+    hook={project.data.caseStudyHook!}
+    problemContext={study.data.summary}
+    pivotalDecision={project.data.pivotalDecision!}
+    evidenceSummary={project.data.evidenceSummary!}
+    theme={project.data.theme!}
+    artifactLabels={project.data.artifactLabels!}
+    diagram={project.data.diagram!}
+  />
+  <ul class="case-study-capabilities" aria-label="Capabilities">
+    {study.data.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
+  </ul>
   <Content />
   <p class="related-project"><a href={`/work/${study.data.projectId.replace('project-', '')}/`}>View the related project</a></p>
 </ArticleLayout>
 
 <style>
-  .case-study-meta { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); padding-bottom: var(--space-5); border-bottom: var(--border-width) solid var(--border-subtle); }
-  .case-study-meta p { margin: 0; color: var(--state-verified); font-size: var(--text-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-  .case-study-meta ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; list-style: none; }
+  .case-study-capabilities { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; list-style: none; }
   .related-project { margin-top: var(--space-7); }
 </style>

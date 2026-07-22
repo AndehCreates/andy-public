@@ -1,7 +1,7 @@
 ---
 id: case-study-alpha-screener
 title: Alpha Screener
-summary: A human-reviewed market research workspace that makes signal quality, uncertainty, and the next evidence to inspect visible.
+summary: How a human-reviewed research workspace ranks what to inspect next without hiding data quality, uncertainty, or promotion gates.
 visibility: featured
 publicReview: approved
 sourceAvailability: public
@@ -16,32 +16,14 @@ status: published
 ---
 
 import DecisionBlock from '@/components/content/DecisionBlock.astro';
-import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
 
 ## What it solves
 
-Alpha Screener is a research and decision-support workspace for examining market opportunities with visible confidence, uncertainty, and evidence. It helps a person decide what to inspect next rather than presenting opaque recommendations or automated actions.
+A ranked result is useful only when a person can see what supports it and what could invalidate it. Alpha Screener is a research and decision-support workspace for examining market opportunities with visible confidence, uncertainty, and evidence. It helps a person decide what to inspect next rather than presenting opaque recommendations or automated actions.
 
 ## System design
 
-<SystemDiagram
-  title="Evidence-gated decision support"
-  description="Inputs are validated before deterministic scoring and research views make uncertainty and the next review step visible to a human decision-maker."
-  nodes={[
-    { label: 'Market inputs', description: 'Provide measured, derived, or proxy information for research.' },
-    { label: 'Validation and trust gates', description: 'Check data quality, confidence, and whether advisory context is appropriate.' },
-    { label: 'Deterministic scoring', description: 'Ranks candidates independently from optional advisory context.' },
-    { label: 'Research evidence views', description: 'Show confidence, uncertainty, and supporting information to inspect.' },
-    { label: 'Human review', description: 'Retains the decision to advance, reject, or continue research.' },
-  ]}
-  edges={[
-    { from: 'Market inputs', to: 'Validation and trust gates', label: 'checks evidence quality' },
-    { from: 'Validation and trust gates', to: 'Deterministic scoring', label: 'permits eligible inputs' },
-    { from: 'Deterministic scoring', to: 'Research evidence views', label: 'ranks starting points' },
-    { from: 'Research evidence views', to: 'Human review', label: 'supports inspection' },
-    { from: 'Validation and trust gates', to: 'Human review', label: 'surfaces blockers and uncertainty' },
-  ]}
-/>
+Market inputs pass through validation and trust gates before deterministic scoring ranks research starting points. Evidence views expose confidence, uncertainty, blockers, and supporting information while human review retains the decision to advance, reject, or continue research.
 
 ## Key decisions and tradeoffs
 

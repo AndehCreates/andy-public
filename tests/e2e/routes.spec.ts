@@ -26,13 +26,37 @@ test('publishes each approved flagship case study with its decision narrative', 
   await expect(page.getByRole('heading', { level: 1, name: 'Case studies' })).toHaveCount(1);
 
   for (const study of [
-    { slug: 'chief-of-staff', title: 'Chief of Staff' },
-    { slug: 'lifeos', title: 'LifeOS' },
-    { slug: 'alpha-screener', title: 'Alpha Screener' },
+    {
+      slug: 'chief-of-staff',
+      title: 'Chief of Staff',
+      hook: 'Coordinate AI-assisted work without taking authority from the systems that execute it.',
+      decision: 'Keep runtime, context, and repository authority distributed rather than centralizing them in the coordination layer.',
+    },
+    {
+      slug: 'lifeos',
+      title: 'LifeOS',
+      hook: 'Make interruption recovery a first-class product behavior instead of relying on recall.',
+      decision: 'Extend the existing state and synchronization model through explicit domain contracts.',
+    },
+    {
+      slug: 'alpha-screener',
+      title: 'Alpha Screener',
+      hook: 'Rank what to inspect next without hiding data quality, uncertainty, or promotion gates.',
+      decision: 'Keep deterministic scoring separate from advisory context and treat research state as evidence rather than permission.',
+    },
   ]) {
     await page.goto(`/case-studies/${study.slug}/`);
     await expect(page.getByRole('heading', { level: 1, name: study.title })).toHaveCount(1);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`/case-studies/${study.slug}/$`));
+
+    const hero = page.locator('[data-case-study-hero]');
+    await expect(hero).toContainText(study.hook);
+    await expect(hero).toContainText(study.decision);
+    await expect(hero.getByText('Problem and context', { exact: true })).toBeVisible();
+    await expect(hero.getByText('Evidence basis', { exact: true })).toBeVisible();
+    await expect(hero.getByText('Evidence boundary', { exact: true })).toBeVisible();
+    await expect(hero.locator('.system-diagram')).toHaveCount(1);
+    await expect(page.locator('.system-diagram')).toHaveCount(1);
 
     for (const section of [
       'What it solves',
@@ -45,6 +69,16 @@ test('publishes each approved flagship case study with its decision narrative', 
       await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
     }
   }
+});
+
+test('keeps flagship safety boundaries explicit without adding unsupported implications', async ({ page }) => {
+  await page.goto('/case-studies/lifeos/');
+  await expect(page.locator('main')).not.toContainText(/diagnos|clinical|treat(?:ment)?|productivity (?:gain|increase|improvement)/i);
+
+  await page.goto('/case-studies/alpha-screener/');
+  await expect(page.locator('[data-case-study-hero]')).toContainText(/uncertainty|evidence gate/i);
+  await expect(page.locator('main')).toContainText('not investment advice');
+  await expect(page.locator('main')).not.toContainText(/guaranteed|returns?|outperform|win rate/i);
 });
 
 test('keeps the local-only Chief of Staff study free of source links and private location details', async ({ page }) => {

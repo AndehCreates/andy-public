@@ -46,3 +46,21 @@ test('reflows diagrams into an ordered relationship sequence without internal sc
   expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth);
   expect(metrics.overflowX).not.toBe('scroll');
 });
+
+test('keeps each flagship opening ahead of long-form sections without horizontal overflow', async ({ page }) => {
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: width <= 768 ? 900 : 720 });
+
+    for (const slug of ['chief-of-staff', 'lifeos', 'alpha-screener']) {
+      await page.goto(`/case-studies/${slug}/`);
+
+      const hero = page.locator('[data-case-study-hero]');
+      const firstLongFormHeading = page.getByRole('heading', { level: 2, name: 'What it solves' });
+      await expect(hero).toBeVisible();
+      await expect(hero.locator('.system-diagram')).toHaveCount(1);
+      expect(await hero.evaluate((element) => element.compareDocumentPosition(document.querySelector('h2')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+      await expect(firstLongFormHeading).toBeVisible();
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    }
+  }
+});

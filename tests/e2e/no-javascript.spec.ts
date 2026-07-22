@@ -9,11 +9,13 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.locator('.project-card')).toHaveCount(5);
 
   await page.goto('/case-studies/chief-of-staff/');
+  await expect(page.locator('[data-case-study-hero]')).toContainText('Coordinate AI-assisted work');
   await expect(page.getByRole('heading', { level: 2, name: 'System design' })).toBeVisible();
   await expect(page.locator('main')).toContainText('Validation');
   await expect(page.locator('.system-diagram__visual')).toBeVisible();
   await expect(page.locator('.system-diagram__relationship')).toHaveCount(5);
   await expect(page.locator('.system-diagram__relationship').last()).toContainText('records recoverable state');
+  await expect(page.locator('.system-diagram')).toHaveCount(1);
 
   await page.goto('/systems/reliable-ai-work/');
   await expect(page.getByRole('heading', { level: 2, name: 'How to read this map' })).toBeVisible();
