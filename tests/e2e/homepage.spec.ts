@@ -25,7 +25,7 @@ test('presents the approved homepage narrative in order', async ({ page }) => {
     'LifeOS',
     'Alpha Screener',
   ]);
-  await expect(page.locator('.home-hero').getByText('Open to roles and collaboration', { exact: true })).toBeVisible();
+  await expect(page.locator('.home-hero').getByText('Open to roles and thoughtful collaboration.', { exact: true })).toBeVisible();
   await expect(page.locator('main')).not.toContainText(/\bproof\b/i);
 });
 
@@ -35,7 +35,7 @@ test('opens with Andy\'s systems practice, one flagship action, and a meaningful
   await page.goto('/');
 
   const hero = page.locator('.home-hero');
-  const primaryAction = hero.getByRole('link', { name: 'Explore the flagship systems', exact: true });
+  const primaryAction = hero.getByRole('link', { name: 'Read flagship case studies', exact: true });
   const signalMap = hero.locator('.system-diagram');
 
   await expect(hero.getByText(/Andy builds evidence-led AI systems/i)).toBeVisible();
@@ -79,4 +79,17 @@ test('presents each flagship as a distinct artifact preview with a direct case-s
     await expect(preview.getByText('Pivotal decision', { exact: true })).toBeVisible();
     await expect(preview.getByText('Evidence boundary', { exact: true })).toBeVisible();
   }
+});
+
+test('uses a concise professional opportunity signal and a clear lead system', async ({ page }) => {
+  await page.goto('/');
+
+  const hero = page.locator('.home-hero');
+  await expect(hero.getByRole('link', { name: 'Read flagship case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
+  await expect(hero.getByText('Open to roles and thoughtful collaboration.', { exact: true })).toBeVisible();
+  await expect(page.locator('.site-header')).not.toContainText('Open to roles and collaboration');
+
+  const featuredSystems = page.locator('#featured-systems [data-flagship-preview]');
+  await expect(featuredSystems).toHaveCount(3);
+  await expect(page.locator('#featured-systems .flagship-preview--lead')).toHaveCount(1);
 });

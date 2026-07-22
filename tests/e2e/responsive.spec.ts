@@ -15,15 +15,23 @@ test('preserves reachable public content and navigation across supported viewpor
   }
 });
 
-test('keeps the complete static navigation visible, wrapping, and operable at 375 pixels', async ({ page }) => {
+test('prioritizes core navigation while preserving secondary routes in a native mobile disclosure', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('/work/');
 
   const navigation = page.getByRole('navigation', { name: 'Primary navigation' });
-  const links = navigation.getByRole('link');
-  await expect(links).toHaveCount(7);
+  const coreLinks = navigation.locator('.site-header__primary-nav a');
+  const more = navigation.locator('details');
+  const secondaryLinks = navigation.locator('.site-header__secondary-nav a');
 
-  for (const link of await links.all()) {
+  await expect(coreLinks).toHaveCount(4);
+  await expect(coreLinks).toHaveText(['Home', 'Work', 'Systems', 'About']);
+  await expect(more).toHaveCount(1);
+  await expect(more.locator('summary')).toHaveText('More');
+  await expect(secondaryLinks).toHaveCount(3);
+  expect(await secondaryLinks.evaluateAll((links) => links.every((link) => !(link as HTMLElement).offsetParent))).toBe(true);
+
+  for (const link of await coreLinks.all()) {
     await expect(link).toBeVisible();
     const bounds = await link.boundingBox();
     expect(bounds, 'navigation link should be rendered').not.toBeNull();
