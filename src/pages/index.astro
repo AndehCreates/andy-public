@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
 import { approvedHomepageFeaturedProjects, publicEntries } from '@/lib/content/queries';
+import { evidenceStateLabels } from '@/lib/content/presentation';
 
 const [projects, handbook, signals] = await Promise.all([
   getCollection('projects'),
@@ -58,11 +59,6 @@ const portfolioSignalMap = {
   ],
 } as const;
 
-const evidenceStateLabels = {
-  'validated-within-scope': 'Validated within scope',
-  'inspected-only': 'Inspected only',
-  'not-yet-validated': 'Not yet validated',
-} as const;
 ---
 
 <BaseLayout
@@ -89,8 +85,8 @@ const evidenceStateLabels = {
       <SystemDiagram
         title={portfolioSignalMap.title}
         description={portfolioSignalMap.description}
-        nodes={[...portfolioSignalMap.nodes]}
-        edges={[...portfolioSignalMap.edges]}
+        nodes={portfolioSignalMap.nodes}
+        edges={portfolioSignalMap.edges}
         variant="authority-boundaries"
         theme="authority"
         headingLevel={2}

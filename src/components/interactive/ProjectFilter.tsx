@@ -1,14 +1,16 @@
 import { Component } from 'react';
 import { capabilities, type CapabilityId } from '@/lib/content/taxonomy';
+import type { VisualMark } from '@/lib/content/presentation';
+import type { ProjectStatus } from '@/lib/content/types';
 import './ProjectFilter.css';
 
 export interface ProjectFilterProject {
   slug: string;
   title: string;
   summary: string;
-  status: 'active' | 'stable' | 'experimental' | 'archived';
+  status: ProjectStatus;
   workHook: string;
-  visualMark: 'authority' | 'continuity' | 'evidence' | 'semantic-document' | 'deterministic-simulation';
+  visualMark: VisualMark;
   technicalDifferentiator: string;
   capabilities: readonly CapabilityId[];
 }
@@ -21,7 +23,7 @@ function projectCountLabel(count: number) {
   return `${count} ${count === 1 ? 'project' : 'projects'} shown`;
 }
 
-const statusDisplayCopy: Record<ProjectFilterProject['status'], string> = {
+const statusDisplayCopy: Record<ProjectStatus, string> = {
   active: 'Active system',
   stable: 'Stable system',
   experimental: 'Exploratory system',

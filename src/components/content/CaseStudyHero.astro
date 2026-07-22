@@ -1,15 +1,13 @@
 ---
 import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
-import type { DiagramConfiguration, EvidenceSummary } from '@/lib/content/presentation';
-
-type Theme = 'authority' | 'continuity' | 'evidence';
+import { evidenceStateLabels, type DiagramConfiguration, type EvidenceSummary, type FlagshipTheme } from '@/lib/content/presentation';
 
 interface Props {
   hook: string;
   problemContext: string;
   pivotalDecision: string;
   evidenceSummary: EvidenceSummary;
-  theme: Theme;
+  theme: FlagshipTheme;
   artifactLabels: string[];
   diagram: DiagramConfiguration;
 }
@@ -31,11 +29,6 @@ const methodLabels: Record<EvidenceSummary['evidenceMethod'], string> = {
   none: 'Not yet validated',
 };
 
-const stateLabels: Record<EvidenceSummary['evidenceState'], string> = {
-  'validated-within-scope': 'Validated within scope',
-  'inspected-only': 'Inspected only',
-  'not-yet-validated': 'Not yet validated',
-};
 ---
 
 <section
@@ -64,7 +57,7 @@ const stateLabels: Record<EvidenceSummary['evidenceState'], string> = {
     <div class="case-study-hero__evidence">
       <dt>Evidence basis</dt>
       <dd>
-        <span>{methodLabels[evidenceSummary.evidenceMethod]} · {stateLabels[evidenceSummary.evidenceState]}</span>
+        <span>{methodLabels[evidenceSummary.evidenceMethod]} · {evidenceStateLabels[evidenceSummary.evidenceState]}</span>
         {evidenceSummary.evidenceScope}
       </dd>
     </div>

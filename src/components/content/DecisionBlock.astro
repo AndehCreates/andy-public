@@ -1,12 +1,13 @@
 ---
+import type { FlagshipTheme } from '@/lib/content/presentation';
+
 type Kind = 'decision' | 'tradeoff' | 'validation' | 'limitation' | 'next';
-type Theme = 'authority' | 'continuity' | 'evidence';
 type Emphasis = 'standard' | 'evidence';
 
 interface Props {
   kind: Kind;
   title: string;
-  theme?: Theme;
+  theme?: FlagshipTheme;
   emphasis?: Emphasis;
 }
 
@@ -27,8 +28,6 @@ const labels: Record<Kind, string> = {
     theme && `decision-block--theme-${theme}`,
     emphasis === 'evidence' && 'decision-block--evidence-emphasis',
   ]}
-  data-theme={theme}
-  data-emphasis={emphasis}
   aria-label={`${labels[kind]}: ${title}`}
 >
   <p class="decision-block__kind">{labels[kind]}</p>

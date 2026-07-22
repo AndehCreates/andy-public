@@ -4,6 +4,7 @@ import { z } from 'astro/zod';
 import { capabilityIds } from '@/lib/content/taxonomy';
 import { reviewValues, sourceAvailabilityValues, visibilityValues } from '@/lib/content/publication';
 import { addProjectPresentationIssues, projectPresentationFields } from '@/lib/content/presentation';
+import { projectStatusValues } from '@/lib/content/types';
 
 const baseFields = {
   id: z.string().min(2).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -26,7 +27,7 @@ const projects = defineCollection({
     ...baseFields,
     ...projectPresentationFields,
     projectId: z.string().min(2),
-    status: z.enum(['active', 'stable', 'experimental', 'archived']),
+    status: z.enum(projectStatusValues),
   }).superRefine(addProjectPresentationIssues),
 });
 

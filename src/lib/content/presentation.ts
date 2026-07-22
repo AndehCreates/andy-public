@@ -1,10 +1,23 @@
 import { z } from 'astro/zod';
+import { canPublish, reviewValues, visibilityValues, type PublicReview, type Visibility } from './publication';
 
 export const visualMarkValues = ['authority', 'continuity', 'evidence', 'semantic-document', 'deterministic-simulation'] as const;
 export const flagshipThemeValues = ['authority', 'continuity', 'evidence'] as const;
 export const diagramVariantValues = ['authority-boundaries', 'continuity-reentry', 'evidence-gates'] as const;
 export const evidenceMethodValues = ['test-execution', 'static-check', 'source-inspection', 'none'] as const;
 export const evidenceStateValues = ['validated-within-scope', 'inspected-only', 'not-yet-validated'] as const;
+
+export type VisualMark = (typeof visualMarkValues)[number];
+export type FlagshipTheme = (typeof flagshipThemeValues)[number];
+export type DiagramVariant = (typeof diagramVariantValues)[number];
+export type EvidenceMethod = (typeof evidenceMethodValues)[number];
+export type EvidenceState = (typeof evidenceStateValues)[number];
+
+export const evidenceStateLabels: Record<EvidenceState, string> = {
+  'validated-within-scope': 'Validated within scope',
+  'inspected-only': 'Inspected only',
+  'not-yet-validated': 'Not yet validated',
+};
 
 export const projectPresentationFieldNames = [
   'workHook',
@@ -91,8 +104,8 @@ const commonFieldNames = ['workHook', 'visualMark', 'technicalDifferentiator'] a
 const flagshipFieldNames = ['caseStudyHook', 'theme', 'artifactLabels', 'pivotalDecision', 'evidenceSummary', 'diagram'] as const;
 
 type PresentationRefinementInput = {
-  visibility?: unknown;
-  publicReview?: unknown;
+  visibility?: Visibility;
+  publicReview?: PublicReview;
 } & Partial<Record<(typeof commonFieldNames)[number] | (typeof flagshipFieldNames)[number], unknown>>;
 
 type PresentationRefinementContext = {
@@ -103,8 +116,10 @@ export function addProjectPresentationIssues(
   project: PresentationRefinementInput,
   context: PresentationRefinementContext,
 ): void {
-  const isPublishable = (project.visibility === 'listed' || project.visibility === 'featured') &&
-    project.publicReview === 'approved';
+  const isPublishable = project.visibility !== undefined && project.publicReview !== undefined && canPublish({
+    visibility: project.visibility,
+    publicReview: project.publicReview,
+  });
 
   if (!isPublishable) return;
 
@@ -132,8 +147,8 @@ export function addProjectPresentationIssues(
 }
 
 export const projectPresentationSchema = z.object({
-  visibility: z.enum(['internal', 'draft', 'listed', 'featured']),
-  publicReview: z.enum(['pending', 'approved']),
+  visibility: z.enum(visibilityValues),
+  publicReview: z.enum(reviewValues),
   ...projectPresentationFields,
 }).superRefine(addProjectPresentationIssues);
 

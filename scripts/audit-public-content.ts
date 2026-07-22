@@ -60,7 +60,7 @@ function asEntry(collection: ContentCollectionName, parsed: matter.GrayMatterFil
   const data = parsed.data as Record<string, unknown>;
   const authoredId = typeof data.id === 'string' ? data.id : '';
 
-  return {
+  const entry: AuditedEntry = {
     id: canonicalRelationId(collection, authoredId),
     collection,
     visibility: data.visibility as Visibility,
@@ -71,8 +71,10 @@ function asEntry(collection: ContentCollectionName, parsed: matter.GrayMatterFil
     title: typeof data.title === 'string' ? data.title : '',
     summary: typeof data.summary === 'string' ? data.summary : '',
     body: parsed.content,
-    presentationStrings: collectProjectPresentationStrings(data),
   };
+
+  if (canPublish(entry)) entry.presentationStrings = collectProjectPresentationStrings(data);
+  return entry;
 }
 
 async function readEntries(): Promise<AuditedEntry[]> {

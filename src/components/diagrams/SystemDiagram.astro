@@ -1,16 +1,13 @@
 ---
-import type { DiagramConfiguration } from '@/lib/content/presentation';
+import type { DiagramConfiguration, DiagramVariant, FlagshipTheme } from '@/lib/content/presentation';
 
-type Theme = 'authority' | 'continuity' | 'evidence';
-type Variant = DiagramConfiguration['variant'];
-
-export interface DiagramNode {
+interface DiagramNode {
   id?: string;
   label: string;
   description: string;
 }
 
-export interface DiagramEdge {
+interface DiagramEdge {
   from: string;
   to: string;
   label?: string;
@@ -19,11 +16,11 @@ export interface DiagramEdge {
 interface Props {
   title?: string;
   description?: string;
-  nodes?: DiagramNode[];
-  edges?: DiagramEdge[];
+  nodes?: readonly DiagramNode[];
+  edges?: readonly DiagramEdge[];
   diagram?: DiagramConfiguration;
-  variant?: Variant;
-  theme?: Theme;
+  variant?: DiagramVariant;
+  theme?: FlagshipTheme;
   compact?: boolean;
   headingLevel?: 2 | 3;
 }
@@ -46,13 +43,12 @@ if (!title || !description || !suppliedNodes || !edges) {
   throw new Error('SystemDiagram requires a title, description, nodes, and edges.');
 }
 
-const inferredTheme: Theme = variant?.startsWith('authority')
-  ? 'authority'
-  : variant?.startsWith('continuity')
-    ? 'continuity'
-    : variant?.startsWith('evidence')
-      ? 'evidence'
-      : 'authority';
+const themesByVariant: Record<DiagramVariant, FlagshipTheme> = {
+  'authority-boundaries': 'authority',
+  'continuity-reentry': 'continuity',
+  'evidence-gates': 'evidence',
+};
+const inferredTheme = variant ? themesByVariant[variant] : 'authority';
 const theme = Astro.props.theme ?? inferredTheme;
 const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const Subheading = headingLevel === 2 ? 'h3' : 'h4';
@@ -64,12 +60,6 @@ const resolveNode = (reference: string) => nodesByReference.get(reference) ?? {
   label: reference,
   description: '',
 };
-const relationships = edges.map((edge) => ({
-  ...edge,
-  fromNode: resolveNode(edge.from),
-  toNode: resolveNode(edge.to),
-}));
-
 const humanDecisionIds = new Set([
   'governance',
   'human-judgment',
@@ -90,6 +80,15 @@ const nodeRole = (id: string) => humanDecisionIds.has(id)
   : boundaryIds.has(id)
     ? 'boundary'
     : 'component';
+const relationships = edges.map((edge) => ({
+  ...edge,
+  fromNode: resolveNode(edge.from),
+  toNode: resolveNode(edge.to),
+})).map((relationship) => ({
+  ...relationship,
+  fromRole: nodeRole(relationship.fromNode.id),
+  toRole: nodeRole(relationship.toNode.id),
+}));
 ---
 
 <section
@@ -107,19 +106,19 @@ const nodeRole = (id: string) => humanDecisionIds.has(id)
 
   <div class="system-diagram__visual" aria-hidden="true">
     <div class="system-diagram__flow">
-      {relationships.map(({ fromNode, toNode, label }) => (
+      {relationships.map(({ fromNode, toNode, fromRole, toRole, label }) => (
         <div class="system-diagram__flow-row">
-          <div class="system-diagram__node" data-node-id={fromNode.id} data-node-role={nodeRole(fromNode.id)}>
+          <div class="system-diagram__node" data-node-id={fromNode.id} data-node-role={fromRole}>
             <span>{fromNode.label}</span>
-            {nodeRole(fromNode.id) === 'human-decision' && <small>Human decision</small>}
+            {fromRole === 'human-decision' && <small>Human decision</small>}
           </div>
           <div class="system-diagram__connector">
             <span>{label ?? 'flows to'}</span>
             <i></i>
           </div>
-          <div class="system-diagram__node" data-node-id={toNode.id} data-node-role={nodeRole(toNode.id)}>
+          <div class="system-diagram__node" data-node-id={toNode.id} data-node-role={toRole}>
             <span>{toNode.label}</span>
-            {nodeRole(toNode.id) === 'human-decision' && <small>Human decision</small>}
+            {toRole === 'human-decision' && <small>Human decision</small>}
           </div>
         </div>
       ))}
