@@ -4,7 +4,7 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await page.goto('/');
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Work', exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Read flagship case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
+  await expect(page.getByRole('link', { name: 'Read case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
   await expect(page.locator('.home-hero .system-diagram')).toContainText('Human-owned decisions');
   await expect(page.locator('#featured-systems [data-flagship-preview]')).toHaveCount(3);
   await expect(page.locator('#featured-systems [data-artifact-labels]')).toHaveCount(3);

@@ -99,7 +99,7 @@ test('prioritizes the homepage position and flagship action before its visual on
 
   const hero = page.locator('.home-hero');
   const position = hero.locator('.home-hero__position');
-  const primaryAction = hero.getByRole('link', { name: 'Explore the flagship systems', exact: true });
+  const primaryAction = hero.getByRole('link', { name: 'Read case studies', exact: true });
   const visual = hero.locator('.home-hero__visual');
 
   expect(await position.evaluate((element) => element.compareDocumentPosition(document.querySelector('.home-hero__visual')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();

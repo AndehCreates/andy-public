@@ -35,7 +35,7 @@ test('opens with Andy\'s systems practice, one flagship action, and a meaningful
   await page.goto('/');
 
   const hero = page.locator('.home-hero');
-  const primaryAction = hero.getByRole('link', { name: 'Read flagship case studies', exact: true });
+  const primaryAction = hero.getByRole('link', { name: 'Read case studies', exact: true });
   const signalMap = hero.locator('.system-diagram');
 
   await expect(hero.getByText(/Andy builds evidence-led AI systems/i)).toBeVisible();
@@ -85,7 +85,7 @@ test('uses a concise professional opportunity signal and a clear lead system', a
   await page.goto('/');
 
   const hero = page.locator('.home-hero');
-  await expect(hero.getByRole('link', { name: 'Read flagship case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
+  await expect(hero.getByRole('link', { name: 'Read case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
   await expect(hero.getByText('Open to roles and thoughtful collaboration.', { exact: true })).toBeVisible();
   await expect(page.locator('.site-header')).not.toContainText('Open to roles and collaboration');
 
