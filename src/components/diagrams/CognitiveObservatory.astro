@@ -3,99 +3,111 @@ import type { SystemProjection } from '@/lib/content/catalog';
 
 interface Props {
   projection: SystemProjection;
+  title?: string;
+  summary?: string;
 }
 
-const { projection } = Astro.props;
-const projectHrefs: Record<string, string> = {
-  'projects:project-chief-of-staff': '/work/chief-of-staff/',
-};
-
-const projectHref = (projectTarget: string | undefined) => projectTarget ? projectHrefs[projectTarget] : undefined;
+const { projection, title = 'Cognitive Infrastructure', summary } = Astro.props;
+const projectHrefs: Record<string, string> = { 'projects:project-chief-of-staff': '/work/chief-of-staff/' };
+const layerSlug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const layerFocusId = (label: string) => `field-focus-${layerSlug(label)}`;
 ---
 
 <section class="cognitive-observatory" data-cognitive-observatory aria-labelledby="cognitive-observatory-title">
-  <header class="cognitive-observatory__header">
-    <p>Systems Observatory</p>
-    <h2 id="cognitive-observatory-title">A layered system for accountable work</h2>
-    <p>{projection.thesis}</p>
+  <header class="cognitive-observatory__lead">
+    <p class="cognitive-observatory__kicker">Systems Observatory</p>
+    <h1 id="cognitive-observatory-title">{title}</h1>
+    <p class="cognitive-observatory__thesis">{projection.thesis}</p>
+    {summary && <p class="cognitive-observatory__summary">{summary}</p>}
   </header>
 
+  <section class="cognitive-observatory__field" aria-label="Explore the system layers" data-observatory-field>
+    <div class="cognitive-observatory__stage">
+    <div class="cognitive-observatory__field-atmosphere" aria-hidden="true"></div>
+    <svg class="cognitive-observatory__relationships" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <defs><marker id="observatory-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" /></marker></defs>
+      <path class="cognitive-observatory__relationship cognitive-observatory__relationship--continuity" d="M480 306 C420 255 355 215 312 195" marker-end="url(#observatory-arrow)" />
+      <path class="cognitive-observatory__relationship cognitive-observatory__relationship--authority" d="M365 194 C470 144 565 144 650 194" marker-end="url(#observatory-arrow)" />
+      <path class="cognitive-observatory__relationship cognitive-observatory__relationship--system" d="M715 220 C760 300 760 385 712 448" marker-end="url(#observatory-arrow)" />
+      <path class="cognitive-observatory__relationship cognitive-observatory__relationship--evidence" d="M650 465 C560 515 440 515 350 465" marker-end="url(#observatory-arrow)" />
+      <path class="cognitive-observatory__relationship cognitive-observatory__relationship--feedback" d="M286 445 C240 350 250 270 300 205" marker-end="url(#observatory-arrow)" />
+    </svg>
+
+    <div class="cognitive-observatory__orbits" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div class="cognitive-observatory__field-caption" aria-hidden="true"><span>Authority remains at the center</span><span>Work returns as inspectable learning</span></div>
+
+    <div class="cognitive-observatory__field-controls" role="radiogroup" aria-label="Choose a system layer to inspect">
+      {projection.layers.map((layer, index) => (
+        <div class:list={['cognitive-observatory__layer-control', `cognitive-observatory__layer-control--${index + 1}`, `cognitive-observatory__layer-control--${layer.theme}`]}>
+          <input id={layerFocusId(layer.label)} type="radio" name="observatory-layer" value={layerSlug(layer.label)} checked={index === 0} />
+          <label for={layerFocusId(layer.label)}>
+            <span class="cognitive-observatory__node-copy">
+            <span class="cognitive-observatory__node-index">{String(index + 1).padStart(2, '0')}</span>
+            <strong>{layer.label}</strong>
+            <small>{layer.components.map((component) => component.label).join(' · ')}</small>
+            </span>
+          </label>
+        </div>
+      ))}
+    </div>
+    </div>
+
+    <div class="cognitive-observatory__field-dock" aria-live="polite">
+      {projection.layers.map((layer) => (
+        <article class:list={['cognitive-observatory__field-detail', `cognitive-observatory__field-detail--${layer.theme}`]} data-field-detail={layerSlug(layer.label)}>
+          <div><p>Layer focus</p><h2>{layer.label}</h2></div>
+          <p><strong>Responsibility</strong>{layer.responsibility}</p>
+          <p><strong>Authority boundary</strong>{layer.authorityBoundary}</p>
+          <p><strong>Components</strong>{layer.components.map((component) => component.label).join(' · ')}</p>
+          <a href={`#layer-${layerSlug(layer.label)}`}>Read the structured layer trace <span aria-hidden="true">↓</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
   <div class="cognitive-observatory__semantic">
+    <div class="cognitive-observatory__trace-intro"><p>Structured layer trace</p><h2>From direction to learning, every handoff retains a boundary.</h2></div>
     <ol class="cognitive-observatory__layers">
       {projection.layers.map((layer, index) => (
-        <li class:list={['cognitive-observatory__layer', `cognitive-observatory__layer--${layer.theme}`]}>
-          <div class="cognitive-observatory__layer-heading">
-            <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-            <div>
-              <h3>{layer.label}</h3>
-              <p>{layer.responsibility}</p>
-            </div>
-          </div>
-          <p class="cognitive-observatory__boundary"><strong>Authority boundary:</strong> {layer.authorityBoundary}</p>
+        <li id={`layer-${layerSlug(layer.label)}`} class:list={['cognitive-observatory__layer', `cognitive-observatory__layer--${layer.theme}`]}>
+          <div class="cognitive-observatory__layer-heading"><span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><div><p>Responsibility layer</p><h3>{layer.label}</h3></div></div>
+          <div class="cognitive-observatory__layer-purpose"><p>{layer.responsibility}</p><p><strong>Authority boundary</strong>{layer.authorityBoundary}</p></div>
           <ul class="cognitive-observatory__components">
             {layer.components.map((component) => {
-              const href = projectHref(component.projectTarget);
-              return (
-                <li>
-                  <strong>{href ? <a href={href}>{component.label}</a> : component.label}:</strong> {component.responsibility}
-                  <span> {component.authorityBoundary}</span>
-                </li>
-              );
+              const href = component.projectTarget ? projectHrefs[component.projectTarget] : undefined;
+              return <li><h4>{href ? <a href={href}>{component.label}</a> : component.label}</h4><p>{component.responsibility}</p><p><strong>Boundary</strong>{component.authorityBoundary}</p></li>;
             })}
           </ul>
         </li>
       ))}
     </ol>
   </div>
-
-  <div class="cognitive-observatory__visual" aria-hidden="true">
-    <div class="cognitive-observatory__visual-core">Human direction</div>
-    <div class="cognitive-observatory__visual-rings">
-      {projection.layers.slice(1).map((layer) => (
-        <div class:list={['cognitive-observatory__visual-ring', `cognitive-observatory__visual-ring--${layer.theme}`]}>
-          <span>{layer.label}</span>
-          <small>{layer.components.map((component) => component.label).join(' / ')}</small>
-        </div>
-      ))}
-    </div>
-  </div>
 </section>
 
 <style>
-  .cognitive-observatory { margin-block: var(--space-7); padding: var(--space-5); border: var(--border-width) solid color-mix(in srgb, var(--accent-system) 40%, var(--border-subtle)); background: var(--surface-sunken); }
-  .cognitive-observatory__header { display: grid; gap: var(--space-3); max-width: 46rem; }
-  .cognitive-observatory__header :is(h2, p) { margin: 0; }
-  .cognitive-observatory__header > p:first-child { color: var(--accent-system); font-size: var(--text-xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-  .cognitive-observatory__header h2 { color: var(--text-primary); font-size: var(--text-2xl); line-height: 1.05; }
-  .cognitive-observatory__header > p:last-child { color: var(--text-secondary); font-size: var(--text-lg); }
-  .cognitive-observatory__layers { display: grid; gap: var(--space-3); margin: var(--space-6) 0 0; list-style: none; }
-  .cognitive-observatory__layer { display: grid; gap: var(--space-3); padding: var(--space-4); border-left: 2px solid var(--state-boundary); background: var(--surface-raised); }
-  .cognitive-observatory__layer--authority { border-color: var(--state-human-control); }
-  .cognitive-observatory__layer--continuity, .cognitive-observatory__layer--context { border-color: var(--accent-continuity); }
-  .cognitive-observatory__layer--execution { border-color: var(--accent-system); }
-  .cognitive-observatory__layer--feedback, .cognitive-observatory__layer--evidence { border-color: var(--accent-evidence); }
-  .cognitive-observatory__layer-heading { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: var(--space-3); }
-  .cognitive-observatory__layer-heading > span { color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-sm); }
-  .cognitive-observatory__layer-heading :is(h3, p), .cognitive-observatory__boundary { margin: 0; }
-  .cognitive-observatory__layer h3 { color: var(--text-primary); font-size: var(--text-xl); line-height: 1.1; }
-  .cognitive-observatory__layer-heading p, .cognitive-observatory__boundary { color: var(--text-secondary); }
-  .cognitive-observatory__boundary { font-size: var(--text-sm); }
-  .cognitive-observatory__components { display: grid; gap: var(--space-2); margin: 0; padding-left: var(--space-5); color: var(--text-secondary); }
-  .cognitive-observatory__components strong { color: var(--text-primary); }
-  .cognitive-observatory__components a { color: var(--accent-system); }
-  .cognitive-observatory__visual { display: none; }
-  @media (min-width: 64rem) {
-    .cognitive-observatory { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(20rem, .85fr); column-gap: var(--space-6); align-items: start; }
-    .cognitive-observatory__header { grid-column: 1 / -1; }
-    .cognitive-observatory__visual { position: sticky; top: var(--space-5); display: grid; place-items: center; min-height: 34rem; padding: var(--space-5); overflow: hidden; border: var(--border-width) solid var(--border-subtle); background: var(--surface-raised); }
-    .cognitive-observatory__visual::before { position: absolute; inset: 12%; border: var(--border-width) solid var(--border-strong); border-radius: 50%; content: ''; }
-    .cognitive-observatory__visual-core { position: relative; z-index: 1; width: 9rem; aspect-ratio: 1; display: grid; place-items: center; padding: var(--space-3); border: 2px solid var(--state-human-control); border-radius: 50%; color: var(--text-primary); font-weight: 700; text-align: center; }
-    .cognitive-observatory__visual-rings { position: absolute; inset: var(--space-5); display: grid; align-content: center; gap: var(--space-3); }
-    .cognitive-observatory__visual-ring { display: grid; gap: var(--space-1); padding: var(--space-3); border-left: 2px solid var(--state-boundary); background: color-mix(in srgb, var(--surface-sunken) 88%, transparent); }
-    .cognitive-observatory__visual-ring--continuity, .cognitive-observatory__visual-ring--context { border-color: var(--accent-continuity); }
-    .cognitive-observatory__visual-ring--execution { border-color: var(--accent-system); }
-    .cognitive-observatory__visual-ring--feedback, .cognitive-observatory__visual-ring--evidence { border-color: var(--accent-evidence); }
-    .cognitive-observatory__visual-ring span { color: var(--text-primary); font-weight: 700; }
-    .cognitive-observatory__visual-ring small { color: var(--text-secondary); font-size: var(--text-xs); }
-  }
+  .cognitive-observatory { margin-block: var(--space-5) var(--space-8); }
+  .cognitive-observatory__lead { display:grid; gap:var(--space-3); max-width:54rem; margin-bottom:var(--space-5); }
+  .cognitive-observatory__lead :is(h1,p) { margin:0; }
+  .cognitive-observatory__kicker,.cognitive-observatory__trace-intro>p,.cognitive-observatory__field-detail>div>p,.cognitive-observatory__layer-heading p { color:var(--accent-system); font-size:var(--text-xs); font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+  .cognitive-observatory__lead h1 { color:var(--text-primary); font-size:clamp(3rem,6vw,5.75rem); line-height:.91; letter-spacing:-.04em; text-wrap:balance; }
+  .cognitive-observatory__thesis { color:var(--text-primary); font-size:var(--text-xl); line-height:1.28; max-width:42rem; }
+  .cognitive-observatory__summary { color:var(--text-secondary); max-width:48rem; }
+
+  .cognitive-observatory__field { --field-dock-space: 10.75rem; --node-copy-width: clamp(11.5rem,15vw,13.5rem); position:relative; display:grid; grid-template-rows:minmax(0,1fr) var(--field-dock-space); min-height:clamp(39rem,57vw,47rem); overflow:hidden; isolation:isolate; border-block:var(--border-width) solid var(--border-strong); background:radial-gradient(ellipse at 50% 41%,color-mix(in srgb,var(--accent-system) 18%,transparent),transparent 31%),radial-gradient(ellipse at 50% 41%,color-mix(in srgb,var(--accent-signal) 8%,transparent),transparent 54%),var(--surface-sunken); }
+  .cognitive-observatory__stage { position:relative; min-height:0; overflow:hidden; }
+  .cognitive-observatory__field-atmosphere { position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--border-strong) 42%,transparent) 50%,transparent) 50% / 1px 100% no-repeat; mask-image:radial-gradient(ellipse at 50% 42%,black 0 32%,transparent 76%); }
+  .cognitive-observatory__orbits { position:absolute; inset:0; z-index:-1; display:grid; place-items:center; pointer-events:none; }
+  .cognitive-observatory__orbits span { position:absolute; top:50%; left:50%; aspect-ratio:1; border:1px solid color-mix(in srgb,var(--border-strong) 76%,transparent); border-radius:50%; transform:translate(-50%,-50%); }
+  .cognitive-observatory__orbits span:nth-child(1){ width:24%; border-color:color-mix(in srgb,var(--state-human-control) 65%,transparent); }.cognitive-observatory__orbits span:nth-child(2){width:42%;border-color:color-mix(in srgb,var(--accent-continuity) 42%,transparent)}.cognitive-observatory__orbits span:nth-child(3){width:62%;border-color:color-mix(in srgb,var(--accent-system) 38%,transparent)}.cognitive-observatory__orbits span:nth-child(4){width:84%;border-color:color-mix(in srgb,var(--accent-evidence) 28%,transparent)}
+  .cognitive-observatory__relationships { position:absolute; inset:0; z-index:0; width:100%; height:100%; overflow:visible; pointer-events:none; }.cognitive-observatory__relationship{fill:none;stroke:color-mix(in srgb,var(--border-strong) 82%,transparent);stroke-width:1.4;stroke-dasharray:3 7;animation:observatory-flow 11s linear infinite}.cognitive-observatory__relationship--continuity{stroke:color-mix(in srgb,var(--accent-continuity) 75%,transparent)}.cognitive-observatory__relationship--authority{stroke:color-mix(in srgb,var(--state-human-control) 70%,transparent)}.cognitive-observatory__relationship--evidence{stroke:color-mix(in srgb,var(--accent-evidence) 70%,transparent)}.cognitive-observatory__relationship--feedback{stroke:color-mix(in srgb,var(--accent-system) 70%,transparent)}.cognitive-observatory__relationships marker path{fill:var(--border-strong)}
+  .cognitive-observatory__field-caption{position:absolute;inset:var(--space-4) var(--space-5) auto;display:flex;justify-content:space-between;color:var(--text-muted);font-size:var(--text-xs);letter-spacing:.04em}.cognitive-observatory__field-caption span:last-child{text-align:right}
+  .cognitive-observatory__field-controls { position:absolute; inset:0; z-index:2; }.cognitive-observatory__layer-control{position:absolute;transform:translate(-50%,-50%);}.cognitive-observatory__layer-control input{position:absolute;inline-size:1px;block-size:1px;opacity:.001;}.cognitive-observatory__layer-control label{display:grid;width:var(--node-copy-width);padding:var(--space-2) 0;color:var(--text-secondary);cursor:pointer;text-align:center;transition:color var(--motion-base) var(--motion-ease),transform var(--motion-base) var(--motion-ease),filter var(--motion-base) var(--motion-ease)}.cognitive-observatory__layer-control label::before,.cognitive-observatory__layer-control label::after{content:"";display:block;height:1px;background:currentColor;opacity:.52;transform:scaleX(.55);transition:transform var(--motion-base) var(--motion-ease),opacity var(--motion-base) var(--motion-ease)}.cognitive-observatory__node-copy{display:grid;gap:.18rem;padding:var(--space-1) var(--space-2);background:color-mix(in srgb,var(--surface-sunken) 92%,transparent)}.cognitive-observatory__layer-control label::after{order:5}.cognitive-observatory__layer-control strong{color:var(--text-primary);font-size:var(--text-lg);line-height:1.08;letter-spacing:-.02em}.cognitive-observatory__layer-control small{font-size:var(--text-xs);line-height:1.35}.cognitive-observatory__node-index{color:var(--text-muted);font-family:var(--font-mono);font-size:.65rem;letter-spacing:.08em}.cognitive-observatory__layer-control label:hover{color:var(--text-primary);transform:translateY(-.25rem)}.cognitive-observatory__layer-control input:focus-visible+label{outline:2px solid var(--focus-ring);outline-offset:4px}.cognitive-observatory__layer-control input:checked+label{color:var(--text-primary);transform:scale(1.08)}.cognitive-observatory__layer-control input:checked+label::before,.cognitive-observatory__layer-control input:checked+label::after{opacity:1;transform:scaleX(1)}.cognitive-observatory__layer-control--1{left:50%;top:50%}.cognitive-observatory__layer-control--1 label{width:10.5rem;aspect-ratio:1;place-content:center;border:1px solid var(--state-human-control);border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--state-human-control) 14%,transparent),transparent 66%);box-shadow:0 1rem 2.5rem color-mix(in srgb,var(--surface-sunken) 72%,transparent)}.cognitive-observatory__layer-control--1 .cognitive-observatory__node-copy{background:none}.cognitive-observatory__layer-control--1 label::before,.cognitive-observatory__layer-control--1 label::after{display:none}.cognitive-observatory__layer-control--2{left:30%;top:28%;color:var(--accent-continuity)}.cognitive-observatory__layer-control--3{left:70%;top:28%;color:var(--state-human-control)}.cognitive-observatory__layer-control--4{left:70%;top:72%;color:var(--accent-system)}.cognitive-observatory__layer-control--5{left:30%;top:72%;color:var(--accent-evidence)}
+  .cognitive-observatory__field:has(#field-focus-human-direction:checked) .cognitive-observatory__orbits span:nth-child(1){border-width:2px;box-shadow:0 0 2rem color-mix(in srgb,var(--state-human-control) 15%,transparent)}.cognitive-observatory__field:has(#field-focus-remember-and-govern:checked) .cognitive-observatory__orbits span:nth-child(2){border-width:2px;border-color:var(--accent-continuity)}.cognitive-observatory__field:has(#field-focus-coordinate-and-admit:checked) .cognitive-observatory__orbits span:nth-child(2){border-color:var(--state-human-control);border-width:2px}.cognitive-observatory__field:has(#field-focus-execute-and-preserve-code-truth:checked) .cognitive-observatory__orbits span:nth-child(3){border-width:2px;border-color:var(--accent-system)}.cognitive-observatory__field:has(#field-focus-produce-and-learn:checked) .cognitive-observatory__orbits span:nth-child(4){border-width:2px;border-color:var(--accent-evidence)}
+  .cognitive-observatory__field-dock{z-index:3;min-width:0;margin:0 var(--space-5) var(--space-4);border-top:1px solid var(--border-strong);background:linear-gradient(90deg,color-mix(in srgb,var(--surface-raised) 96%,transparent),color-mix(in srgb,var(--surface-sunken) 84%,transparent));}.cognitive-observatory__field-detail{display:none;grid-template-columns:minmax(11rem,1.1fr) minmax(12rem,1.25fr) minmax(13rem,1.35fr) minmax(10rem,1fr) minmax(8.5rem,.8fr);gap:clamp(var(--space-3),1.7vw,var(--space-5));align-items:start;padding:var(--space-4) 0;color:var(--text-secondary)}.cognitive-observatory__field-detail :is(h2,p){margin:0}.cognitive-observatory__field-detail h2{color:var(--text-primary);font-size:var(--text-xl);letter-spacing:-.025em;text-wrap:balance}.cognitive-observatory__field-detail>p{font-size:var(--text-sm);line-height:1.42}.cognitive-observatory__field-detail strong{display:block;margin-bottom:var(--space-1);color:var(--text-muted);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}.cognitive-observatory__field-detail a{align-self:center;color:var(--accent-system);font-size:var(--text-sm);font-weight:700;text-decoration:none}.cognitive-observatory__field-detail a:hover,.cognitive-observatory__field-detail a:focus-visible{text-decoration:underline}.cognitive-observatory__field:has(#field-focus-human-direction:checked) [data-field-detail="human-direction"],.cognitive-observatory__field:has(#field-focus-remember-and-govern:checked) [data-field-detail="remember-and-govern"],.cognitive-observatory__field:has(#field-focus-coordinate-and-admit:checked) [data-field-detail="coordinate-and-admit"],.cognitive-observatory__field:has(#field-focus-execute-and-preserve-code-truth:checked) [data-field-detail="execute-and-preserve-code-truth"],.cognitive-observatory__field:has(#field-focus-produce-and-learn:checked) [data-field-detail="produce-and-learn"]{display:grid}
+
+  .cognitive-observatory__semantic{width:min(100%,70rem);margin:var(--space-8) auto 0}.cognitive-observatory__trace-intro{display:grid;gap:var(--space-3);max-width:48rem;margin-bottom:var(--space-6)}.cognitive-observatory__trace-intro :is(h2,p){margin:0}.cognitive-observatory__trace-intro h2{color:var(--text-primary);font-size:var(--text-2xl);line-height:1.02;letter-spacing:-.03em}.cognitive-observatory__layers{position:relative;display:grid;gap:0;margin:0;padding:0;list-style:none}.cognitive-observatory__layers::before{position:absolute;top:1.2rem;bottom:1.2rem;left:1.05rem;width:1px;background:var(--border-strong);content:""}.cognitive-observatory__layer{position:relative;display:grid;grid-template-columns:minmax(12rem,.7fr) minmax(15rem,1fr) minmax(0,1.2fr);gap:var(--space-6);padding:var(--space-6) 0 var(--space-6) calc(var(--space-7) + .5rem);border-top:1px solid var(--border-subtle);scroll-margin-top:var(--space-7)}.cognitive-observatory__layer:last-child{border-bottom:1px solid var(--border-subtle)}.cognitive-observatory__layer::before{position:absolute;top:calc(var(--space-6) + .2rem);left:.55rem;width:1rem;aspect-ratio:1;border:2px solid var(--state-boundary);border-radius:50%;background:var(--surface-canvas);content:""}.cognitive-observatory__layer--authority::before{border-color:var(--state-human-control)}.cognitive-observatory__layer--continuity::before{border-color:var(--accent-continuity)}.cognitive-observatory__layer--execution::before{border-color:var(--accent-system)}.cognitive-observatory__layer--evidence::before,.cognitive-observatory__layer--feedback::before{border-color:var(--accent-evidence)}.cognitive-observatory__layer-heading{display:grid;grid-template-columns:1.7rem minmax(0,1fr);gap:var(--space-2)}.cognitive-observatory__layer-heading>span{color:var(--text-muted);font-family:var(--font-mono);font-size:var(--text-sm)}.cognitive-observatory__layer-heading :is(h3,p){margin:0}.cognitive-observatory__layer-heading h3{margin-top:var(--space-1);color:var(--text-primary);font-size:var(--text-xl);line-height:1.05;letter-spacing:-.025em}.cognitive-observatory__layer-purpose{display:grid;gap:var(--space-4)}.cognitive-observatory__layer-purpose p{margin:0;color:var(--text-secondary);line-height:1.55}.cognitive-observatory__layer-purpose strong,.cognitive-observatory__components strong{display:block;margin-bottom:var(--space-1);color:var(--text-muted);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}.cognitive-observatory__components{display:grid;gap:var(--space-4);margin:0;padding:0;list-style:none}.cognitive-observatory__components li{padding-top:var(--space-3);border-top:1px solid color-mix(in srgb,var(--border-subtle) 75%,transparent)}.cognitive-observatory__components :is(h4,p){margin:0}.cognitive-observatory__components h4{color:var(--text-primary);font-size:var(--text-base)}.cognitive-observatory__components h4 a{color:var(--accent-system);text-decoration-thickness:1px;text-underline-offset:.18em}.cognitive-observatory__components p{margin-top:var(--space-1);color:var(--text-secondary);font-size:var(--text-sm);line-height:1.48}
+  @keyframes observatory-flow{to{stroke-dashoffset:-80}}
+  @media (prefers-reduced-motion:reduce){.cognitive-observatory__relationship{animation:none}.cognitive-observatory__layer-control label{transition:none}}
+  @media(max-width:63.99rem){.cognitive-observatory__field-detail{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3)}.cognitive-observatory__field-detail a{grid-column:span 2;align-self:auto}.cognitive-observatory__layer{grid-template-columns:minmax(10rem,.7fr) minmax(0,1fr);gap:var(--space-5)}.cognitive-observatory__components{grid-column:2}.cognitive-observatory__layer-heading{grid-row:span 2}}
+  @media(max-width:47.99rem){.cognitive-observatory{margin-top:var(--space-4)}.cognitive-observatory__lead h1{font-size:clamp(2.8rem,14vw,4.25rem)}.cognitive-observatory__field{--field-dock-space:13.5rem;--node-copy-width:7.25rem;min-height:45rem}.cognitive-observatory__field-caption{inset:var(--space-3) var(--space-4) auto;font-size:.65rem}.cognitive-observatory__orbits span:nth-child(1){width:42%}.cognitive-observatory__orbits span:nth-child(2){width:67%}.cognitive-observatory__orbits span:nth-child(3){width:92%}.cognitive-observatory__orbits span:nth-child(4){display:none}.cognitive-observatory__relationships{opacity:.72}.cognitive-observatory__layer-control label{padding:var(--space-2) 0}.cognitive-observatory__layer-control strong{font-size:var(--text-sm)}.cognitive-observatory__layer-control small{font-size:.65rem}.cognitive-observatory__layer-control--1{top:50%}.cognitive-observatory__layer-control--1 label{width:8.75rem}.cognitive-observatory__layer-control--2{left:20%;top:24%}.cognitive-observatory__layer-control--3{left:80%;top:24%}.cognitive-observatory__layer-control--4{left:80%;top:76%}.cognitive-observatory__layer-control--5{left:20%;top:76%}.cognitive-observatory__field-dock{margin:0 var(--space-4) var(--space-3)}.cognitive-observatory__field-detail{grid-template-columns:1fr;gap:var(--space-2);padding-top:var(--space-3)}.cognitive-observatory__field-detail>p{font-size:var(--text-xs)}.cognitive-observatory__field-detail a{grid-column:auto;align-self:start}.cognitive-observatory__semantic{margin-top:var(--space-7)}.cognitive-observatory__trace-intro{margin-bottom:var(--space-5)}.cognitive-observatory__layer{grid-template-columns:1fr;gap:var(--space-4);padding:var(--space-5) 0 var(--space-5) var(--space-7)}.cognitive-observatory__layer-heading{grid-row:auto}.cognitive-observatory__components{grid-column:auto}.cognitive-observatory__layers::before{left:.9rem}.cognitive-observatory__layer::before{left:.4rem;top:calc(var(--space-5) + .2rem)}}
 </style>

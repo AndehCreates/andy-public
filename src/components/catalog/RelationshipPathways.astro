@@ -1,0 +1,18 @@
+---
+import type { RelationshipPathway } from '@/lib/content/relations';
+interface Props { pathways: RelationshipPathway[]; }
+const { pathways } = Astro.props;
+---
+
+<section id="connected-pathways" aria-labelledby="connected-pathways-title">
+  <h2 id="connected-pathways-title">Connected pathways</h2>
+  {pathways.length > 0 ? pathways.map((pathway) => <section class="relationship-pathway"><h3>{pathway.heading}</h3><ul>{pathway.items.map((item) => <li><a href={item.href}>{item.title}</a>: {item.annotation}</li>)}</ul></section>) : <p>Connections will be added only when their public material is approved and available.</p>}
+</section>
+
+<style>
+  h2, h3 { color: var(--text-primary); }
+  h2 { font-size: var(--text-2xl); }
+  h3 { font-size: var(--text-lg); }
+  .relationship-pathway + .relationship-pathway { margin-top: var(--space-4); }
+  a { color: var(--accent-system); }
+</style>
