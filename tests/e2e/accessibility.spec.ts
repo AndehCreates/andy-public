@@ -46,6 +46,45 @@ test('provides a keyboard-operable skip link, a single page heading, and landmar
   const homeLink = page.getByRole('link', { name: /AI Systems home$/ });
   await homeLink.focus();
   await expect(homeLink).toHaveCSS('outline-style', 'solid');
+
+  await page.goto('/signals/');
+  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.getByRole('heading', {
+    level: 1,
+    name: 'What should a ranking prove before a person acts?',
+  })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 3, name: /What must evidence establish before a result advances\?/ })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 3, name: /What state must survive an interruption\?/ })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 3, name: /Where does private state stop and public output begin\?/ })).toHaveCount(1);
+  await expect(page.locator('[data-signal-path] ol li')).toHaveCount(9);
+  const pathLists = page.locator('[data-signal-path] ol');
+  await expect(pathLists).toHaveCount(3);
+  for (let index = 0; index < await pathLists.count(); index += 1) {
+    const itemCount = await pathLists.nth(index).locator(':scope > li').count();
+    expect(itemCount).toBeGreaterThanOrEqual(2);
+  }
+  await expect(page.locator('[data-signal-path] .signal-research-path__connector')).toHaveCount(6);
+  await expect(page.locator('[data-signal-path] [aria-hidden="true"]')).toHaveCount(6);
+  await expect(page.locator('[data-signal-artifact-record]')).toHaveAttribute('aria-label', /Artifact record/);
+  await expect(page.locator('[data-signal-field-index] a')).toHaveCount(4);
+
+  const atlasLinks = await page.locator('[data-signal-lead] a, [data-signal-path] a, [data-signal-field-index] a').evaluateAll((links) =>
+    links.map((link) => {
+      const element = link as HTMLAnchorElement;
+      return {
+        name: (element.getAttribute('aria-label') ?? element.textContent ?? '').trim().replace(/\s+/g, ' '),
+        href: element.getAttribute('href') ?? '',
+      };
+    }),
+  );
+  const names = new Map<string, string>();
+  for (const { name, href } of atlasLinks) {
+    const previousHref = names.get(name);
+    if (previousHref && previousHref !== href) {
+      throw new Error(`Duplicate accessible link name "${name}" maps to both "${previousHref}" and "${href}".`);
+    }
+    names.set(name, href);
+  }
 });
 
 test('respects reduced motion preferences', async ({ page }) => {

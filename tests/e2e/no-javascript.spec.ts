@@ -32,5 +32,19 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.getByRole('heading', { level: 1, name: 'Engineering handbook' })).toBeVisible();
 
   await page.goto('/signals/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Signal Library' })).toBeVisible();
+  await expect(page.getByRole('heading', {
+    level: 1,
+    name: 'What should a ranking prove before a person acts?',
+  })).toBeVisible();
+  await expect(page.locator('[data-signal-lead]')).toBeVisible();
+  await expect(page.locator('[data-signal-path]')).toHaveCount(3);
+  await expect(page.locator('[data-signal-field-index] a')).toHaveCount(4);
+
+  const pathLinks = page.locator('[data-signal-path] a');
+  for (let index = 0; index < await pathLinks.count(); index += 1) {
+    await expect(pathLinks.nth(index)).toHaveAttribute(
+      'href',
+      /^(?:\/signals|\/handbook|\/systems|\/work|\/case-studies)\//,
+    );
+  }
 });

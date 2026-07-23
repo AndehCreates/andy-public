@@ -93,6 +93,62 @@ test('keeps each flagship opening ahead of long-form sections without horizontal
   }
 });
 
+test('keeps the Signal Atlas readable and unclipped across supported viewport widths', async ({ page }) => {
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/signals/');
+
+    const lead = page.locator('[data-signal-lead]');
+    const artifactRecord = page.locator('[data-signal-artifact-record]');
+    const firstPath = page.locator('[data-signal-path]').first();
+    const firstPathSteps = firstPath.locator('ol > li');
+    const firstPathConnectors = firstPath.locator('[aria-hidden="true"]');
+    const fieldLinks = page.locator('[data-signal-field-index] a');
+
+    await expect(lead).toBeVisible();
+    await expect(artifactRecord).toBeVisible();
+    expect(await lead.evaluate((element) => element.compareDocumentPosition(document.querySelector('[data-signal-artifact-record]')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+    await expect(page.locator('main')).toContainText('What should a ranking prove before a person acts?');
+    await expect(fieldLinks).toHaveCount(4);
+    for (let index = 0; index < await fieldLinks.count(); index += 1) {
+      await expect(fieldLinks.nth(index)).toBeVisible();
+    }
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+    expect(overflow).toBe(true);
+
+    if (width === 375) {
+      await expect(firstPathSteps).toHaveCount(3);
+      await expect(firstPathConnectors).toHaveCount(2);
+      for (let index = 0; index < await firstPathSteps.count(); index += 1) {
+        const box = await firstPathSteps.nth(index).boundingBox();
+        expect(box?.width).toBeGreaterThan(0);
+        expect(box?.height).toBeGreaterThan(0);
+      }
+      const connectorBox = await firstPathConnectors.first().boundingBox();
+      expect(connectorBox).not.toBeNull();
+      expect(connectorBox!.height).toBeGreaterThan(connectorBox!.width);
+    } else if (width >= 1280) {
+      const pathGrid = firstPath.locator('ol');
+      const gridTemplateColumns = await pathGrid.evaluate((element) => getComputedStyle(element).gridTemplateColumns);
+      expect(gridTemplateColumns.split(' ').length).toBeGreaterThanOrEqual(3);
+      const clip = await firstPath.evaluate((element) => getComputedStyle(element).overflowX);
+      expect(clip).not.toBe('clip');
+      await expect(firstPathConnectors).toHaveCount(2);
+      const connectorBox = await firstPathConnectors.first().boundingBox();
+      expect(connectorBox).not.toBeNull();
+      expect(connectorBox!.width).toBeGreaterThan(connectorBox!.height);
+      const metrics = await firstPath.evaluate((element) => ({
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+      }));
+      expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth);
+    } else {
+      await expect(firstPathSteps).toHaveCount(3);
+    }
+  }
+});
+
 test('prioritizes the homepage position and flagship action before its visual on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/');

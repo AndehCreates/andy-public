@@ -25,6 +25,7 @@ const intentLabels: Record<ResolvedSignalAtlas['paths'][number]['steps'][number]
     {path.steps.map((step, index) => <li>
       <span class="visually-hidden">Step {index + 1} of {path.steps.length}: </span>
       <p class="signal-research-path__intent">{intentLabels[step.intent]}</p>
+      {index < path.steps.length - 1 && <span class="signal-research-path__connector" aria-hidden="true"></span>}
       <a href={step.record.href}>{intentLabels[step.intent]}: {step.record.title}</a>
       <p class="signal-research-path__summary">{step.record.summary}</p>
       {step.transition && <p class="signal-research-path__transition"><span class="visually-hidden">Then: </span>{step.transition}</p>}
@@ -42,10 +43,13 @@ const intentLabels: Record<ResolvedSignalAtlas['paths'][number]['steps'][number]
   li { position: relative; display: grid; align-content: start; gap: var(--space-2); min-width: 0; padding: var(--space-4) 0 var(--space-4) var(--space-5); border-top: var(--border-width) solid var(--border-subtle); counter-increment: path-step; transition: border-color var(--motion-base) var(--motion-ease), transform var(--motion-base) var(--motion-ease); }
   li::before { position: absolute; top: var(--space-4); left: 0; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-xs); content: '0' counter(path-step); }
   li:hover, li:focus-within { border-color: var(--accent-signal); transform: translateX(.25rem); }
+  .signal-research-path__connector { width: var(--border-width); min-height: var(--space-6); margin-block: var(--space-1) var(--space-2); background: linear-gradient(to bottom, var(--accent-signal), transparent); opacity: .45; transition: opacity var(--motion-base) var(--motion-ease); }
+  li:hover .signal-research-path__connector, li:focus-within .signal-research-path__connector { opacity: .9; }
   a { width: fit-content; color: var(--text-primary); font-weight: 700; text-decoration-color: var(--accent-signal); text-decoration-thickness: .1em; }
+  a:focus-visible { outline: 2px solid var(--accent-signal); outline-offset: 3px; }
   a:hover { color: var(--accent-signal); }
   .signal-research-path__summary { max-width: 42ch; font-size: var(--text-sm); line-height: 1.55; }
   .signal-research-path__transition { padding-top: var(--space-2); color: var(--accent-evidence); font-size: var(--text-sm); line-height: 1.5; }
-  @media (min-width: 48rem) { ol { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } li { min-height: 100%; } }
-  @media (prefers-reduced-motion: reduce) { li { transition: none; } li:hover, li:focus-within { transform: none; } }
+  @media (min-width: 48rem) { ol { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } li { min-height: 100%; } .signal-research-path__connector { width: 100%; min-height: var(--border-width); background: linear-gradient(to right, var(--accent-signal), transparent); } }
+  @media (prefers-reduced-motion: reduce) { li { transition: none; } li:hover, li:focus-within { transform: none; } .signal-research-path__connector { transition-duration: 10ms; } }
 </style>
