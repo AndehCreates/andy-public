@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { basename, resolve } from 'node:path';
+import { basename, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import fg from 'fast-glob';
 import matter from 'gray-matter';
@@ -8,6 +8,14 @@ import { canPublish, type PublicReview, type SourceAvailability, type Visibility
 import { findPublicContentRisks } from '../src/lib/content/sanitization';
 import { projectPresentationFieldNames } from '../src/lib/content/presentation';
 import type { ContentCollectionName } from '../src/lib/content/types';
+import { signalAtlasConfig } from '../src/data/signalAtlas';
+import {
+  SignalAtlasConfigurationError,
+  contentSlugFromRelativePath,
+  resolveSignalAtlas,
+  toSignalAtlasRecord,
+  type SignalAtlasConfig,
+} from '../src/lib/content/signalAtlas';
 
 const contentRoot = resolve(process.cwd(), 'src/content');
 const collectionDirectories = [
@@ -20,6 +28,7 @@ const collectionDirectories = [
 
 export type AuditedEntry = {
   id: string;
+  slug: string;
   collection: ContentCollectionName;
   visibility: Visibility;
   publicReview: PublicReview;
@@ -31,6 +40,18 @@ export type AuditedEntry = {
   summary: string;
   body: string;
   presentationStrings?: string[];
+  signalPresentation?: SignalPresentationAuditPayload;
+};
+
+export type SignalPresentationAuditPayload = {
+  artifactLabel?: string;
+  finding?: string;
+  evidenceSummary?: string;
+  evidenceBoundary?: string;
+  continueTo?: {
+    targetId?: string;
+    annotation?: string;
+  };
 };
 
 export type EvidenceDocument = {
@@ -57,12 +78,13 @@ export function collectProjectPresentationStrings(data: Record<string, unknown>)
   return projectPresentationFieldNames.flatMap((field) => collectStrings(data[field]));
 }
 
-function asEntry(collection: ContentCollectionName, parsed: matter.GrayMatterFile<string>): AuditedEntry {
+function asEntry(collection: ContentCollectionName, routeSlug: string, parsed: matter.GrayMatterFile<string>): AuditedEntry {
   const data = parsed.data as Record<string, unknown>;
   const authoredId = typeof data.id === 'string' ? data.id : '';
 
   const entry: AuditedEntry = {
     id: canonicalRelationId(collection, authoredId),
+    slug: routeSlug,
     collection,
     visibility: data.visibility as Visibility,
     publicReview: data.publicReview as PublicReview,
@@ -89,8 +111,69 @@ async function readEntries(): Promise<AuditedEntry[]> {
     const collection = collectionDirectories.find(([, directory]) => filePath.includes(`${directory}\\`) || filePath.includes(`${directory}/`))?.[0];
     if (!collection) throw new Error(`Unable to determine collection for ${filePath}.`);
     const raw = await readFile(filePath, 'utf8');
-    return asEntry(collection, matter(raw));
+    const directory = collectionDirectories.find(([candidate]) => candidate === collection)?.[1];
+    if (!directory) throw new Error(`Unable to determine directory for ${collection}.`);
+    const routeSlug = contentSlugFromRelativePath(relative(resolve(contentRoot, directory), filePath));
+    return asEntry(collection, routeSlug, matter(raw));
   }));
+}
+
+function signalAtlasRecords(entries: AuditedEntry[]) {
+  return entries.map((entry) => toSignalAtlasRecord({
+    collection: entry.collection,
+    authoredId: entry.id.slice(`${entry.collection}:`.length),
+    routeSlug: entry.slug,
+    title: entry.title,
+    summary: entry.summary,
+    visibility: entry.visibility,
+    publicReview: entry.publicReview,
+  }));
+}
+
+function presentString(value: string | undefined): boolean {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+export function validateSignalAtlasEntries(
+  entries: AuditedEntry[],
+  atlasConfig: SignalAtlasConfig = signalAtlasConfig,
+): string[] {
+  const violations: string[] = [];
+  const records = signalAtlasRecords(entries);
+  const recordById = new Map(records.map((record) => [record.canonicalId, record]));
+
+  for (const entry of entries) {
+    if (entry.collection !== 'signals' || !canPublish(entry)) continue;
+    const presentation = entry.signalPresentation;
+    const requiredFields: Array<keyof Pick<SignalPresentationAuditPayload, 'artifactLabel' | 'finding' | 'evidenceSummary' | 'evidenceBoundary'>> = [
+      'artifactLabel', 'finding', 'evidenceSummary', 'evidenceBoundary',
+    ];
+    for (const field of requiredFields) {
+      if (!presentString(presentation?.[field])) violations.push(`${entry.id}: signal-presentation: ${field} is required for publishable signals.`);
+    }
+    if (!presentation?.continueTo || !presentString(presentation.continueTo.annotation)) {
+      violations.push(`${entry.id}: signal-presentation: continueTo.annotation is required for publishable signals.`);
+    }
+    const continuationTargetId = presentation?.continueTo?.targetId;
+    if (typeof continuationTargetId !== 'string' || continuationTargetId.trim().length === 0) {
+      violations.push(`${entry.id}: signal-presentation: continueTo.targetId is required for publishable signals.`);
+    } else {
+      const continuation = recordById.get(continuationTargetId);
+      if (!continuation) violations.push(`${entry.id}: continuation: "${continuationTargetId}" does not exist.`);
+      else if (!canPublish(continuation)) violations.push(`${entry.id}: continuation: "${continuationTargetId}" is not approved for public content.`);
+    }
+    for (const finding of findPublicContentRisks(collectStrings(presentation).join('\n'))) {
+      violations.push(`${entry.id}: ${finding.rule}: ${finding.excerpt}`);
+    }
+  }
+
+  try {
+    resolveSignalAtlas(atlasConfig, records);
+  } catch (error) {
+    if (error instanceof SignalAtlasConfigurationError) violations.push(...error.issues);
+    else throw error;
+  }
+  return violations;
 }
 
 export function auditEntries(entries: AuditedEntry[]): void {
