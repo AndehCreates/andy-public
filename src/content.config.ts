@@ -5,6 +5,7 @@ import { capabilityIds } from '@/lib/content/taxonomy';
 import { reviewValues, sourceAvailabilityValues, visibilityValues } from '@/lib/content/publication';
 import { addProjectPresentationIssues, projectPresentationFields } from '@/lib/content/presentation';
 import { catalogPresentationFields } from '@/lib/content/catalog';
+import { relationshipEdgeSchema } from '@/lib/content/relations';
 import { projectStatusValues } from '@/lib/content/types';
 
 const baseFields = {
@@ -17,6 +18,7 @@ const baseFields = {
   sourceUrls: z.array(z.string().url()).default([]),
   capabilities: z.array(z.enum(capabilityIds)).min(1),
   relatedIds: z.array(z.string()).default([]),
+  relationshipEdges: z.array(relationshipEdgeSchema).default([]),
   publishedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date(),
   order: z.number().int().nonnegative().optional(),
