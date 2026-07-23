@@ -1,11 +1,11 @@
 # Signal Library Editorial Atlas Design
 
-**Date:** 2026-07-23  
-**Status:** Approved in the visual companion on 2026-07-23; awaiting written-spec review  
-**Product:** Andy Public Portfolio  
-**Route:** `/signals/`  
-**Surface mode:** Experience for discovery, Read for detail  
-**Direction:** Editorial Research Atlas  
+**Date:** 2026-07-23
+**Status:** Approved in the visual companion on 2026-07-23; awaiting written-spec review
+**Product:** Andy Public Portfolio
+**Route:** `/signals/`
+**Surface mode:** Experience for discovery, Read for detail
+**Direction:** Editorial Research Atlas
 
 ## Objective
 
