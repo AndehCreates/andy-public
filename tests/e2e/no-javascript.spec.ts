@@ -28,6 +28,13 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.getByRole('heading', { level: 2, name: 'How to read this map' })).toBeVisible();
   await expect(page.locator('main')).toContainText('Related public work');
 
+  await page.goto('/systems/cognitive-infrastructure/');
+  const observatory = page.locator('[data-cognitive-observatory]');
+  await expect(observatory.locator('.cognitive-observatory__semantic')).toBeVisible();
+  await expect(observatory).toContainText('Owns durable memory, session context, and recoverable handoffs.');
+  await expect(observatory).toContainText('Reconciles desired work, coordinates verification, and publishes handoff state.');
+  await expect(observatory.getByRole('link', { name: 'Chief of Staff' })).toHaveAttribute('href', '/work/chief-of-staff/');
+
   await page.goto('/handbook/');
   await expect(page.getByRole('heading', { level: 1, name: 'Engineering handbook' })).toBeVisible();
 

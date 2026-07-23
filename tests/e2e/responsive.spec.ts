@@ -115,3 +115,15 @@ test('prioritizes the homepage position and flagship action before its visual on
   await expect(visual).toContainText('Human-owned decisions');
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('reflows the Observatory into an ordered layer sequence on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('/systems/cognitive-infrastructure/');
+
+  const observatory = page.locator('[data-cognitive-observatory]');
+  await expect(observatory.locator('.cognitive-observatory__visual')).toBeHidden();
+  await expect(observatory.locator('.cognitive-observatory__layers')).toHaveCSS('display', 'grid');
+  await expect(observatory.locator('.cognitive-observatory__layer').first()).toContainText('Human direction');
+  await expect(observatory.locator('.cognitive-observatory__layer').last()).toContainText('Portfolio projects and feedback');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});

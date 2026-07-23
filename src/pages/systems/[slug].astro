@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
 import { publicEntries } from '@/lib/content/queries';
+import CognitiveObservatory from '@/components/diagrams/CognitiveObservatory.astro';
 
 const collectionRoute = {
   projects: '/work/',
@@ -68,6 +69,7 @@ const related = await relatedPublicEntries(system.data.relatedIds);
   canonicalPath={`/systems/${system.id}/`}
   updatedAt={system.data.updatedAt}
 >
+  {system.data.systemProjection && <CognitiveObservatory projection={system.data.systemProjection} />}
   <Content />
   <aside class="system-relations" aria-labelledby="related-public-work">
     <h2 id="related-public-work">Related public work</h2>
