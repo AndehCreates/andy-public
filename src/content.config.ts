@@ -4,6 +4,7 @@ import { z } from 'astro/zod';
 import { capabilityIds } from '@/lib/content/taxonomy';
 import { reviewValues, sourceAvailabilityValues, visibilityValues } from '@/lib/content/publication';
 import { addProjectPresentationIssues, projectPresentationFields } from '@/lib/content/presentation';
+import { addSignalPresentationIssues, signalPresentationFields } from '@/lib/content/signals';
 import { projectStatusValues } from '@/lib/content/types';
 
 const baseFields = {
@@ -60,8 +61,9 @@ const signals = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/signals' }),
   schema: z.object({
     ...baseFields,
+    ...signalPresentationFields,
     kind: z.enum(['resource', 'homelab', 'field-note', 'experiment']),
-  }),
+  }).superRefine(addSignalPresentationIssues),
 });
 
 export const collections = { projects, caseStudies, systems, handbook, signals };

@@ -12,8 +12,19 @@ publishedAt: 2026-07-14
 updatedAt: 2026-07-21
 order: 4
 kind: experiment
+researchQuestion: Who is allowed to declare work complete?
+artifactLabel: Lifecycle fixtures and independent-verification gate
+artifactType: test
+finding: Completion remains accountable when lifecycle fixtures distinguish a worker-reported result from independently declared verification evidence.
+evidenceSummary: Offline lifecycle fixtures exercised completion, stale-lease, human-waiting, recovery, handoff-pending, and approval-pending states; the reviewed suite passed 104 tests.
+evidenceBoundary: This evidence is fixture-based and offline; it does not establish live fleet operation, integration, autonomy, or business-scale outcomes.
+readingMinutes: 3
+sourceContext: Chief of Staff coordination lifecycle
+continueTo:
+  targetId: caseStudies:case-study-chief-of-staff
+  annotation: Continue to see how lifecycle states, repository guards, and independent verification preserve human control at completion boundaries.
 ---
 
-Small experiments can expose a system's behavior earlier than a fully composed experience. The useful constraint is to keep inputs, output, and the person's next choice visible enough to inspect together.
+Completion should be a verifiable state, not a worker's self-report. Chief of Staff models admission, execution, verification, human review, recovery, and handoff as explicit lifecycle states, with declared verification evidence required before work is treated as complete.
 
-This connects to the wider work by treating interaction as an evaluation surface: a prototype can reveal ambiguity, awkward control boundaries, or missing feedback before those assumptions become architecture.
+The reviewed offline fixtures cover normal completion, stale leases, human waiting, recovery, handoff-pending, and approval-pending states, and the reviewed suite passed 104 tests. This does not establish a live fleet or integration. Continue to the Chief of Staff case study for the authority boundaries and next validation step.

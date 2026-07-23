@@ -12,8 +12,19 @@ publishedAt: 2026-07-16
 updatedAt: 2026-07-21
 order: 2
 kind: resource
+researchQuestion: Where does private state stop and public output begin?
+artifactLabel: Static build pipeline and rendered-output audit
+artifactType: test
+finding: A static build creates a reviewable public artifact when content checks and rendered-output audits inspect what will be served.
+evidenceSummary: The portfolio package scripts run type checks, tests, a public-content audit, a static build, and a rendered-output audit; the V1 readiness record documents a passing static build and rendered-output audit.
+evidenceBoundary: Static output does not establish public deployment and does not remove the need for editorial review or security review.
+readingMinutes: 2
+sourceContext: Andy Public Portfolio build and verification record
+continueTo:
+  targetId: handbook:grounded-knowledge
+  annotation: Continue to the grounded-knowledge principle for the editorial discipline that keeps reviewed evidence separate from unreviewed context.
 ---
 
-[Astro's static and on-demand rendering guide](https://docs.astro.build/en/guides/on-demand-rendering/) is useful because it makes the delivery boundary explicit: content can be built and inspected before it is served.
+A public site is easier to review when its rendered output is a deliberate artifact rather than an accidental view into runtime state. This portfolio's build pipeline checks content, builds static pages, and audits the rendered output before it is treated as a release candidate.
 
-For this portfolio, that boundary supports a public-content audit and keeps the published site separate from local sources and operational state. The resource matters as a design reference, not as a claim that static output removes the need for editorial review.
+The V1 readiness record documents a passing static build and rendered-output audit. That evidence supports a reviewable output boundary, not public deployment or the claim that static delivery replaces editorial and security review. Continue to Grounded knowledge for the practice of keeping evidence and context distinct.

@@ -12,8 +12,19 @@ publishedAt: 2026-07-15
 updatedAt: 2026-07-21
 order: 3
 kind: homelab
+researchQuestion: What state must survive an interruption?
+artifactLabel: Application-state, adjustment, and intervention contracts
+artifactType: source
+finding: Interruption recovery becomes inspectable when application state, user-confirmed adjustments, and human interventions are represented as typed contracts.
+evidenceSummary: Source inspection confirmed typed schemas for application state, adjustment proposals, delegated policies, human interventions, and planning artifacts; the inspected commit also completed a TypeScript type check.
+evidenceBoundary: This evidence does not establish clinical, productivity, accessibility, reliability, cross-device, or production-ready synchronization outcomes.
+readingMinutes: 3
+sourceContext: LifeOS application architecture
+continueTo:
+  targetId: caseStudies:case-study-lifeos
+  annotation: Continue to see how typed state and user-confirmed interventions support continuity without claiming that every recovery or sync path is complete.
 ---
 
-Local infrastructure is most useful when its state can be understood without relying on a person remembering every recovery step. A concise status surface and a durable handoff record make maintenance calmer and failures easier to revisit.
+An interruption should not force a person to reconstruct the whole system from memory. LifeOS makes the state around work, adjustment proposals, and human interventions explicit in typed contracts, so consequential changes can be inspected and confirmed rather than disappearing into interface behavior.
 
-This note deliberately stays at the pattern level. It omits addresses, host names, inventories, access methods, and topology; the public lesson is about inspectable recovery, not a deployable infrastructure recipe.
+The reviewed source confirms those contracts through source inspection and a TypeScript type check. It does not establish recovery, accessibility, productivity, or synchronization outcomes. Continue to the LifeOS case study for the architecture and the scenario validation still to do.

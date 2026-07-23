@@ -7,6 +7,7 @@ import { canonicalRelationId, validatePublicRelations } from '../src/lib/content
 import { canPublish, type PublicReview, type SourceAvailability, type Visibility, validateSourcePolicy } from '../src/lib/content/publication';
 import { findPublicContentRisks } from '../src/lib/content/sanitization';
 import { projectPresentationFieldNames } from '../src/lib/content/presentation';
+import { signalArtifactTypeValues } from '../src/lib/content/signals';
 import type { ContentCollectionName } from '../src/lib/content/types';
 import { signalAtlasConfig } from '../src/data/signalAtlas';
 import {
@@ -44,10 +45,14 @@ export type AuditedEntry = {
 };
 
 export type SignalPresentationAuditPayload = {
+  researchQuestion?: string;
   artifactLabel?: string;
+  artifactType?: string;
   finding?: string;
   evidenceSummary?: string;
   evidenceBoundary?: string;
+  readingMinutes?: number;
+  sourceContext?: string;
   continueTo?: {
     targetId?: string;
     annotation?: string;
@@ -78,6 +83,28 @@ export function collectProjectPresentationStrings(data: Record<string, unknown>)
   return projectPresentationFieldNames.flatMap((field) => collectStrings(data[field]));
 }
 
+export function collectSignalPresentation(data: Record<string, unknown>): SignalPresentationAuditPayload {
+  const continueTo = data.continueTo && typeof data.continueTo === 'object' && !Array.isArray(data.continueTo)
+    ? data.continueTo as Record<string, unknown>
+    : undefined;
+  return {
+    ...(typeof data.researchQuestion === 'string' ? { researchQuestion: data.researchQuestion } : {}),
+    ...(typeof data.artifactLabel === 'string' ? { artifactLabel: data.artifactLabel } : {}),
+    ...(typeof data.artifactType === 'string' ? { artifactType: data.artifactType } : {}),
+    ...(typeof data.finding === 'string' ? { finding: data.finding } : {}),
+    ...(typeof data.evidenceSummary === 'string' ? { evidenceSummary: data.evidenceSummary } : {}),
+    ...(typeof data.evidenceBoundary === 'string' ? { evidenceBoundary: data.evidenceBoundary } : {}),
+    ...(typeof data.readingMinutes === 'number' ? { readingMinutes: data.readingMinutes } : {}),
+    ...(typeof data.sourceContext === 'string' ? { sourceContext: data.sourceContext } : {}),
+    ...(continueTo ? {
+      continueTo: {
+        ...(typeof continueTo.targetId === 'string' ? { targetId: continueTo.targetId } : {}),
+        ...(typeof continueTo.annotation === 'string' ? { annotation: continueTo.annotation } : {}),
+      },
+    } : {}),
+  };
+}
+
 function asEntry(collection: ContentCollectionName, routeSlug: string, parsed: matter.GrayMatterFile<string>): AuditedEntry {
   const data = parsed.data as Record<string, unknown>;
   const authoredId = typeof data.id === 'string' ? data.id : '';
@@ -98,6 +125,7 @@ function asEntry(collection: ContentCollectionName, routeSlug: string, parsed: m
   };
 
   if (canPublish(entry)) entry.presentationStrings = collectProjectPresentationStrings(data);
+  if (collection === 'signals') entry.signalPresentation = collectSignalPresentation(data);
   return entry;
 }
 
@@ -145,11 +173,14 @@ export function validateSignalAtlasEntries(
   for (const entry of entries) {
     if (entry.collection !== 'signals' || !canPublish(entry)) continue;
     const presentation = entry.signalPresentation;
-    const requiredFields: Array<keyof Pick<SignalPresentationAuditPayload, 'artifactLabel' | 'finding' | 'evidenceSummary' | 'evidenceBoundary'>> = [
-      'artifactLabel', 'finding', 'evidenceSummary', 'evidenceBoundary',
+    const requiredFields: Array<keyof Pick<SignalPresentationAuditPayload, 'researchQuestion' | 'artifactLabel' | 'artifactType' | 'finding' | 'evidenceSummary' | 'evidenceBoundary'>> = [
+      'researchQuestion', 'artifactLabel', 'artifactType', 'finding', 'evidenceSummary', 'evidenceBoundary',
     ];
     for (const field of requiredFields) {
       if (!presentString(presentation?.[field])) violations.push(`${entry.id}: signal-presentation: ${field} is required for publishable signals.`);
+    }
+    if (presentation?.artifactType && !signalArtifactTypeValues.includes(presentation.artifactType as typeof signalArtifactTypeValues[number])) {
+      violations.push(`${entry.id}: signal-presentation: artifactType must be one of ${signalArtifactTypeValues.join(', ')}.`);
     }
     if (!presentation?.continueTo || !presentString(presentation.continueTo.annotation)) {
       violations.push(`${entry.id}: signal-presentation: continueTo.annotation is required for publishable signals.`);
@@ -176,7 +207,10 @@ export function validateSignalAtlasEntries(
   return violations;
 }
 
-export function auditEntries(entries: AuditedEntry[]): void {
+export function auditEntries(
+  entries: AuditedEntry[],
+  atlasConfig: SignalAtlasConfig = signalAtlasConfig,
+): void {
   const records = new Map(entries.map((entry) => [entry.id, entry]));
   const violations: string[] = [];
 
@@ -188,6 +222,7 @@ export function auditEntries(entries: AuditedEntry[]): void {
         entry.summary,
         ...entry.sourceUrls,
         ...(entry.presentationStrings ?? []),
+        ...collectStrings(entry.signalPresentation),
         entry.body,
       ].join('\n'))) {
         violations.push(`${entry.id}: ${finding.rule}: ${finding.excerpt}`);
@@ -206,7 +241,10 @@ export function auditEntries(entries: AuditedEntry[]): void {
     }
   }
 
-  if (violations.length) throw new Error(`Public content audit failed:\n${violations.map((violation) => `- ${violation}`).join('\n')}`);
+  violations.push(...validateSignalAtlasEntries(entries, atlasConfig));
+
+  const uniqueViolations = [...new Set(violations)];
+  if (uniqueViolations.length) throw new Error(`Public content audit failed:\n${uniqueViolations.map((violation) => `- ${violation}`).join('\n')}`);
 }
 
 export function auditEvidenceDocuments(documents: EvidenceDocument[]): void {

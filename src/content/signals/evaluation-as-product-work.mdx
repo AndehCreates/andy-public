@@ -12,8 +12,19 @@ publishedAt: 2026-07-21
 updatedAt: 2026-07-21
 order: 1
 kind: field-note
+researchQuestion: What should a ranking prove before a person acts?
+artifactLabel: Uncertainty and readiness gates
+artifactType: implementation
+finding: A ranking remains a decision aid when deterministic scoring is paired with explicit uncertainty and readiness gates instead of being presented as a conclusion.
+evidenceSummary: Source inspection found deterministic scoring, uncertainty and pre-trade gates; 16 focused tests covered insufficient-sample blocking, non-positive-edge rejection, readiness alignment, and signal-promotion guardrails.
+evidenceBoundary: This evidence does not establish profitability, trading performance, investment advice, live execution, or a production-ready signal.
+readingMinutes: 3
+sourceContext: Alpha Screener research workspace
+continueTo:
+  targetId: caseStudies:case-study-alpha-screener
+  annotation: Continue to see how deterministic scoring, uncertainty, and human review are kept distinct in the broader decision-support workspace.
 ---
 
-Reliability has a user-facing shape. A confidence label, a missing-input state, and a next-evidence cue can help someone decide what to inspect instead of receiving a polished result with no visible limits.
+A ranking is only a useful starting point if a person can inspect what supports it and what blocks it. In Alpha Screener, deterministic scoring stays separate from uncertainty and readiness gates, so missing evidence or unresolved conditions can remain visible instead of being smoothed into a recommendation.
 
-This relates to the work because decision-support interfaces need to expose uncertainty as part of the product, not leave it buried in implementation notes. The useful question is not whether an output looks complete; it is whether a person can understand what would change their mind.
+The reviewed source includes focused tests for insufficient-sample blocking, non-positive-edge rejection, readiness alignment, and signal-promotion guardrails. That establishes a bounded decision-aid pattern, not profitability, advice, or live execution. Continue to the Alpha Screener case study for the wider workspace and its remaining validation boundaries.

@@ -17,6 +17,7 @@ it('excludes underscored fixture filenames from the standalone content audit', (
 it('accepts a public relationship that resolves through a canonical authored ID', () => {
   const projectId = canonicalRelationId('projects', 'chief-of-staff');
   const systemId = canonicalRelationId('systems', 'reliable-ai-work');
+  const signalId = 'signals:relation-signal';
 
   expect(() => auditEntries([
     {
@@ -45,7 +46,35 @@ it('accepts a public relationship that resolves through a canonical authored ID'
       summary: 'A cross-project system map for reliable AI architecture patterns.',
       body: 'Public-safe system narrative.',
     },
-  ])).not.toThrow();
+    {
+      id: signalId,
+      slug: 'relation-signal',
+      collection: 'signals',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      title: 'A complete relation Signal',
+      summary: 'A reviewed Signal fixture that keeps the relationship audit independent.',
+      body: 'Public-safe Signal narrative.',
+      signalPresentation: {
+        researchQuestion: 'What relationship should remain valid after Signal activation?',
+        artifactLabel: 'Canonical relation fixture',
+        artifactType: 'test',
+        finding: 'A public relationship keeps its canonical authored identifier.',
+        evidenceSummary: 'The focused audit fixture resolves a public relationship.',
+        evidenceBoundary: 'This fixture does not establish a broader system outcome.',
+        continueTo: { targetId: systemId, annotation: 'Continue to the public system record that resolves this relationship.' },
+      },
+    },
+  ], {
+    leadSignalId: signalId,
+    paths: [{ id: 'relation-path', question: 'What relationship is public?', premise: 'Follow the public Signal into its resolved system.', readingMinutes: 2, steps: [
+      { targetId: signalId, intent: 'inspect', transition: 'The resolved relation continues into the public system.' },
+      { targetId: systemId, intent: 'practice' },
+    ] }],
+  })).not.toThrow();
 });
 
 it('rejects a public case study whose related project is not approved for public content', () => {
@@ -131,8 +160,10 @@ function atlasEntry(overrides: Record<string, unknown> = {}) {
     visibility: 'listed' as const, publicReview: 'approved' as const, sourceAvailability: 'local-only' as const,
     sourceUrls: [], relatedIds: [], title: 'A complete public Signal', summary: 'A reviewed Signal with structured public presentation fields.', body: 'Public body.',
     signalPresentation: {
-      artifactLabel: 'Reviewed readiness gate', finding: 'The artifact keeps promotion decisions inspectable.',
+      researchQuestion: 'What evidence must this public Signal establish before it continues?',
+      artifactLabel: 'Reviewed readiness gate', artifactType: 'test', finding: 'The artifact keeps promotion decisions inspectable.',
       evidenceSummary: 'Focused tests cover the relevant gate behavior.', evidenceBoundary: 'The test does not establish live outcomes.',
+      readingMinutes: 3, sourceContext: 'Reviewed Signal source context',
       continueTo: { targetId: 'caseStudies:route-alpha', annotation: 'Continue to inspect the system-level consequence of this gate.' },
     },
     ...overrides,
@@ -154,6 +185,18 @@ it('accepts a complete public Signal and uses the route slug instead of its auth
     .toBe('/case-studies/alpha-screener/');
 });
 
+it('accepts a complete structured Signal through the live content audit', () => {
+  expect(() => auditEntries([
+    atlasEntry(),
+    continuationEntry(),
+    {
+      id: 'projects:alpha-screener', slug: 'alpha-screener', collection: 'projects' as const,
+      visibility: 'featured' as const, publicReview: 'approved' as const, sourceAvailability: 'local-only' as const,
+      sourceUrls: [], relatedIds: [], title: 'Alpha Screener', summary: 'A reviewed project record for the case-study continuation.', body: 'Public project body.',
+    },
+  ], atlasConfig)).not.toThrow();
+});
+
 it.each([
   ['unknown', undefined],
   ['draft', continuationEntry({ visibility: 'draft' })],
@@ -164,9 +207,15 @@ it.each([
   expect(validateSignalAtlasEntries(entries, atlasConfig).join('\n')).toMatch(/continuation|caseStudies:route-alpha/i);
 });
 
-it.each(['evidenceSummary', 'evidenceBoundary'] as const)('requires signalPresentation.%s', (field) => {
+it.each(['researchQuestion', 'artifactType', 'finding', 'evidenceSummary', 'evidenceBoundary'] as const)('requires signalPresentation.%s', (field) => {
   const presentation = { ...atlasEntry().signalPresentation, [field]: undefined };
   expect(validateSignalAtlasEntries([atlasEntry({ signalPresentation: presentation }), continuationEntry()], atlasConfig).join('\n')).toMatch(new RegExp(field));
+});
+
+it('rejects a Signal artifact type outside the shared public contract', () => {
+  const presentation = { ...atlasEntry().signalPresentation, artifactType: 'unsupported-type' };
+  expect(validateSignalAtlasEntries([atlasEntry({ signalPresentation: presentation }), continuationEntry()], atlasConfig).join('\n'))
+    .toMatch(/artifactType must be one of/);
 });
 
 it('requires a continuation annotation and reports unsafe structured strings', () => {
@@ -191,4 +240,47 @@ it('includes resolver configuration failures while leaving unrelated non-Signal 
   const invalid = { ...atlasConfig, leadSignalId: 'signals:missing' };
   const unrelated = continuationEntry({ collection: 'systems', id: 'systems:unrelated', slug: 'unrelated' });
   expect(validateSignalAtlasEntries([atlasEntry(), continuationEntry(), unrelated], invalid).join('\n')).toMatch(/Lead Signal/i);
+});
+
+it('integrates complete Signal presentation, sanitizer, continuation, and atlas failures into the live audit', () => {
+  const unsafePresentation = {
+    ...atlasEntry().signalPresentation,
+    sourceContext: 'Reviewed source at C:\\private\\signal.',
+    continueTo: { targetId: 'caseStudies:missing', annotation: 'Continue to inspect the system-level consequence of this gate.' },
+  };
+  const incompletePresentation = {
+    ...atlasEntry().signalPresentation,
+    researchQuestion: undefined,
+    artifactType: undefined,
+    finding: undefined,
+    evidenceSummary: undefined,
+    evidenceBoundary: undefined,
+    continueTo: undefined,
+  };
+
+  let error: unknown;
+  try {
+    auditEntries([
+      atlasEntry({ signalPresentation: unsafePresentation }),
+      atlasEntry({ id: 'signals:incomplete-signal', slug: 'incomplete-signal', signalPresentation: incompletePresentation }),
+      continuationEntry(),
+    ]);
+  } catch (caught) {
+    error = caught;
+  }
+
+  expect(error).toBeInstanceOf(Error);
+  const message = (error as Error).message;
+  for (const violation of [
+    'researchQuestion is required',
+    'artifactType is required',
+    'finding is required',
+    'evidenceSummary is required',
+    'evidenceBoundary is required',
+    'continueTo.annotation is required',
+    'continuation: "caseStudies:missing" does not exist',
+    'windows-path: C:\\private\\signal',
+    'Path "evidence-before-action" target "handbook:evaluation-driven-development" does not exist',
+  ]) expect(message).toContain(violation);
+  expect(message.match(/windows-path: C:\\private\\signal/g)).toHaveLength(1);
 });
