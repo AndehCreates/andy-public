@@ -113,3 +113,32 @@ choose claims on the user's behalf.
 - Use focused conventional commits after meaningful verified units.
 - Do not push, open a pull request, or merge unless the user requests that
   lifecycle explicitly.
+
+## Code Review Rules
+
+### Public evidence boundaries
+
+- Flag any public route, metadata, relationship, generated artifact, or
+  source-link change that exposes a private path, host, credential, personal
+  data, draft/internal content, or an unsupported claim. The safe path is to
+  keep the item pending or remove the unsafe public reference.
+
+### Publication-state integrity
+
+- Flag behavior that infers `publicationState`, `sourceAvailability`, or
+  `publicReview` from another field. These states are independent; public
+  selectors and generated routes must use the explicit approved state.
+
+### Static and accessible delivery
+
+- Flag new portfolio content that depends on client JavaScript for core
+  navigation, reading, relationship paths, or source disclosures. The safe
+  path is semantic static HTML with progressive enhancement only.
+
+### Pull request review loop
+
+- Before merge, request a Codex review for the current head commit with the
+  exact PR comment `@codex review`. Wait for the eyes reaction and review on
+  that commit, address findings, and repeat after every substantive new commit.
+- Do not treat a review on an earlier commit SHA as coverage for the current
+  pull request head.
