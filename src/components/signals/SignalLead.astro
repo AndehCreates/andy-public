@@ -1,0 +1,49 @@
+---
+import type { SignalAtlasSignalView } from '@/lib/content/signalAtlas';
+
+interface Props {
+  signal: SignalAtlasSignalView;
+}
+
+const { signal } = Astro.props;
+const date = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(signal.updatedAt);
+---
+
+<section class="signal-lead" data-signal-lead aria-labelledby="signal-lead-question">
+  <p class="signal-lead__eyebrow">{signal.artifactType} artifact / {signal.sourceContext ?? 'Reviewed Signal record'}</p>
+  <h1 id="signal-lead-question">{signal.researchQuestion}</h1>
+  <p class="signal-lead__finding">{signal.finding}</p>
+  <div class="signal-lead__evidence">
+    <p><span>Evidence</span>{signal.evidenceSummary}</p>
+    <p><span>Limit</span>{signal.evidenceBoundary}</p>
+  </div>
+  <dl class="signal-lead__metadata" aria-label="Signal metadata">
+    <div><dt>Updated</dt><dd>{date}</dd></div>
+    <div><dt>Kind</dt><dd>{signal.kind}</dd></div>
+    <div><dt>Capability</dt><dd>{signal.capabilities.at(0)}</dd></div>
+    {signal.readingMinutes && <div><dt>Read</dt><dd>{signal.readingMinutes} min</dd></div>}
+  </dl>
+  <a class="signal-lead__link" href={signal.href}>Read the annotation: {signal.title}</a>
+</section>
+
+<style>
+  .signal-lead { display: grid; align-content: start; gap: var(--space-4); padding-block: var(--space-6); border-top: var(--border-width) solid var(--accent-signal); }
+  .signal-lead__eyebrow { color: var(--accent-signal); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: .04em; text-transform: uppercase; }
+  h1 { max-width: 13ch; color: var(--text-primary); font-size: var(--text-3xl); letter-spacing: -.04em; line-height: .98; text-wrap: balance; }
+  .signal-lead__finding { max-width: 42ch; color: var(--text-primary); font-size: var(--text-xl); font-weight: 600; line-height: 1.3; }
+  .signal-lead__evidence { display: grid; gap: var(--space-3); max-width: 68ch; color: var(--text-secondary); }
+  .signal-lead__evidence p { display: grid; gap: var(--space-1); }
+  .signal-lead__evidence span { color: var(--accent-evidence); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: .05em; text-transform: uppercase; }
+  .signal-lead__evidence p:last-child span { color: var(--state-human-control); }
+  .signal-lead__metadata { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); padding-top: var(--space-3); border-top: var(--border-width) solid var(--border-subtle); }
+  .signal-lead__metadata div { display: grid; gap: .1rem; }
+  .signal-lead__metadata dt { color: var(--text-muted); font-family: var(--font-mono); font-size: .6875rem; text-transform: uppercase; }
+  .signal-lead__metadata dd { color: var(--text-secondary); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .signal-lead__link { width: fit-content; color: var(--accent-signal); font-weight: 700; }
+  .signal-lead__link:hover { color: var(--text-primary); }
+</style>

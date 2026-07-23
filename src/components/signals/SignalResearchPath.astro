@@ -1,0 +1,51 @@
+---
+import type { ResolvedSignalAtlas } from '@/lib/content/signalAtlas';
+
+interface Props {
+  path: ResolvedSignalAtlas['paths'][number];
+}
+
+const { path } = Astro.props;
+const intentLabels: Record<ResolvedSignalAtlas['paths'][number]['steps'][number]['intent'], string> = {
+  inspect: 'Inspect the artifact',
+  understand: 'Understand the decision',
+  practice: 'See it in practice',
+  evidence: 'Examine the evidence',
+  continue: 'Continue the investigation',
+};
+---
+
+<section class="signal-research-path" data-signal-path aria-labelledby={`path-${path.id}`}>
+  <header>
+    <p>{path.readingMinutes} minute research path</p>
+    <h3 id={`path-${path.id}`}>{path.question}</h3>
+    <p>{path.premise}</p>
+  </header>
+  <ol>
+    {path.steps.map((step, index) => <li>
+      <span class="visually-hidden">Step {index + 1} of {path.steps.length}: </span>
+      <p class="signal-research-path__intent">{intentLabels[step.intent]}</p>
+      <a href={step.record.href}>{intentLabels[step.intent]}: {step.record.title}</a>
+      <p class="signal-research-path__summary">{step.record.summary}</p>
+      {step.transition && <p class="signal-research-path__transition"><span class="visually-hidden">Then: </span>{step.transition}</p>}
+    </li>)}
+  </ol>
+</section>
+
+<style>
+  .signal-research-path { display: grid; gap: var(--space-5); padding-block: var(--space-6); border-top: var(--border-width) solid var(--border-subtle); }
+  header { display: grid; gap: var(--space-2); max-width: 58rem; }
+  header > p:first-child, .signal-research-path__intent { color: var(--accent-signal); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: .04em; text-transform: uppercase; }
+  h3 { color: var(--text-primary); font-size: var(--text-xl); line-height: 1.18; }
+  header > p:last-child, .signal-research-path__summary { color: var(--text-secondary); }
+  ol { display: grid; gap: var(--space-4); list-style: none; counter-reset: path-step; }
+  li { position: relative; display: grid; align-content: start; gap: var(--space-2); min-width: 0; padding: var(--space-4) 0 var(--space-4) var(--space-5); border-top: var(--border-width) solid var(--border-subtle); counter-increment: path-step; transition: border-color var(--motion-base) var(--motion-ease), transform var(--motion-base) var(--motion-ease); }
+  li::before { position: absolute; top: var(--space-4); left: 0; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-xs); content: '0' counter(path-step); }
+  li:hover, li:focus-within { border-color: var(--accent-signal); transform: translateX(.25rem); }
+  a { width: fit-content; color: var(--text-primary); font-weight: 700; text-decoration-color: var(--accent-signal); text-decoration-thickness: .1em; }
+  a:hover { color: var(--accent-signal); }
+  .signal-research-path__summary { max-width: 42ch; font-size: var(--text-sm); line-height: 1.55; }
+  .signal-research-path__transition { padding-top: var(--space-2); color: var(--accent-evidence); font-size: var(--text-sm); line-height: 1.5; }
+  @media (min-width: 48rem) { ol { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } li { min-height: 100%; } }
+  @media (prefers-reduced-motion: reduce) { li { transition: none; } li:hover, li:focus-within { transform: none; } }
+</style>

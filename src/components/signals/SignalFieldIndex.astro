@@ -1,0 +1,41 @@
+---
+import type { SignalAtlasSignalView } from '@/lib/content/signalAtlas';
+
+interface Props {
+  signals: SignalAtlasSignalView[];
+}
+
+const { signals } = Astro.props;
+const formatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+
+<section class="signal-field-index" data-signal-field-index aria-labelledby="signal-field-index-heading">
+  <header>
+    <p>Complete record</p>
+    <h2 id="signal-field-index-heading">All reviewed Signal annotations</h2>
+  </header>
+  <ol>
+    {signals.map((signal) => <li>
+      <p class="signal-field-index__meta">{signal.kind} / {formatter.format(signal.updatedAt)} / {signal.capabilities.at(0)}{signal.readingMinutes ? ` / ${signal.readingMinutes} min` : ''}</p>
+      <div>
+        <p class="signal-field-index__question">{signal.researchQuestion}</p>
+        <p>{signal.sourceContext ?? signal.artifactLabel}</p>
+      </div>
+      <a href={signal.href}>Read {signal.title}</a>
+    </li>)}
+  </ol>
+</section>
+
+<style>
+  .signal-field-index { display: grid; gap: var(--space-5); padding-block: var(--space-7); border-top: var(--border-width) solid var(--accent-signal); }
+  header { display: grid; gap: var(--space-2); }
+  header p, .signal-field-index__meta { color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: .04em; text-transform: uppercase; }
+  h2 { color: var(--text-primary); font-size: var(--text-xl); }
+  ol { list-style: none; }
+  li { display: grid; gap: var(--space-3); padding-block: var(--space-4); border-top: var(--border-width) solid var(--border-subtle); }
+  li > div { display: grid; gap: var(--space-1); color: var(--text-secondary); font-size: var(--text-sm); }
+  .signal-field-index__question { color: var(--text-primary); font-size: var(--text-base); font-weight: 700; }
+  a { width: fit-content; color: var(--accent-signal); font-size: var(--text-sm); font-weight: 700; }
+  a:hover { color: var(--text-primary); }
+  @media (min-width: 48rem) { li { grid-template-columns: minmax(11rem, .75fr) minmax(0, 1.5fr) auto; align-items: center; gap: var(--space-5); } }
+</style>

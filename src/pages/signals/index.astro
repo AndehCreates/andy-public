@@ -1,64 +1,82 @@
 ---
+// Direction contract: THESIS: observations become system decisions. OWN-WORLD: the incumbent navy field guide uses violet research, cyan structure, green evidence, and warm-yellow limitations. STORY: inspect a lead artifact, follow authored consequences, then scan the complete record. FIRST VIEWPORT: one concrete question with its compact artifact record. FORM: thin rules, asymmetric editorial columns, quiet prose, and compact data typography; never card grids or taxonomy-first controls.
 import { getCollection } from 'astro:content';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignalArtifactRecord from '@/components/signals/SignalArtifactRecord.astro';
+import SignalFieldIndex from '@/components/signals/SignalFieldIndex.astro';
+import SignalLead from '@/components/signals/SignalLead.astro';
+import SignalResearchPath from '@/components/signals/SignalResearchPath.astro';
+import { signalAtlasConfig } from '@/data/signalAtlas';
+import { capabilities, type CapabilityId } from '@/lib/content/taxonomy';
 import { publicEntries } from '@/lib/content/queries';
-import { capabilities } from '@/lib/content/taxonomy';
+import { resolveSignalAtlas, toSignalAtlasRecord, type SignalAtlasSignalView } from '@/lib/content/signalAtlas';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const signals = publicEntries((await getCollection('signals')).map((entry) => ({
-  title: entry.data.title,
-  visibility: entry.data.visibility,
-  publicReview: entry.data.publicReview,
+const [projects, caseStudies, systems, handbook, signals] = await Promise.all([
+  getCollection('projects'),
+  getCollection('caseStudies'),
+  getCollection('systems'),
+  getCollection('handbook'),
+  getCollection('signals'),
+]);
+
+const records = [
+  ...projects.map((entry) => toSignalAtlasRecord({ collection: 'projects', authoredId: entry.data.id, routeSlug: entry.id, title: entry.data.title, summary: entry.data.summary, visibility: entry.data.visibility, publicReview: entry.data.publicReview })),
+  ...caseStudies.map((entry) => toSignalAtlasRecord({ collection: 'caseStudies', authoredId: entry.data.id, routeSlug: entry.id, title: entry.data.title, summary: entry.data.summary, visibility: entry.data.visibility, publicReview: entry.data.publicReview })),
+  ...systems.map((entry) => toSignalAtlasRecord({ collection: 'systems', authoredId: entry.data.id, routeSlug: entry.id, title: entry.data.title, summary: entry.data.summary, visibility: entry.data.visibility, publicReview: entry.data.publicReview })),
+  ...handbook.map((entry) => toSignalAtlasRecord({ collection: 'handbook', authoredId: entry.data.id, routeSlug: entry.id, title: entry.data.title, summary: entry.data.summary, visibility: entry.data.visibility, publicReview: entry.data.publicReview })),
+  ...signals.map((entry) => toSignalAtlasRecord({ collection: 'signals', authoredId: entry.data.id, routeSlug: entry.id, title: entry.data.title, summary: entry.data.summary, visibility: entry.data.visibility, publicReview: entry.data.publicReview })),
+];
+
+const signalViews = signals.map((entry): SignalAtlasSignalView => ({
+  ...toSignalAtlasRecord({ collection: 'signals', authoredId: entry.data.id, routeSlug: entry.id, title: entry.data.title, summary: entry.data.summary, visibility: entry.data.visibility, publicReview: entry.data.publicReview }),
+  artifactLabel: entry.data.artifactLabel ?? '',
+  artifactType: entry.data.artifactType ?? '',
+  researchQuestion: entry.data.researchQuestion ?? entry.data.title,
+  finding: entry.data.finding ?? entry.data.summary,
+  evidenceSummary: entry.data.evidenceSummary ?? '',
+  evidenceBoundary: entry.data.evidenceBoundary ?? '',
+  readingMinutes: entry.data.readingMinutes,
+  sourceContext: entry.data.sourceContext,
+  continueAnnotation: entry.data.continueTo?.annotation ?? '',
+  capabilities: entry.data.capabilities.map((capability) => capabilities[capability as CapabilityId]),
+  kind: entry.data.kind,
+  updatedAt: entry.data.updatedAt,
   ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
-  entry,
-}))).map(({ entry }) => entry);
-const kindLabel = { resource: 'Resource', homelab: 'Homelab', 'field-note': 'Field note', experiment: 'Experiment' } as const;
-const signalGroups = [
-  { kind: 'resource', title: 'Resource' },
-  { kind: 'homelab', title: 'Homelab' },
-  { kind: 'field-note', title: 'Field notes' },
-  { kind: 'experiment', title: 'Experiments' },
-] as const;
+}));
+const signalViewById = new Map(signalViews.map((signal) => [signal.canonicalId, signal]));
+const atlas = resolveSignalAtlas(signalAtlasConfig, records);
+const lead = signalViewById.get(atlas.lead.canonicalId);
+if (!lead) throw new Error(`Atlas lead ${atlas.lead.canonicalId} is not a Signal view.`);
+const fieldIndex = publicEntries(signalViews.map((signal) => ({ ...signal, title: signal.title, entry: signal }))).map(({ entry }) => entry);
 ---
 
-<BaseLayout title="Signal Library | Andy — AI Systems" description="Annotated resources, homelab notes, field notes, and experiments around reliable human-centered systems." canonicalPath="/signals/">
-  <section class="signals container" aria-labelledby="signals-heading">
-    <header>
-      <p>Annotated references and experiments</p>
-      <h1 id="signals-heading">Signal Library</h1>
-      <p>Useful material from the edges of the work: practical resources, local infrastructure patterns, field notes, and small experiments with a clear reason for being here.</p>
-    </header>
-    <div class="signals__groups">
-      {signalGroups.map((group) => {
-        const entries = signals.filter((entry) => entry.data.kind === group.kind);
-        return entries.length > 0 && <section class="signals__group" aria-labelledby={`signals-${group.kind}`}>
-          <h2 id={`signals-${group.kind}`}>{group.title}</h2>
-          <div class="signals__grid">
-            {entries.map((entry) => <article>
-              <p>{kindLabel[entry.data.kind]} - {capabilities[entry.data.capabilities.at(0) ?? 'ai-systems']}</p>
-              <h3><a href={`/signals/${entry.id}/`}>{entry.data.title}</a></h3>
-              <p>{entry.data.summary}</p>
-              <a href={`/signals/${entry.id}/`}>Read the annotation</a>
-            </article>)}
-          </div>
-        </section>;
-      })}
+<BaseLayout title="Signal Library | Andy - AI Systems" description="An editorial research atlas of inspected artifacts, authored decisions, and evidence boundaries." canonicalPath="/signals/">
+  <section class="signal-atlas container" aria-label="Signal Library atlas">
+    <div class="signal-atlas__opening">
+      <SignalLead signal={lead} />
+      <SignalArtifactRecord signal={lead} />
     </div>
+    <section class="signal-atlas__paths" aria-labelledby="signal-paths-heading">
+      <header>
+        <p>Guided research paths</p>
+        <h2 id="signal-paths-heading">Start with something inspectable. Follow what it changed.</h2>
+      </header>
+      {atlas.paths.map((path) => <SignalResearchPath path={path} />)}
+    </section>
+    <SignalFieldIndex signals={fieldIndex} />
+    <p class="signal-atlas__rss"><a href="/rss.xml">Follow the public research feed via RSS.</a></p>
   </section>
 </BaseLayout>
 
 <style>
-  .signals { padding-block: var(--space-8); }
-  header, article { display: grid; gap: var(--space-3); }
-  .signals > header { max-width: 48rem; margin-bottom: var(--space-7); }
-  header p, article p { margin: 0; color: var(--text-secondary); }
-  .signals > header > p:first-child, article > p:first-child { color: var(--accent-signal); font-size: var(--text-sm); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-  h1, h2, h3 { margin: 0; color: var(--text-primary); }
-  h1 { font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
-  h2 { font-size: var(--text-xl); }
-  .signals__groups { display: grid; gap: var(--space-7); }
-  .signals__group { display: grid; gap: var(--space-4); }
-  .signals__grid { display: grid; gap: var(--space-4); }
-  article { align-content: start; padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
-  article a { color: var(--accent-signal); }
-  @media (min-width: 48rem) { .signals__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .signal-atlas { padding-block: var(--space-7) var(--space-8); }
+  .signal-atlas__opening { display: grid; gap: var(--space-7); }
+  .signal-atlas__paths { display: grid; gap: 0; margin-top: var(--space-8); }
+  .signal-atlas__paths > header { display: grid; gap: var(--space-3); max-width: 55rem; padding-bottom: var(--space-5); }
+  .signal-atlas__paths > header p { color: var(--accent-system); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: .06em; text-transform: uppercase; }
+  .signal-atlas__paths h2 { color: var(--text-primary); font-size: var(--text-2xl); letter-spacing: -.03em; line-height: 1.06; text-wrap: balance; }
+  .signal-atlas__rss { margin-top: var(--space-2); color: var(--text-muted); font-size: var(--text-sm); }
+  .signal-atlas__rss a { color: inherit; }
+  .signal-atlas__rss a:hover { color: var(--accent-system); }
+  @media (min-width: 62rem) { .signal-atlas__opening { grid-template-columns: minmax(0, 1.45fr) minmax(18rem, .8fr); gap: clamp(3rem, 8vw, 8rem); align-items: start; } }
 </style>

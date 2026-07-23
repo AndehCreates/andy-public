@@ -123,17 +123,10 @@ test('publishes approved handbook principles, Signal Library entries, and a newe
   }
 
   await page.goto('/signals/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Signal Library' })).toHaveCount(1);
-  const signalGroups = [
-    ['Resource', 'Static output as a safety boundary'],
-    ['Homelab', 'Local-first recovery notes'],
-    ['Field notes', 'Evaluation is product work'],
-    ['Experiments', 'Bounded interface experiment'],
-  ] as const;
-  for (const [kind, title] of signalGroups) {
-    await expect(page.getByRole('heading', { level: 2, name: kind })).toHaveCount(1);
-    await expect(page.getByRole('heading', { level: 2, name: kind }).locator('..')).toContainText(title);
-  }
+  await expect(page.locator('[data-signal-field-index]')).toContainText('Static output as a safety boundary');
+  await expect(page.locator('[data-signal-field-index]')).toContainText('Local-first recovery notes');
+  await expect(page.locator('[data-signal-field-index]')).toContainText('Evaluation is product work');
+  await expect(page.locator('[data-signal-field-index]')).toContainText('Bounded interface experiment');
 
   await page.goto('/signals/evaluation-as-product-work/');
   await expect(page.getByRole('heading', { level: 1, name: 'Evaluation is product work' })).toHaveCount(1);
@@ -149,7 +142,7 @@ test('publishes approved handbook principles, Signal Library entries, and a newe
 
 test('renders public labels and prose without mojibake', async ({ page }) => {
   await page.goto('/signals/');
-  await expect(page.getByText('Field note - Evaluation & reliability', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-signal-field-index]')).toContainText('Evaluation is product work');
 
   await page.goto('/systems/software-for-cognition/');
   await expect(page.locator('main')).toContainText('path back into work for a person');

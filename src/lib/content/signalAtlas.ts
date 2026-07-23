@@ -36,6 +36,23 @@ export type SignalAtlasRecord = {
   publicReview: PublicReview;
 };
 
+/** Public-only presentation fields needed by the server-rendered Signal atlas. */
+export type SignalAtlasSignalView = SignalAtlasRecord & {
+  artifactLabel: string;
+  artifactType: string;
+  researchQuestion: string;
+  finding: string;
+  evidenceSummary: string;
+  evidenceBoundary: string;
+  readingMinutes?: number | undefined;
+  sourceContext?: string | undefined;
+  continueAnnotation: string;
+  capabilities: string[];
+  kind: string;
+  updatedAt: Date;
+  order?: number;
+};
+
 export type ResolvedSignalAtlas = {
   lead: SignalAtlasRecord;
   paths: Array<Omit<SignalAtlasConfig['paths'][number], 'steps'> & {
