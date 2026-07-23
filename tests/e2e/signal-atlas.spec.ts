@@ -36,3 +36,39 @@ test('renders authored transitions instead of raw relation labels', async ({ pag
   );
   await expect(firstPath).not.toContainText(/part-of|related-to|applies-principle|caseStudies:/);
 });
+
+test('grounds every Signal detail page in its inspected artifact and reviewed continuation', async ({ page }) => {
+  for (const detail of [
+    {
+      slug: 'evaluation-as-product-work',
+      continuationName: 'Continue to the Alpha Screener case study',
+      continuationHref: '/case-studies/alpha-screener/',
+    },
+    {
+      slug: 'static-output-as-a-safety-boundary',
+      continuationName: 'Continue to the Grounded knowledge handbook principle',
+      continuationHref: '/handbook/grounded-knowledge/',
+    },
+    {
+      slug: 'local-first-recovery-notes',
+      continuationName: 'Continue to the LifeOS case study',
+      continuationHref: '/case-studies/lifeos/',
+    },
+    {
+      slug: 'bounded-interface-experiment',
+      continuationName: 'Continue to the Chief of Staff case study',
+      continuationHref: '/case-studies/chief-of-staff/',
+    },
+  ]) {
+    await page.goto(`/signals/${detail.slug}/`);
+
+    const context = page.locator('[data-signal-context]');
+    await expect(context).toContainText('What was inspected');
+    await expect(context).toContainText('What the evidence does not establish');
+    await expect(context.getByRole('link', { name: detail.continuationName })).toHaveAttribute(
+      'href',
+      detail.continuationHref,
+    );
+    await expect(context.getByRole('link', { name: 'Return to the Signal Library atlas' })).toHaveAttribute('href', '/signals/');
+  }
+});

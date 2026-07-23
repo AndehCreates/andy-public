@@ -1,7 +1,10 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import SignalContext from '@/components/signals/SignalContext.astro';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { canPublish } from '@/lib/content/publication';
 import { publicEntries } from '@/lib/content/queries';
+import { toSignalAtlasRecord, type SignalAtlasRecord } from '@/lib/content/signalAtlas';
 
 export async function getStaticPaths() {
   const entries = await getCollection('signals');
@@ -18,8 +21,29 @@ interface Props { entry: CollectionEntry<'signals'>; }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 const sources = entry.data.sourceUrls.map((href) => ({ label: 'Referenced resource', href }));
+const [projects, caseStudies, systems, handbook, signals] = await Promise.all([
+  getCollection('projects'),
+  getCollection('caseStudies'),
+  getCollection('systems'),
+  getCollection('handbook'),
+  getCollection('signals'),
+]);
+const records: SignalAtlasRecord[] = [
+  ...projects.map((candidate) => toSignalAtlasRecord({ collection: 'projects', authoredId: candidate.data.id, routeSlug: candidate.id, title: candidate.data.title, summary: candidate.data.summary, visibility: candidate.data.visibility, publicReview: candidate.data.publicReview })),
+  ...caseStudies.map((candidate) => toSignalAtlasRecord({ collection: 'caseStudies', authoredId: candidate.data.id, routeSlug: candidate.id, title: candidate.data.title, summary: candidate.data.summary, visibility: candidate.data.visibility, publicReview: candidate.data.publicReview })),
+  ...systems.map((candidate) => toSignalAtlasRecord({ collection: 'systems', authoredId: candidate.data.id, routeSlug: candidate.id, title: candidate.data.title, summary: candidate.data.summary, visibility: candidate.data.visibility, publicReview: candidate.data.publicReview })),
+  ...handbook.map((candidate) => toSignalAtlasRecord({ collection: 'handbook', authoredId: candidate.data.id, routeSlug: candidate.id, title: candidate.data.title, summary: candidate.data.summary, visibility: candidate.data.visibility, publicReview: candidate.data.publicReview })),
+  ...signals.map((candidate) => toSignalAtlasRecord({ collection: 'signals', authoredId: candidate.data.id, routeSlug: candidate.id, title: candidate.data.title, summary: candidate.data.summary, visibility: candidate.data.visibility, publicReview: candidate.data.publicReview })),
+];
+const continuationTargetId = entry.data.continueTo?.targetId;
+if (!continuationTargetId) throw new Error(`Public Signal ${entry.data.id} requires a continuation target.`);
+const continuation = records.find((record) => record.canonicalId === continuationTargetId);
+if (!continuation || !canPublish(continuation)) {
+  throw new Error(`Public Signal ${entry.data.id} continuation ${continuationTargetId} must resolve to public content.`);
+}
 ---
 
 <ArticleLayout title={entry.data.title} description={entry.data.summary} canonicalPath={`/signals/${entry.id}/`} updatedAt={entry.data.updatedAt} sources={sources} tableOfContents={headings}>
+  <SignalContext slot="lead" signal={entry.data} continuation={continuation} />
   <Content />
 </ArticleLayout>
