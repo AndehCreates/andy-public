@@ -113,10 +113,15 @@ Thematic threads are presented as concrete questions:
 Questions may change as the reviewed catalog grows. They are not permanent
 taxonomy values.
 
-Each path contains three to five authored steps. A step points to a reviewed
-Signal entry, Handbook principle, System, Project, Case Study, or evidence
-object. Every transition includes a short explanation of why the next artifact
+Each path contains three to five authored steps. A step points to a reviewed,
+collection-backed Signal entry, Handbook principle, System, Project, or Case
+Study. Every transition includes a short explanation of why the next artifact
 follows.
+
+Evidence objects remain part of the adjacent artifact record or transition
+annotation. They do not become independent path targets until the repository
+defines a separately typed, publication-aware evidence collection. This avoids
+creating unresolvable pseudo-routes or a second relationship authority.
 
 Public copy groups the steps by reader intent:
 
@@ -174,11 +179,24 @@ Extend the Signal content contract only with independently useful fields:
 - `artifactType`: controlled value such as `source`, `implementation`, `test`,
   `interface`, `decision-record`, `failure`, or `diagram`;
 - `finding`: the observed decision or behavior;
+- `evidenceSummary`: the concise public-safe evidence supporting the finding;
 - `evidenceBoundary`: what the artifact does not establish;
 - `readingMinutes`: optional positive integer; and
-- `sourceContext`: optional public-safe project, system, or source label.
+- `sourceContext`: optional public-safe project, system, or source label; and
+- `continueTo`: one public collection target plus an editorial annotation
+  explaining why that destination is the useful next read.
 
 Do not store lead placement or thread order in individual Signal entries.
+
+`evidenceSummary` supplies the index and detail-page answer to "what evidence
+supports this interpretation." The MDX body may expand that evidence without
+duplicating the summary.
+
+`continueTo` supplies the default detail-page continuation for a Signal that is
+not currently visible inside a curated research path. When a Signal appears in
+a configured path, the path's authored transition annotation takes precedence
+in that context. Both targets resolve through the same public-target validation
+rules.
 
 ### Atlas configuration
 
@@ -204,6 +222,20 @@ The resolver must:
 Do not duplicate long summaries, validation claims, or publication fields in
 the atlas configuration.
 
+Curated configuration is a build-time contract, not a best-effort hint. The
+content audit must fail when:
+
+- `leadSignalId` is missing, unknown, duplicated, unpublished, or unapproved;
+- a configured path has fewer than two valid public steps;
+- any path target becomes draft, internal, pending review, or unknown;
+- a transition annotation is missing; or
+- publication filtering would leave the atlas with no eligible public Signal
+  entries.
+
+Production output must not silently choose a replacement lead, drop an invalid
+step, render a broken path, or publish an empty atlas. Editors correct the
+configuration or publication state before the build can succeed.
+
 ### Editorial requirements
 
 Every public Signal entry must answer:
@@ -214,6 +246,12 @@ Every public Signal entry must answer:
 4. What evidence supports that interpretation?
 5. What does the evidence not establish?
 6. Where should the reader continue?
+
+The structured Signal fields supply concise answers for index and navigation:
+`artifactLabel` and `artifactType` answer the first question; `finding` answers
+the second and third; `evidenceSummary` answers the fourth;
+`evidenceBoundary` answers the fifth; and `continueTo` answers the sixth. The
+MDX body supplies the fuller reasoning and supporting context.
 
 Connections appear only when the editorial annotation names the shared
 decision, constraint, observed behavior, or evidence boundary. A generic
@@ -354,8 +392,11 @@ Implementation planning must include:
 - atlas-configuration tests for one lead, stable order, and required transition
   annotations;
 - resolver tests for unknown, draft, internal, and unapproved targets;
+- failure tests for an invalid lead, paths reduced below two valid steps, and an
+  atlas with no eligible public entries;
 - content-audit fixtures for missing artifacts, missing evidence boundaries,
-  unsafe strings, and private-target leakage;
+  missing evidence summaries, missing continuation annotations, unsafe strings,
+  and private-target leakage;
 - route tests for the lead, artifact record, guided paths, and complete field
   index;
 - regression coverage proving all four currently public Signal routes remain
@@ -384,5 +425,7 @@ The design is complete when:
 - motion clarifies traversal while reduced-motion and no-JavaScript behavior
   remain complete;
 - no new claim or publication state is inferred from visual placement; and
+- invalid curated configuration blocks the production build instead of
+  silently selecting, dropping, or emptying content; and
 - the result feels like a curated research atlas rather than grouped cards,
   decorative cartography, or abstract systems branding.
