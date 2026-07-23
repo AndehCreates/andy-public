@@ -20,6 +20,17 @@ caseStudyHook: Make interruption recovery a first-class product behavior instead
 theme: continuity
 artifactLabels: [Interruption, Preserved context, Re-entry]
 pivotalDecision: Extend the existing state and synchronization model through explicit domain contracts.
+capabilityNarrative:
+  capabilityThesis: Preserve context so returning to interrupted work does not depend on recall.
+  humanFriction: People must reconstruct open loops, commitments, and context after interruptions.
+  whyItMatters: Reconstruction delays the next meaningful action and makes continuity fragile.
+  systemResponse: Externalize work, time, context, transitions, and recovery through a local-first continuity workspace.
+  capabilityExtended: Reliable re-entry into meaningful work.
+  howItWorks: Explicit domain contracts extend the existing local-first state and synchronization model while consequential changes remain user-confirmed.
+  pivotalDecision: Extend the existing state and synchronization model through explicit domain contracts.
+  decisionTradeoff: Extend existing boundaries rather than add a replacement orchestrator or persistence model.
+  principleIds: [handbook:modular-architecture]
+  nextStep: Continue scenario-based validation for interruption recovery, synchronization conflicts, and durable re-entry flows.
 evidenceSummary:
   evidenceMethod: static-check
   evidenceState: validated-within-scope

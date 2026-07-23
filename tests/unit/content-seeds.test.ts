@@ -24,3 +24,11 @@ it('keeps loader schema seeds non-public while preserving typed collection entri
   ]));
   expect(publicEntries(seeds.map((seed) => ({ ...seed, title: seed.id })))).toEqual([]);
 });
+
+it('keeps catalog fields optional on draft schema seeds', async () => {
+  const source = await readFile(resolve(process.cwd(), 'src/content/projects/schema-seed.mdx'), 'utf8');
+  const seed = matter(source).data as Record<string, unknown>;
+
+  expect(seed.visibility).toBe('draft');
+  expect(seed.capabilityNarrative).toBeUndefined();
+});

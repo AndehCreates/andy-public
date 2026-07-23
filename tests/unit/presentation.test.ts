@@ -5,6 +5,7 @@ import {
   projectPresentationSchema,
   type ProjectPresentationInput,
 } from '../../src/lib/content/presentation';
+import { capabilityNarrativeSchema } from '../../src/lib/content/catalog';
 
 const flagshipPresentation = {
   visibility: 'featured',
@@ -35,9 +36,22 @@ const flagshipPresentation = {
   },
 } satisfies ProjectPresentationInput;
 
+const capabilityNarrative = {
+  capabilityThesis: 'Reduce the cognitive cost of returning to interrupted work.',
+  humanFriction: 'Working context is expensive to reconstruct after interruption.',
+  whyItMatters: 'Reconstruction delays action and increases dependence on recall.',
+  systemResponse: 'Preserve a durable working state and explicit recovery path.',
+  capabilityExtended: 'Reliable re-entry into meaningful work.',
+  howItWorks: 'Shared contracts connect interface behavior, local state, and synchronization.',
+  pivotalDecision: 'Extend the existing authority boundaries.',
+  decisionTradeoff: 'Accept slower expansion in exchange for continuity and clear ownership.',
+  principleIds: ['handbook:modular-architecture'],
+  nextStep: 'Validate interruption and conflict-recovery scenarios.',
+};
+
 describe('project presentation schema', () => {
   it('accepts complete approved presentation data for a featured flagship', () => {
-    expect(projectPresentationSchema.safeParse(flagshipPresentation).success).toBe(true);
+    expect(projectPresentationSchema.safeParse({ ...flagshipPresentation, capabilityNarrative }).success).toBe(true);
   });
 
   it.each([
@@ -66,7 +80,7 @@ describe('project presentation schema', () => {
   });
 
   it('allows an approved local-only flagship without source or media fields', () => {
-    expect(projectPresentationSchema.safeParse(flagshipPresentation).success).toBe(true);
+    expect(projectPresentationSchema.safeParse({ ...flagshipPresentation, capabilityNarrative }).success).toBe(true);
   });
 
   it('rejects duplicate diagram node IDs', () => {
@@ -101,5 +115,12 @@ describe('project presentation schema', () => {
       visibility: 'listed',
       publicReview: 'approved',
     }).success).toBe(false);
+  });
+
+  it('requires a capability narrative for publishable projects but not draft or internal content', () => {
+    expect(projectPresentationSchema.safeParse(flagshipPresentation).success).toBe(false);
+    expect(projectPresentationSchema.safeParse({ visibility: 'draft', publicReview: 'pending' }).success).toBe(true);
+    expect(projectPresentationSchema.safeParse({ visibility: 'internal', publicReview: 'pending' }).success).toBe(true);
+    expect(capabilityNarrativeSchema.safeParse({ ...capabilityNarrative, capabilityThesis: '' }).success).toBe(false);
   });
 });

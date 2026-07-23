@@ -4,6 +4,7 @@ import { z } from 'astro/zod';
 import { capabilityIds } from '@/lib/content/taxonomy';
 import { reviewValues, sourceAvailabilityValues, visibilityValues } from '@/lib/content/publication';
 import { addProjectPresentationIssues, projectPresentationFields } from '@/lib/content/presentation';
+import { catalogPresentationFields } from '@/lib/content/catalog';
 import { projectStatusValues } from '@/lib/content/types';
 
 const baseFields = {
@@ -26,6 +27,7 @@ const projects = defineCollection({
   schema: z.object({
     ...baseFields,
     ...projectPresentationFields,
+    ...catalogPresentationFields,
     projectId: z.string().min(2),
     status: z.enum(projectStatusValues),
   }).superRefine(addProjectPresentationIssues),
@@ -44,6 +46,7 @@ const systems = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/systems' }),
   schema: z.object({
     ...baseFields,
+    ...catalogPresentationFields,
     systemId: z.string().min(2),
   }),
 });
