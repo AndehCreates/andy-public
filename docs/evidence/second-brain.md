@@ -68,18 +68,19 @@ handoffs can make prior decisions and the next useful action easier to recover.
 - Any claim that it governs consequential work, admits runtime work, or owns
   project-repository truth.
 
-## Candidate project and case-study copy
+## Approved public project framing
 
-Pending review: "Second Brain is a durable context layer for preserving session
-continuity and recoverable handoffs, so people can resume complex work with a
-clearer view of prior decisions and the next action. Its observed contract
-surfaces define an evidence boundary; live operational behavior remains outside
-this inventory."
+Second Brain may be presented as a durable context layer that preserves session
+continuity and recoverable handoffs. Public copy may describe the observed
+contract, preflight, smoke, latest-cycle, session-board, and handoff surfaces.
+It must keep live writes, remote-host behavior, retention, privacy, and
+production reliability outside the established evidence boundary.
 
 ## Review date and public-review decision
 
-- Review date: 2026-07-22.
-- `publicationState`: featured (proposed only).
+- Review date: 2026-07-24.
+- `publicationState`: featured.
 - `sourceAvailability`: local-only.
-- `publicReview`: pending; no project route, source link, or media is
-  authorized.
+- `publicReview`: approved by the user for the evidence-bounded project route.
+- Source links, screenshots, vault material, operational records, and broader
+  claims remain unauthorized.

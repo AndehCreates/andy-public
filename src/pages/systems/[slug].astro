@@ -5,6 +5,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CatalogArticleLayout from '@/layouts/CatalogArticleLayout.astro';
 import { publicEntries } from '@/lib/content/queries';
 import { resolveRelationshipPathways, type RelationshipTarget } from '@/lib/content/relations';
+import { canPublish } from '@/lib/content/publication';
 import CognitiveObservatory from '@/components/diagrams/CognitiveObservatory.astro';
 
 const collectionRoute = { projects: '/work/', caseStudies: '/case-studies/', handbook: '/handbook/', signals: '/signals/', systems: '/systems/' } as const;
@@ -23,22 +24,31 @@ const { Content } = await render(system);
 const narrative = system.data.capabilityNarrative;
 const targets = await relationshipTargets();
 const pathways = resolveRelationshipPathways(system.data, targets);
+const projectHrefs = Object.fromEntries(
+  (system.data.systemProjection?.layers ?? []).flatMap((layer) =>
+    layer.components.flatMap((component) => {
+      if (!component.projectTarget) return [];
+      const target = targets.get(component.projectTarget);
+      return target?.href && canPublish(target) ? [[component.projectTarget, target.href]] : [];
+    }),
+  ),
+);
 ---
 
 {system.id === 'cognitive-infrastructure' && system.data.systemProjection ? (
   <BaseLayout title={system.data.title} description={system.data.summary} canonicalPath={`/systems/${system.id}/`} type="article">
-    <section class="observatory-page container"><CognitiveObservatory projection={system.data.systemProjection} title={system.data.title} summary={system.data.summary} /><div class="observatory-page__after prose"><Content /></div></section>
+    <section class="observatory-page container"><CognitiveObservatory projection={system.data.systemProjection} title={system.data.title} summary={system.data.summary} projectHrefs={projectHrefs} /><div class="observatory-page__after prose"><Content /></div></section>
   </BaseLayout>
 ) : narrative ? (
   <CatalogArticleLayout title={system.data.title} description={system.data.summary} canonicalPath={`/systems/${system.id}/`} updatedAt={system.data.updatedAt} narrative={narrative} position={system.data.systemProjection?.thesis ?? 'A public map of related systems and decisions.'} pathways={pathways} observatoryHref={system.id === 'cognitive-infrastructure' ? '/systems/cognitive-infrastructure/' : undefined}>
     <div slot="principles"><p>Principles are connected only through reviewed public catalog relationships.</p></div>
     <div slot="evidence"><p>Public system maps describe reviewed responsibilities, not private topology or operational availability.</p></div>
-    {system.data.systemProjection && <CognitiveObservatory projection={system.data.systemProjection} />}
+    {system.data.systemProjection && <CognitiveObservatory projection={system.data.systemProjection} projectHrefs={projectHrefs} />}
     <Content />
   </CatalogArticleLayout>
 ) : (
   <ArticleLayout title={system.data.title} description={system.data.summary} canonicalPath={`/systems/${system.id}/`} updatedAt={system.data.updatedAt}>
-    {system.data.systemProjection && <CognitiveObservatory projection={system.data.systemProjection} />}
+    {system.data.systemProjection && <CognitiveObservatory projection={system.data.systemProjection} projectHrefs={projectHrefs} />}
     <Content />
   </ArticleLayout>
 )}

@@ -1,0 +1,98 @@
+---
+id: project-nexus
+title: Nexus
+summary: Defines a governance and accountability model for consequential work while keeping approval, verification, and execution responsibilities distinct.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [ai-systems, evaluation-reliability, human-centered-design]
+relatedIds: []
+relationshipEdges:
+  - target: systems:cognitive-infrastructure
+    type: part-of
+    annotation: Nexus defines the governance responsibility within the wider Cognitive Infrastructure system.
+publishedAt: 2026-07-24
+updatedAt: 2026-07-24
+order: 2
+projectId: project-nexus
+status: experimental
+workHook: Make consequential automation attributable, reviewable, and explicitly authorized.
+visualMark: authority
+technicalDifferentiator: Separates governance from coordination, runtime admission, durable context, and repository truth while its direct implementation evidence remains intentionally unclaimed.
+caseStudyHook: Define who may authorize consequential work without allowing the execution layer to govern itself.
+theme: authority
+artifactLabels: [Human intent, Governance conditions, Accountable action]
+pivotalDecision: Keep governance and accountability separate from coordination and execution.
+capabilityNarrative:
+  capabilityThesis: Make consequential automated work accountable before it advances.
+  humanFriction: When policy, approval, execution, and evidence collapse into one control surface, responsibility becomes difficult to inspect.
+  whyItMatters: Consequential work needs clear conditions for who may authorize, execute, verify, and promote a result.
+  systemResponse: Define a separate governance boundary for accountability, approval conditions, and evidence requirements.
+  capabilityExtended: Reviewable governance for consequential work.
+  howItWorks: The public responsibility model assigns governance to Nexus while coordination, runtime admission, durable context, and code truth remain with their respective systems.
+  pivotalDecision: Keep governance and accountability separate from coordination and execution.
+  decisionTradeoff: Publish the reviewed responsibility model while withholding Nexus-specific implementation claims until authoritative source and tests are inspected.
+  principleIds: [handbook:human-owned-decisions]
+  nextStep: Resolve the authoritative Nexus source and validate its governance contracts before expanding public technical claims.
+evidenceSummary:
+  evidenceMethod: none
+  evidenceState: not-yet-validated
+  evidenceScope: The public governance model is supported by reviewed surrounding-system architecture; no Nexus-owned source, test, command, deployment, or outcome evidence has been inspected.
+diagram:
+  variant: authority-boundaries
+  title: Governance before consequential action
+  description: A public responsibility model keeps human intent, governance conditions, coordination, execution, and independent evidence distinct.
+  nodes:
+    - id: human-intent
+      label: Human intent
+      description: Defines what matters and retains consequential approval.
+    - id: governance-conditions
+      label: Governance conditions
+      description: State accountability, evidence, and approval requirements.
+    - id: coordination
+      label: Coordination
+      description: Requests bounded work without granting itself policy authority.
+    - id: runtime-execution
+      label: Runtime execution
+      description: Performs admitted work within the approved boundary.
+    - id: independent-evidence
+      label: Independent evidence
+      description: Supports review without allowing worker self-report to become completion by itself.
+  edges:
+    - from: human-intent
+      to: governance-conditions
+      label: sets consequential boundaries
+    - from: governance-conditions
+      to: coordination
+      label: defines admissible work
+    - from: coordination
+      to: runtime-execution
+      label: requests bounded execution
+    - from: runtime-execution
+      to: independent-evidence
+      label: produces reviewable observations
+    - from: independent-evidence
+      to: human-intent
+      label: supports accountable review
+---
+
+## What it clarifies
+
+Nexus defines the governance responsibility in the wider system: the conditions, accountability, and evidence required before consequential automated work advances. It is presented as a reviewed governance design, not as a verified deployed service.
+
+## Who it helps
+
+It is intended for people overseeing automated or agent-assisted work who need approval, execution, and verification responsibilities to remain attributable and reviewable.
+
+## Design choice and tradeoff
+
+Governance remains separate from coordination and execution. Chief of Staff may reconcile work, runtime systems may admit and execute it, and repositories may retain code truth, but none of those responsibilities silently becomes the authority that defines its own approval conditions.
+
+## Validation boundary
+
+The surrounding architecture consistently names Nexus as the governance and accountability boundary. No Nexus-owned source, test, command, deployment, or outcome evidence is currently available in the portfolio inventory, so this page makes no implementation, reliability, scale, or operational claim.
+
+## Next step
+
+Resolve the authoritative Nexus source and validate its governance contracts before expanding the public technical narrative.

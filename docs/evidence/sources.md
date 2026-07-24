@@ -15,5 +15,5 @@ identity, commit, and inspection date are completed from the Task 5 inventories.
 | project-android-lab | available | local-only | none observed | 1f3186b | 2026-07-21 |
 | project-japanese-language-cognition | available | public | https://github.com/AndehCreates/japanese-anime-inspired | 6ebf6e8 | 2026-07-22 |
 | project-second-brain | available | local-only | none authorized | fa5f8b9 | 2026-07-22 |
-| project-nexus | source-unconfirmed | unconfirmed | none authorized | not observed | 2026-07-22 |
+| project-nexus | owner-confirmed | local-only | none authorized | not inspected | 2026-07-24 |
 | project-ai-hub | source-unconfirmed | unconfirmed | none authorized | not observed | 2026-07-22 |

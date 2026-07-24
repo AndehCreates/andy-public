@@ -30,7 +30,9 @@ test('presents Cognitive Infrastructure as a public-safe, readable Observatory',
   await expect(observatory.locator('.cognitive-observatory__field')).not.toHaveAttribute('aria-hidden', 'true');
   await expect(observatory.locator('.cognitive-observatory__semantic')).toHaveCount(1);
   await expect(observatory.locator('a[href="/work/chief-of-staff/"]')).toHaveCount(1);
-  await expect(observatory.locator('a[href*="second-brain"], a[href*="nexus"], a[href*="ai-hub"]')).toHaveCount(0);
+  await expect(observatory.locator('a[href="/work/second-brain/"]')).toHaveCount(1);
+  await expect(observatory.locator('a[href="/work/nexus/"]')).toHaveCount(1);
+  await expect(observatory.locator('a[href*="ai-hub"]')).toHaveCount(0);
   await expect(observatory).not.toContainText(/localhost|127\.0\.0\.1|[A-Z]:\\|https?:\/\/[^\s]*(?:internal|private|local)/i);
 });
 

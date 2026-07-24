@@ -2,9 +2,11 @@
 
 ## Public framing
 
-Candidate framing: a proposed governance and accountability boundary for
-consequential work. This is a hypothesis derived from related-system design,
-not a verified Nexus implementation claim.
+Approved framing: an evidence-limited governance and accountability model for
+consequential work. The owner confirmed Nexus as a local system project and
+approved a featured public route. This inventory still distinguishes that
+approval from any Nexus-specific implementation claim because an authoritative
+source checkout has not been inspected.
 
 ## Authoritative sources inspected
 
@@ -45,7 +47,8 @@ an intended value, not an observed outcome.
 
 ## Known limitations
 
-- No authoritative Nexus checkout resolved by Git remote and commit.
+- No authoritative Nexus checkout resolved by Git remote and commit during this
+  review.
 - No source availability, public remote, test suite, implementation entry
   point, or current Git state can be recorded.
 - This inventory must not be used to support implementation, deployment,
@@ -53,9 +56,11 @@ an intended value, not an observed outcome.
 
 ## Public-safe diagrams and media
 
-- No Nexus-specific media or diagram is approved.
-- A non-linking, abstract governance boundary may be considered only after a
-  direct source and public-review decision are supplied.
+- A public-safe responsibility diagram may show human intent, governance
+  conditions, coordination, execution, and independent evidence as separate
+  boundaries.
+- No Nexus-specific screenshot, repository link, runtime view, or operational
+  media is approved.
 
 ## Claims not currently supported
 
@@ -63,14 +68,23 @@ an intended value, not an observed outcome.
   of any observed result.
 - Any Nexus-specific technical, operational, scale, performance, or user claim.
 
-## Candidate project and case-study copy
+## Approved public project framing
 
-None. A public project or dossier must wait for an authoritative source,
-sanitized evidence, and explicit review approval.
+Nexus may be presented as the governance responsibility in the wider Cognitive
+Infrastructure system: it defines the accountability, approval conditions, and
+evidence expectations for consequential work while coordination, runtime
+admission, durable context, and repository truth remain separate.
+
+The public dossier must state that this is a reviewed responsibility model. It
+must not imply that a Nexus-owned implementation, test suite, deployment, or
+outcome was inspected.
 
 ## Review date and public-review decision
 
-- Review date: 2026-07-22.
-- `publicationState`: featured (proposed only).
-- `sourceAvailability`: unconfirmed.
-- `publicReview`: pending; no route, link, media, or claim is authorized.
+- Review date: 2026-07-24.
+- `publicationState`: featured.
+- `sourceAvailability`: local-only by owner confirmation; authoritative source
+  and commit not inspected.
+- `publicReview`: approved by the user for the evidence-limited project route.
+- Source links, screenshots, implementation details, and operational claims
+  remain unauthorized.

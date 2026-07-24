@@ -98,3 +98,20 @@ The implementation task should return one of two truthful outcomes:
 
 Anything between those outcomes should be reported as active work or a concrete
 blocker, not as completion.
+
+## 2026-07-24 publication decision
+
+The user explicitly approved `project-second-brain` and `project-nexus` for
+`featured` public project routes.
+
+- Second Brain remains `local-only`. Its public narrative is limited to the
+  inspected contract, cycle-state, session-board, and recoverable-handoff
+  surfaces. No source link, screenshot, vault material, operational record,
+  live-write result, privacy guarantee, or reliability claim is approved.
+- Nexus is owner-confirmed as a local system project, but an authoritative
+  checkout and commit have not been inspected. Its featured route may explain
+  the reviewed governance responsibility model and must explicitly avoid
+  Nexus-specific implementation, deployment, operational, scale, performance,
+  user, or outcome claims.
+- Both projects may link from the public Cognitive Infrastructure projection.
+  Their individual evidence boundaries remain authoritative.

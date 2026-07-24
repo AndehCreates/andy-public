@@ -50,7 +50,7 @@ export default class ProjectFilter extends Component<Props, State> {
       <header className="collection-index__header">
         <p className="collection-index__eyebrow">Work</p>
         <h1 id="collection-heading">Project atlas</h1>
-        <p>Reviewed systems with different jobs: coordinate AI work, preserve continuity, evaluate uncertain evidence, keep calculations coherent, and make simulations inspectable.</p>
+        <p>Reviewed systems with different jobs: preserve context, govern consequential work, coordinate AI-assisted execution, evaluate uncertain evidence, keep calculations coherent, and make simulations inspectable.</p>
         <p className="collection-index__count" role="status" aria-live="polite">
           {projectCountLabel(visibleProjects.length)}
         </p>

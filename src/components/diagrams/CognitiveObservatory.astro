@@ -5,10 +5,10 @@ interface Props {
   projection: SystemProjection;
   title?: string;
   summary?: string;
+  projectHrefs?: Record<string, string>;
 }
 
-const { projection, title = 'Cognitive Infrastructure', summary } = Astro.props;
-const projectHrefs: Record<string, string> = { 'projects:project-chief-of-staff': '/work/chief-of-staff/' };
+const { projection, title = 'Cognitive Infrastructure', summary, projectHrefs = {} } = Astro.props;
 const layerSlug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const layerFocusId = (label: string) => `field-focus-${layerSlug(label)}`;
 ---

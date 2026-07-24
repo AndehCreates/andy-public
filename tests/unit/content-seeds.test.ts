@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import matter from 'gray-matter';
@@ -31,4 +32,49 @@ it('keeps catalog fields optional on draft schema seeds', async () => {
 
   expect(seed.visibility).toBe('draft');
   expect(seed.capabilityNarrative).toBeUndefined();
+});
+
+it('publishes Nexus and Second Brain as approved featured capability dossiers', async () => {
+  const projectPaths = [
+    resolve(process.cwd(), 'src/content/projects/nexus.mdx'),
+    resolve(process.cwd(), 'src/content/projects/second-brain.mdx'),
+  ];
+
+  expect(projectPaths.every(existsSync)).toBe(true);
+
+  const projects = await Promise.all(projectPaths.map(async (projectPath) => {
+    const source = await readFile(projectPath, 'utf8');
+    return matter(source).data as {
+      id: string;
+      visibility: 'featured';
+      publicReview: 'approved';
+      sourceAvailability: 'local-only';
+      capabilityNarrative: unknown;
+      evidenceSummary: unknown;
+      diagram: unknown;
+    };
+  }));
+
+  expect(projects).toEqual([
+    expect.objectContaining({
+      id: 'project-nexus',
+      visibility: 'featured',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      capabilityNarrative: expect.any(Object),
+      evidenceSummary: expect.any(Object),
+      diagram: expect.any(Object),
+    }),
+    expect.objectContaining({
+      id: 'project-second-brain',
+      visibility: 'featured',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      capabilityNarrative: expect.any(Object),
+      evidenceSummary: expect.any(Object),
+      diagram: expect.any(Object),
+    }),
+  ]);
+
+  expect(publicEntries(projects.map((project) => ({ ...project, title: project.id })))).toHaveLength(2);
 });
