@@ -1,0 +1,122 @@
+---
+id: cognitive-infrastructure
+title: Cognitive Infrastructure
+summary: A public-safe field guide to the distinct responsibilities that preserve human authority while work moves through context, governance, coordination, execution, and feedback.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [ai-systems, knowledge-context, evaluation-reliability]
+relatedIds: []
+publishedAt: 2026-07-22
+updatedAt: 2026-07-22
+order: 0
+systemId: cognitive-infrastructure
+systemProjection:
+  thesis: The system extends human capability without erasing human authority.
+  layers:
+    - id: human-direction
+      label: Human direction
+      responsibility: Chooses what matters and retains consequential authority.
+      authorityBoundary: Human judgment and approval remain the source of consequential direction.
+      theme: authority
+      components:
+        - id: human-intent-judgment-approval
+          label: Human intent, judgment, approval
+          responsibility: Frames the work, evaluates what matters, and approves consequential changes.
+          authorityBoundary: Does not delegate consequential authority to a system.
+          theme: authority
+    - id: remember-and-govern
+      label: Remember and govern
+      responsibility: Preserves the context and boundaries needed for accountable work.
+      authorityBoundary: Context and policy inform work; they do not replace human approval.
+      theme: continuity
+      components:
+        - id: second-brain
+          label: Second Brain
+          responsibility: Owns durable memory, session context, and recoverable handoffs.
+          authorityBoundary: Preserves context without deciding what a person should value.
+          projectTarget: projects:project-second-brain
+          theme: continuity
+        - id: nexus
+          label: Nexus
+          responsibility: Defines policy, accountability, and conditions for consequential work.
+          authorityBoundary: Establishes governance boundaries while keeping implementation claims tied to direct evidence.
+          projectTarget: projects:project-nexus
+          theme: authority
+    - id: coordinate-and-admit
+      label: Coordinate and admit
+      responsibility: Turns a directed task into bounded, reviewable work.
+      authorityBoundary: Coordination and admission remain distinct from human authority and code truth.
+      theme: execution
+      components:
+        - id: chief-of-staff
+          label: Chief of Staff
+          responsibility: Reconciles desired work, coordinates verification, and publishes handoff state.
+          authorityBoundary: Coordinates work without becoming the authority for every system it touches.
+          projectTarget: projects:project-chief-of-staff
+          theme: execution
+        - id: ai-hub
+          label: AI Hub
+          responsibility: Defines the conceptual boundary for considering bounded work for execution.
+          authorityBoundary: The projection describes a responsibility rather than a claim about implementation or deployment.
+          theme: execution
+    - id: execute-and-preserve
+      label: Execute and preserve code truth
+      responsibility: Performs bounded work and retains the records needed to inspect it.
+      authorityBoundary: Execution returns observations; repositories retain implementation and review truth.
+      theme: evidence
+      components:
+        - id: codex-specialized-agents
+          label: Codex and specialized agents
+          responsibility: Perform bounded work and return observations and evidence.
+          authorityBoundary: Operate within the work and verification boundaries established for a task.
+          theme: execution
+        - id: project-repositories
+          label: Project repositories
+          responsibility: Retain source, tests, review, implementation, and release truth.
+          authorityBoundary: Preserve inspectable technical records rather than a public claim about any specific checkout.
+          theme: evidence
+    - id: produce-and-learn
+      label: Produce and learn
+      responsibility: Turns work into products, evidence, and feedback for the wider practice.
+      authorityBoundary: Feedback informs later decisions; it does not automate them.
+      theme: feedback
+      components:
+        - id: portfolio-projects-feedback
+          label: Portfolio projects and feedback
+          responsibility: Become products, experiments, evidence, and feedback for the wider system.
+          authorityBoundary: Makes selected public reasoning inspectable without exposing private operational detail.
+          theme: feedback
+  edges:
+    - from: human-direction
+      to: second-brain
+      label: sets context worth preserving
+    - from: second-brain
+      to: chief-of-staff
+      label: provides recoverable handoff context
+    - from: nexus
+      to: chief-of-staff
+      label: frames accountable coordination
+    - from: chief-of-staff
+      to: codex-specialized-agents
+      label: coordinates bounded work
+    - from: codex-specialized-agents
+      to: project-repositories
+      label: returns inspectable work
+    - from: project-repositories
+      to: portfolio-projects-feedback
+      label: supports public evidence and learning
+---
+
+## What this system is for
+
+Cognitive Infrastructure is a public-safe projection of how context, boundaries, coordination, execution, and technical records can work together. It describes distinct responsibilities and deliberate handoffs rather than a live topology, deployment, or unattended operating model.
+
+## How to read the Observatory
+
+Read from human direction through the layers below. Each layer has a different responsibility and authority boundary. The goal is not to centralize judgment in software; it is to make useful work easier to inspect, recover, and improve while consequential authority stays with people.
+
+## What remains outside this view
+
+This field guide intentionally omits private infrastructure, endpoints, source locations, credentials, operational logs, and internal availability details. Component drill-downs remain limited to reviewed public material and inherit the evidence boundary stated on each project page.

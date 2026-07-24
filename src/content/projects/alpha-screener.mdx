@@ -10,7 +10,7 @@ capabilities: [decision-intelligence, evaluation-reliability, ai-systems]
 relatedIds: []
 publishedAt: 2026-07-21
 updatedAt: 2026-07-21
-order: 3
+order: 5
 projectId: project-alpha-screener
 status: active
 workHook: Expose uncertainty and promotion gates before a research result advances.
@@ -20,6 +20,17 @@ caseStudyHook: Rank what to inspect next without hiding data quality, uncertaint
 theme: evidence
 artifactLabels: [Input trust, Evidence gate, Human review]
 pivotalDecision: Keep deterministic scoring separate from advisory context and treat research state as evidence rather than permission.
+capabilityNarrative:
+  capabilityThesis: Rank research starting points without hiding uncertainty or evidence gates.
+  humanFriction: Research inputs can be incomplete, stale, provider-dependent, derived, or proxy-based.
+  whyItMatters: Opaque recommendations can make exploratory research appear more certain than the evidence supports.
+  systemResponse: Separate deterministic scoring from advisory context and surface confidence, uncertainty, and the next review step.
+  capabilityExtended: Evidence-gated decision support for research.
+  howItWorks: Validation and trust gates check inputs before deterministic scoring informs research views and human review.
+  pivotalDecision: Keep deterministic scoring separate from advisory context and treat research state as evidence rather than permission.
+  decisionTradeoff: Preserve explicit evidence gates instead of presenting exploratory research as trade-ready.
+  principleIds: [handbook:evaluation-driven-development]
+  nextStep: Extend bounded validation around live-data conditions and outcome research without weakening human review or evidence gates.
 evidenceSummary:
   evidenceMethod: test-execution
   evidenceState: validated-within-scope

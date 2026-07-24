@@ -10,12 +10,23 @@ capabilities: [interactive-creative-systems, product-engineering]
 relatedIds: []
 publishedAt: 2026-07-21
 updatedAt: 2026-07-21
-order: 5
+order: 7
 projectId: project-arcade
 status: experimental
 workHook: Make playable simulation behavior observable and reproducible.
 visualMark: deterministic-simulation
 technicalDifferentiator: Seeded runs, restart-only tuning, shared simulation contracts, and visible telemetry preserve active-run determinism.
+capabilityNarrative:
+  capabilityThesis: Make playable simulation behavior observable and reproducible.
+  humanFriction: Interactive tuning and simulation state are hard to reason about when active runs change unpredictably.
+  whyItMatters: Builders need to observe and refine behavior without losing the conditions that produced it.
+  systemResponse: Pair deterministic canvas simulations with a shared tuning and telemetry shell.
+  capabilityExtended: Reproducible interactive-system experimentation.
+  howItWorks: Seeded runs, restart-only tuning, shared simulation contracts, and visible telemetry preserve active-run determinism.
+  pivotalDecision: Keep tuning changes pending until an explicit restart.
+  decisionTradeoff: Preserve active-run determinism and avoid leaking hidden actor state.
+  principleIds: [handbook:evaluation-driven-development]
+  nextStep: Use reviewed gameplay captures and continued deterministic scenario testing to guide subsequent refinements.
 ---
 
 ## What it solves

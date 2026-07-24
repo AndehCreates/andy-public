@@ -10,7 +10,7 @@ capabilities: [ai-systems, evaluation-reliability, knowledge-context]
 relatedIds: []
 publishedAt: 2026-07-21
 updatedAt: 2026-07-21
-order: 1
+order: 3
 projectId: project-chief-of-staff
 status: active
 workHook: Authority-bounded coordination for recoverable AI-assisted work.
@@ -20,6 +20,17 @@ caseStudyHook: Coordinate AI-assisted work without taking authority from the sys
 theme: authority
 artifactLabels: [Governance, Coordination, Human review]
 pivotalDecision: Keep runtime, context, and repository authority distributed rather than centralizing them in the coordination layer.
+capabilityNarrative:
+  capabilityThesis: Keep AI-assisted software work recoverable without centralizing authority.
+  humanFriction: Work becomes difficult to review or resume when progress and ownership are scattered across systems.
+  whyItMatters: Uncertain execution needs visible boundaries, recovery state, and human review rather than an unsupported completion claim.
+  systemResponse: Coordinate bounded work through typed lifecycles while existing systems retain their authority.
+  capabilityExtended: Recoverable coordination for AI-assisted software work.
+  howItWorks: Lifecycle states, repository guards, and independent verification keep coordination distinct from runtime, context, and source truth.
+  pivotalDecision: Keep runtime, context, and repository authority distributed rather than centralizing them in the coordination layer.
+  decisionTradeoff: Coordinate existing authorities instead of centralizing them in the control plane.
+  principleIds: [handbook:human-owned-decisions]
+  nextStep: Validate the prepared live-admission boundary only with explicit operator acknowledgement.
 evidenceSummary:
   evidenceMethod: test-execution
   evidenceState: validated-within-scope

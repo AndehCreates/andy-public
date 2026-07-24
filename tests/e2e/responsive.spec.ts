@@ -171,3 +171,30 @@ test('prioritizes the homepage position and flagship action before its visual on
   await expect(visual).toContainText('Human-owned decisions');
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('reflows the Observatory into an intentional layer constellation on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('/systems/cognitive-infrastructure/');
+
+  const observatory = page.locator('[data-cognitive-observatory]');
+  await expect(observatory.locator('.cognitive-observatory__field')).toBeVisible();
+  await expect(observatory.locator('.cognitive-observatory__field [role="radiogroup"]')).toBeVisible();
+  await expect(observatory.locator('.cognitive-observatory__field [data-field-detail="human-direction"]')).toBeVisible();
+  await expect(observatory.locator('.cognitive-observatory__layers')).toHaveCSS('display', 'grid');
+  await expect(observatory.locator('.cognitive-observatory__layer').first()).toContainText('Human direction');
+  await expect(observatory.locator('.cognitive-observatory__layer').last()).toContainText('Portfolio projects and feedback');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test('replaces the dossier rail with compact chapter navigation on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('/work/lifeos/');
+
+  await expect(page.getByRole('complementary', { name: 'System position' })).toBeHidden();
+  const chapters = page.locator('details[data-dossier-chapters]');
+  await expect(chapters).toBeVisible();
+  await expect(chapters.locator('summary')).toHaveText('On this page');
+  await chapters.locator('summary').click();
+  await expect(chapters.getByRole('link', { name: 'Why it matters' })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});

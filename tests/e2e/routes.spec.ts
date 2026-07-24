@@ -11,7 +11,7 @@ test('publishes the Work atlas and a reviewed project route with complete metada
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/work\/chief-of-staff\/$/);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /coordinates AI-assisted software work/i);
   await expect(page.getByText('AI systems & orchestration', { exact: true })).toBeVisible();
-  await expect(page.getByText('Updated July 21, 2026', { exact: true })).toBeVisible();
+  await expect(page.getByText('Capability thesis', { exact: true })).toBeVisible();
 });
 
 test('does not publish draft project routes', async ({ page }) => {
@@ -102,8 +102,8 @@ test('publishes public system maps with text explanations, legends, and validate
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`/systems/${system.slug}/$`));
     await expect(page.getByRole('heading', { level: 2, name: 'How to read this map' })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 2, name: 'Map legend' })).toHaveCount(1);
-    await expect(page.getByRole('heading', { level: 2, name: 'Related public work' })).toHaveCount(1);
-    await expect.poll(() => page.locator('.system-relations a').count()).toBeGreaterThanOrEqual(2);
+    await expect(page.getByRole('heading', { level: 2, name: 'What this connects' })).toHaveCount(1);
+    await expect(page.locator('main')).toContainText('The connected public work explores');
   }
 });
 

@@ -11,6 +11,8 @@ const systems = publicEntries((await getCollection('systems')).map((entry) => ({
   ...(entry.data.order === undefined ? {} : { order: entry.data.order }),
   entry,
 }))).map(({ entry }) => entry);
+const observatory = systems.find((system) => system.data.systemId === 'cognitive-infrastructure');
+const remainingSystems = systems.filter((system) => system !== observatory);
 ---
 
 <BaseLayout
@@ -24,8 +26,16 @@ const systems = publicEntries((await getCollection('systems')).map((entry) => ({
       <h1 id="systems-heading">System maps</h1>
       <p>These maps connect public work through shared responsibilities and decisions. Each is readable as text and keeps operational details out of the public view.</p>
     </header>
+    {observatory && (
+      <article class="systems__lead" data-observatory-lead>
+        <p>Featured system</p>
+        <h2>{observatory.data.title}</h2>
+        <p>{observatory.data.summary}</p>
+        <a href={`/systems/${observatory.id}/`}>Explore Cognitive Infrastructure</a>
+      </article>
+    )}
     <div class="systems__grid">
-      {systems.map((system) => (
+      {remainingSystems.map((system) => (
         <article class="system-card">
           <p>{capabilities[system.data.capabilities.at(0) ?? 'ai-systems']}</p>
           <h2><a href={`/systems/${system.id}/`}>{system.data.title}</a></h2>
@@ -45,6 +55,11 @@ const systems = publicEntries((await getCollection('systems')).map((entry) => ({
   h1, h2 { margin: 0; color: var(--text-primary); }
   h1 { font-size: var(--text-3xl); letter-spacing: -.045em; line-height: 1; }
   .systems__grid { display: grid; gap: var(--space-4); }
+  .systems__lead { display: grid; gap: var(--space-4); margin-bottom: var(--space-6); padding: var(--space-6); border: var(--border-width) solid color-mix(in srgb, var(--accent-system) 45%, var(--border-subtle)); background: linear-gradient(135deg, color-mix(in srgb, var(--surface-raised) 88%, var(--accent-system)), var(--surface-sunken)); }
+  .systems__lead p { margin: 0; color: var(--text-secondary); font-size: var(--text-lg); max-width: 54rem; }
+  .systems__lead > p:first-child { color: var(--accent-system); font-size: var(--text-xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .systems__lead h2 { margin: 0; color: var(--text-primary); font-size: var(--text-2xl); }
+  .systems__lead a { width: fit-content; color: var(--accent-system); font-weight: 700; }
   .system-card { display: grid; align-content: start; gap: var(--space-3); padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
   .system-card p { margin: 0; color: var(--text-secondary); }
   .system-card > p:first-child { color: var(--accent-human); font-size: var(--text-sm); font-weight: 700; }

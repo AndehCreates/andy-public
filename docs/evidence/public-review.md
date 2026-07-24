@@ -1,11 +1,12 @@
 # Public review matrix
 
-Rows below record the completed human review. Visibility remains the publication
-selector: approved draft rows stay excluded from public routes.
+Rows below record evidence and human-review status. Visibility remains the
+publication selector: approved draft rows stay excluded from public routes, and
+pending rows do not authorize public content.
 
 | Project ID | Evidence inventory | Source availability / commit | Proposed visibility | Public review | Approved framing / capability tags | Approved links and media | Explicitly excluded claims/details | Reviewer / date |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| project-chief-of-staff | chief-of-staff.md | local-only / 884ecb0 | featured | approved | Authority-bounded AI work coordination; AI systems, evaluation and reliability, knowledge and context | None | Repository link, host topology, service endpoints, live fleet or performance claims | user / 2026-07-21 |
+| project-chief-of-staff | chief-of-staff.md | local-only / 884ecb0 | listed | approved | Authority-bounded AI work coordination; AI systems, evaluation and reliability, knowledge and context | None | Repository link, host topology, service endpoints, live fleet or performance claims | user / 2026-07-21 |
 | project-lifeos | lifeos.md | public / 7f50ad1 | featured | approved | Human-centered continuity system; knowledge and context, product engineering, human-centered design | https://github.com/AndehCreates/LifeOS | Personal tasks, contacts, journals, schedules, clinical/productivity claims | user / 2026-07-21 |
 | project-alpha-screener | alpha-screener.md | public / 787aaef | featured | approved | Human-reviewed decision research; decision intelligence, evaluation and reliability, AI systems | https://github.com/AndehCreates/alpha-screener | Investment advice, accounts, positions, live performance or profitability claims | user / 2026-07-21 |
 | project-mathpad | mathpad.md | public / 6704730 | listed | approved | Calculation notebook and semantic editor; product engineering, knowledge and context | https://github.com/AndehCreates/mathpad | Commercial parity, adoption, performance claims | user / 2026-07-21 |
@@ -13,4 +14,7 @@ selector: approved draft rows stay excluded from public routes.
 | project-adhd-tabs | adhd-tabs.md | local-only / 60b897b | draft | approved | Reversible attention-support workflow; human-centered design, knowledge and context | None | Clinical efficacy, diagnosis, recommendation metrics, repository link | user / 2026-07-21 |
 | project-creative-suite | creative-suite.md | local-only / 53824f1 | draft | approved | Accessible creative-preview gallery; interactive and creative systems, product engineering | None | Creator adoption, hosting, external media or repository link | user / 2026-07-21 |
 | project-android-lab | android-lab.md | local-only / 1f3186b | draft | approved | Device-sensor learning workbench; local infrastructure and edge, product engineering | None | Hardware validation, device IDs, production release or repository link | user / 2026-07-21 |
-| project-japanese-anime-inspired | japanese-anime-inspired.md | public / 6ebf6e8 | draft | approved | Audio-first language-learning design; human-centered design, interactive and creative systems | None | Shipped app, learning outcomes, audio provenance, anime IP association | user / 2026-07-21 |
+| project-japanese-language-cognition | japanese-language-cognition.md | public / 6ebf6e8 | listed | pending | Audio-first language-education cognition; human-centered design, interactive and creative systems | None | Shipped application, learning outcomes, proficiency gains, audio provenance, licensing, and specific intellectual-property association | pending / 2026-07-22 |
+| project-second-brain | second-brain.md | local-only / fa5f8b9 | featured | approved | Durable context and recoverable handoffs; knowledge and context, evaluation and reliability, human-centered design | None | Repository link, vault material, topology, operational records, live-write, availability, privacy, reliability, and productivity claims | user / 2026-07-24 |
+| project-nexus | nexus.md | owner-confirmed local-only / source not inspected | featured | approved | Evidence-limited governance and accountability model; AI systems, evaluation and reliability, human-centered design | None | Nexus-specific implementation, deployment, operational, scale, performance, user, and outcome claims | user / 2026-07-24 |
+| project-ai-hub | ai-hub.md | unconfirmed / not observed | listed | pending | Proposed runtime-admission boundary; AI systems, local infrastructure and edge | None | All implementation, deployment, runtime, lease, capacity, event, operational, scale, performance, user, and outcome claims | pending / 2026-07-22 |

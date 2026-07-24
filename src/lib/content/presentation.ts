@@ -1,5 +1,6 @@
 import { z } from 'astro/zod';
 import { canPublish, reviewValues, visibilityValues, type PublicReview, type Visibility } from './publication';
+import { catalogPresentationFields } from './catalog';
 
 export const visualMarkValues = ['authority', 'continuity', 'evidence', 'semantic-document', 'deterministic-simulation'] as const;
 export const flagshipThemeValues = ['authority', 'continuity', 'evidence'] as const;
@@ -125,7 +126,7 @@ const flagshipFieldNames = ['caseStudyHook', 'theme', 'artifactLabels', 'pivotal
 type PresentationRefinementInput = {
   visibility?: Visibility;
   publicReview?: PublicReview;
-} & Partial<Record<(typeof commonFieldNames)[number] | (typeof flagshipFieldNames)[number], unknown>>;
+} & Partial<Record<(typeof commonFieldNames)[number] | (typeof flagshipFieldNames)[number] | 'capabilityNarrative', unknown>>;
 
 type PresentationRefinementContext = {
   addIssue(issue: { code: 'custom'; path: string[]; message: string }): void;
@@ -165,6 +166,14 @@ export function addProjectPresentationIssues(
         message: `${field} is required for publishable projects.`,
       });
     }
+  }
+
+  if (project.capabilityNarrative === undefined) {
+    context.addIssue({
+      code: 'custom',
+      path: ['capabilityNarrative'],
+      message: 'capabilityNarrative is required for publishable projects.',
+    });
   }
 
   if (project.visibility !== 'featured') return;
@@ -207,6 +216,7 @@ export const projectPresentationSchema = z.object({
   visibility: z.enum(visibilityValues),
   publicReview: z.enum(reviewValues),
   ...projectPresentationFields,
+  ...catalogPresentationFields,
 }).superRefine(addProjectPresentationIssues);
 
 export type EvidenceSummary = z.infer<typeof evidenceSummarySchema>;

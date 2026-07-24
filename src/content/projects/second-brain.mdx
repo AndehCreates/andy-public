@@ -1,0 +1,95 @@
+---
+id: project-second-brain
+title: Second Brain
+summary: Preserves session context, decisions, and handoff state so complex work can resume without reconstructing the entire path from memory.
+visibility: featured
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [knowledge-context, evaluation-reliability, human-centered-design]
+relatedIds: []
+relationshipEdges:
+  - target: systems:cognitive-infrastructure
+    type: part-of
+    annotation: Second Brain provides the durable-context responsibility within the wider Cognitive Infrastructure system.
+publishedAt: 2026-07-24
+updatedAt: 2026-07-24
+order: 1
+projectId: project-second-brain
+status: active
+workHook: Turn interrupted work into a recoverable handoff.
+visualMark: continuity
+technicalDifferentiator: Separates durable context and operator-facing cycle state from runtime admission, governance, coordination, and repository truth.
+caseStudyHook: Preserve enough context to resume complex work without treating memory as execution authority.
+theme: continuity
+artifactLabels: [Active work, Durable handoff, Re-entry]
+pivotalDecision: Keep durable context and recoverable handoffs separate from runtime, governance, and source-code authority.
+capabilityNarrative:
+  capabilityThesis: Preserve context so complex work can resume without reconstructing every prior decision.
+  humanFriction: After an interruption, decisions, open questions, and the next useful action can be scattered across sessions, logs, and repositories.
+  whyItMatters: Reconstructing that state consumes attention and increases the chance that constraints, unresolved blockers, or prior reasoning are lost.
+  systemResponse: Maintain session-board, cycle-status, and handoff-oriented artifacts behind an explicit repository-owned contract boundary.
+  capabilityExtended: Recoverable continuity across complex work.
+  howItWorks: Operator-facing cycle state and handoff artifacts preserve context while runtime admission, governance, coordination, and code truth remain with their respective systems.
+  pivotalDecision: Keep durable context and recoverable handoffs separate from runtime, governance, and source-code authority.
+  decisionTradeoff: Favor explicit, inspectable handoff state over claims of autonomous memory or invisible continuity.
+  principleIds: [handbook:grounded-knowledge]
+  nextStep: Run the repository-owned contract checks against a clean revision and validate a direct durable-write and re-entry scenario.
+evidenceSummary:
+  evidenceMethod: source-inspection
+  evidenceState: inspected-only
+  evidenceScope: Source inspection confirmed repository-owned contract, preflight, smoke, latest-cycle, session-board, and handoff surfaces; live writes and remote-host behavior were not tested.
+diagram:
+  variant: continuity-reentry
+  title: Context carried into a recoverable handoff
+  description: Work state is distilled into an inspectable handoff so a person can recover prior decisions, unresolved constraints, and the next useful action.
+  nodes:
+    - id: active-work
+      label: Active work
+      description: Produces decisions, open questions, constraints, and changing state.
+    - id: cycle-state
+      label: Cycle state
+      description: Records the current position and what remains unresolved.
+    - id: handoff-record
+      label: Handoff record
+      description: Preserves the context required for a deliberate continuation.
+    - id: reentry-context
+      label: Re-entry context
+      description: Restores prior reasoning and the next useful action.
+    - id: human-continuation
+      label: Human continuation
+      description: Keeps the decision to continue, revise, or stop with the person returning to the work.
+  edges:
+    - from: active-work
+      to: cycle-state
+      label: records current state
+    - from: cycle-state
+      to: handoff-record
+      label: distills a recoverable handoff
+    - from: handoff-record
+      to: reentry-context
+      label: restores prior context
+    - from: reentry-context
+      to: human-continuation
+      label: supports deliberate re-entry
+---
+
+## What it solves
+
+Second Brain is a durable context layer for preserving session continuity and recoverable handoffs across complex work. It reduces the need to reconstruct prior decisions, unresolved constraints, and the next useful action after an interruption.
+
+## Who it helps
+
+It is designed for people moving through long-running technical or creative work where the important state lives across sessions, artifacts, and repositories rather than in one short task.
+
+## Design choice and tradeoff
+
+Durable context remains a distinct responsibility. Second Brain records cycle state and handoff-oriented artifacts without becoming the runtime, governance authority, coordinator, or source of code truth. That boundary favors inspectable continuity over claims of autonomous memory.
+
+## Validation boundary
+
+Source inspection confirmed repository-owned contract, preflight, smoke, latest-cycle, session-board, and handoff surfaces. This review did not run live writes, remote-host checks, browser flows, or retention and privacy validation, and it does not establish production reliability.
+
+## Next step
+
+Run the repository-owned contract checks against a clean revision, then validate one direct durable-write and re-entry scenario without exposing private operational material.

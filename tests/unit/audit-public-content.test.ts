@@ -29,6 +29,7 @@ it('accepts a public relationship that resolves through a canonical authored ID'
       sourceAvailability: 'local-only',
       sourceUrls: [],
       relatedIds: [systemId],
+      relationshipEdges: [],
       title: 'Chief of Staff',
       summary: 'A reviewed orchestration system with explicit operator controls.',
       body: 'Public-safe project narrative.',
@@ -42,6 +43,7 @@ it('accepts a public relationship that resolves through a canonical authored ID'
       sourceAvailability: 'local-only',
       sourceUrls: [],
       relatedIds: [],
+      relationshipEdges: [],
       title: 'Reliable AI work',
       summary: 'A cross-project system map for reliable AI architecture patterns.',
       body: 'Public-safe system narrative.',
@@ -55,6 +57,7 @@ it('accepts a public relationship that resolves through a canonical authored ID'
       sourceAvailability: 'local-only',
       sourceUrls: [],
       relatedIds: [],
+      relationshipEdges: [],
       title: 'A complete relation Signal',
       summary: 'A reviewed Signal fixture that keeps the relationship audit independent.',
       body: 'Public-safe Signal narrative.',
@@ -88,6 +91,7 @@ it('rejects a public case study whose related project is not approved for public
       sourceAvailability: 'local-only',
       sourceUrls: [],
       relatedIds: [],
+      relationshipEdges: [],
       projectId: 'project-chief-of-staff',
       title: 'Chief of Staff',
       summary: 'A reviewed case study that depends on an approved project presentation.',
@@ -102,6 +106,7 @@ it('rejects a public case study whose related project is not approved for public
       sourceAvailability: 'local-only',
       sourceUrls: [],
       relatedIds: [],
+      relationshipEdges: [],
       title: 'Chief of Staff',
       summary: 'A pending project record that must not be joined into a public case study.',
       body: 'Pending project narrative.',
@@ -131,6 +136,7 @@ it('scans nested public presentation strings with the existing sanitizer rules',
       sourceAvailability: 'local-only',
       sourceUrls: [],
       relatedIds: [],
+      relationshipEdges: [],
       title: 'Chief of Staff',
       summary: 'A reviewed orchestration system with explicit operator controls.',
       body: 'Public-safe project narrative.',
@@ -158,7 +164,7 @@ function atlasEntry(overrides: Record<string, unknown> = {}) {
   return {
     id: 'signals:public-signal', slug: 'research/public-signal', collection: 'signals' as const,
     visibility: 'listed' as const, publicReview: 'approved' as const, sourceAvailability: 'local-only' as const,
-    sourceUrls: [], relatedIds: [], title: 'A complete public Signal', summary: 'A reviewed Signal with structured public presentation fields.', body: 'Public body.',
+    sourceUrls: [], relatedIds: [], relationshipEdges: [], title: 'A complete public Signal', summary: 'A reviewed Signal with structured public presentation fields.', body: 'Public body.',
     signalPresentation: {
       researchQuestion: 'What evidence must this public Signal establish before it continues?',
       artifactLabel: 'Reviewed readiness gate', artifactType: 'test', finding: 'The artifact keeps promotion decisions inspectable.',
@@ -174,7 +180,7 @@ function continuationEntry(overrides: Record<string, unknown> = {}) {
   return {
     id: 'caseStudies:route-alpha', slug: 'alpha-screener', collection: 'caseStudies' as const,
     visibility: 'featured' as const, publicReview: 'approved' as const, sourceAvailability: 'local-only' as const,
-    sourceUrls: [], relatedIds: [], projectId: 'alpha-screener', title: 'Alpha Screener', summary: 'A reviewed continuation record for the Signal.', body: 'Public case-study body.',
+    sourceUrls: [], relatedIds: [], relationshipEdges: [], projectId: 'alpha-screener', title: 'Alpha Screener', summary: 'A reviewed continuation record for the Signal.', body: 'Public case-study body.',
     ...overrides,
   };
 }
@@ -192,7 +198,7 @@ it('accepts a complete structured Signal through the live content audit', () => 
     {
       id: 'projects:alpha-screener', slug: 'alpha-screener', collection: 'projects' as const,
       visibility: 'featured' as const, publicReview: 'approved' as const, sourceAvailability: 'local-only' as const,
-      sourceUrls: [], relatedIds: [], title: 'Alpha Screener', summary: 'A reviewed project record for the case-study continuation.', body: 'Public project body.',
+      sourceUrls: [], relatedIds: [], relationshipEdges: [], title: 'Alpha Screener', summary: 'A reviewed project record for the case-study continuation.', body: 'Public project body.',
     },
   ], atlasConfig)).not.toThrow();
 });
@@ -283,4 +289,170 @@ it('integrates complete Signal presentation, sanitizer, continuation, and atlas 
     'Path "evidence-before-action" target "handbook:evaluation-driven-development" does not exist',
   ]) expect(message).toContain(violation);
   expect(message.match(/windows-path: C:\\private\\signal/g)).toHaveLength(1);
+});
+
+it('rejects missing typed targets, private targets, and lineage relations without evidence', () => {
+  expect(() => auditEntries([
+    {
+      id: canonicalRelationId('projects', 'project-lifeos'),
+      slug: 'lifeos',
+      collection: 'projects',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'public',
+      sourceUrls: ['https://example.com/lifeos'],
+      relatedIds: [],
+      relationshipEdges: [
+        {
+          target: 'systems:missing',
+          type: 'related-to',
+          annotation: 'LifeOS sits beside the missing system.',
+        },
+        {
+          target: canonicalRelationId('systems', 'private-system'),
+          type: 'applies-principle',
+          annotation: 'LifeOS uses a private system pattern.',
+        },
+        {
+          target: canonicalRelationId('systems', 'reliable-ai-work'),
+          type: 'built-through',
+          annotation: 'This project was built through the connected workflow.',
+        },
+      ],
+      title: 'LifeOS',
+      summary: 'A reviewed continuity workspace with typed local-first contracts.',
+      body: 'Public-safe project narrative.',
+    },
+    {
+      id: canonicalRelationId('systems', 'private-system'),
+      slug: 'private-system',
+      collection: 'systems',
+      visibility: 'internal',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      relationshipEdges: [],
+      title: 'Private system',
+      summary: 'A private system record that must never be referenced publicly.',
+      body: 'Private system narrative.',
+    },
+    {
+      id: canonicalRelationId('systems', 'reliable-ai-work'),
+      slug: 'reliable-ai-work',
+      collection: 'systems',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      relationshipEdges: [],
+      title: 'Reliable AI work',
+      summary: 'A reviewed public system map for reliable AI architecture patterns.',
+      body: 'Public-safe system narrative.',
+    },
+  ])).toThrowError(
+    /Relationship target "systems:missing" does not exist\..*Relationship target "systems:private-system" is internal.*Relationship "built-through" targeting "systems:reliable-ai-work" requires evidenceNote\./s,
+  );
+});
+
+it('rejects unsafe strings inside typed relationship annotations and evidence notes', () => {
+  expect(() => auditEntries([
+    {
+      id: canonicalRelationId('projects', 'project-lifeos'),
+      slug: 'lifeos',
+      collection: 'projects',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'public',
+      sourceUrls: ['https://example.com/lifeos'],
+      relatedIds: [],
+      relationshipEdges: [{
+        target: canonicalRelationId('systems', 'reliable-ai-work'),
+        type: 'built-through',
+        annotation: 'Built through http://127.0.0.1:4321 during local preview.',
+        evidenceNote: 'token=actual-secret',
+      }],
+      title: 'LifeOS',
+      summary: 'A reviewed continuity workspace with typed local-first contracts.',
+      body: 'Public-safe project narrative.',
+    },
+    {
+      id: canonicalRelationId('systems', 'reliable-ai-work'),
+      slug: 'reliable-ai-work',
+      collection: 'systems',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      relationshipEdges: [],
+      title: 'Reliable AI work',
+      summary: 'A reviewed public system map for reliable AI architecture patterns.',
+      body: 'Public-safe system narrative.',
+    },
+  ])).toThrowError(/localhost-url: http:\/\/127\.0\.0\.1:4321.*secret-assignment: token=actual-secret/s);
+});
+
+it('accepts a valid typed public relationship with a lineage evidence note', () => {
+  expect(() => auditEntries([
+    {
+      id: canonicalRelationId('projects', 'project-lifeos'),
+      slug: 'lifeos',
+      collection: 'projects',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'public',
+      sourceUrls: ['https://example.com/lifeos'],
+      relatedIds: [],
+      relationshipEdges: [{
+        target: canonicalRelationId('systems', 'reliable-ai-work'),
+        type: 'built-through',
+        annotation: 'This project was built through the reliable AI practice.',
+        evidenceNote: 'Reviewed against the shared local-first authority boundaries.',
+      }],
+      title: 'LifeOS',
+      summary: 'A reviewed continuity workspace with typed local-first contracts.',
+      body: 'Public-safe project narrative.',
+    },
+    {
+      id: canonicalRelationId('systems', 'reliable-ai-work'),
+      slug: 'reliable-ai-work',
+      collection: 'systems',
+      visibility: 'listed',
+      publicReview: 'approved',
+      sourceAvailability: 'local-only',
+      sourceUrls: [],
+      relatedIds: [],
+      relationshipEdges: [],
+      title: 'Reliable AI work',
+      summary: 'A reviewed public system map for reliable AI architecture patterns.',
+      body: 'Public-safe system narrative.',
+    },
+    atlasEntry({
+      signalPresentation: {
+        ...atlasEntry().signalPresentation,
+        continueTo: {
+          targetId: canonicalRelationId('systems', 'reliable-ai-work'),
+          annotation: 'Continue to the reviewed system map that this Signal helps explain.',
+        },
+      },
+    }),
+  ], {
+    leadSignalId: 'signals:public-signal',
+    paths: [{
+      id: 'combined-contract',
+      question: 'How does the reviewed Signal connect to the system map?',
+      premise: 'Follow the inspected artifact into the approved public system.',
+      readingMinutes: 3,
+      steps: [
+        {
+          targetId: 'signals:public-signal',
+          intent: 'inspect',
+          transition: 'The reviewed artifact continues into the connected system.',
+        },
+        { targetId: canonicalRelationId('systems', 'reliable-ai-work'), intent: 'understand' },
+      ],
+    }],
+  })).not.toThrow();
 });

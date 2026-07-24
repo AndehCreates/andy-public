@@ -9,6 +9,7 @@ const publicRoutes = [
   '/case-studies/lifeos/',
   '/case-studies/alpha-screener/',
   '/systems/reliable-ai-work/',
+  '/systems/cognitive-infrastructure/',
   '/handbook/',
   '/signals/',
   '/about/',
@@ -117,4 +118,25 @@ test('keeps compact diagram components available to assistive technology', async
   const compactDiagram = page.locator('.home-hero .system-diagram--compact');
   await expect(compactDiagram.locator('.system-diagram__components')).not.toHaveCSS('display', 'none');
   await expect(compactDiagram.locator('.system-diagram__components li')).toHaveCount(4);
+});
+
+test('keeps the Observatory field interactive with a complete semantic layer trace', async ({ page }) => {
+  await page.goto('/systems/cognitive-infrastructure/');
+
+  const observatory = page.locator('[data-cognitive-observatory]');
+  await expect(observatory.locator('.cognitive-observatory__semantic')).toHaveCount(1);
+  await expect(observatory.getByRole('radiogroup', { name: 'Choose a system layer to inspect' })).toBeVisible();
+  await expect(observatory.getByRole('radio')).toHaveCount(5);
+  await expect(observatory.locator('.cognitive-observatory__layers')).toBeVisible();
+  await expect(observatory.locator('.cognitive-observatory__layers .cognitive-observatory__layer')).toHaveCount(5);
+});
+
+test('keeps the dossier rail navigable and its current chapter explicit', async ({ page }) => {
+  await page.goto('/work/lifeos/');
+
+  const rail = page.getByRole('complementary', { name: 'System position' });
+  const navigation = page.getByRole('navigation', { name: 'Dossier chapters' });
+  await expect(rail).toBeVisible();
+  await expect(navigation).toBeVisible();
+  await expect(navigation.getByRole('link', { name: 'Why it matters' })).toHaveAttribute('aria-current', 'location');
 });

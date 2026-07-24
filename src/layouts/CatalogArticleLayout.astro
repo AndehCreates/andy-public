@@ -1,0 +1,44 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import CapabilityEquation from '@/components/catalog/CapabilityEquation.astro';
+import CapabilityDossierHero from '@/components/catalog/CapabilityDossierHero.astro';
+import CatalogRail from '@/components/catalog/CatalogRail.astro';
+import RelationshipPathways from '@/components/catalog/RelationshipPathways.astro';
+import type { RelationshipPathway } from '@/lib/content/relations';
+import '@/styles/prose.css';
+
+interface Narrative { capabilityThesis: string; humanFriction: string; whyItMatters: string; systemResponse: string; capabilityExtended: string; howItWorks: string; pivotalDecision: string; decisionTradeoff: string; nextStep: string; }
+interface Props { title: string; description: string; canonicalPath: string; updatedAt?: Date | undefined; status?: string | undefined; narrative: Narrative; position: string; pathways: RelationshipPathway[]; sources?: Array<{ label: string; href: string }>; observatoryHref?: string | undefined; }
+const { title, description, canonicalPath, status, narrative, position, pathways, sources = [], observatoryHref } = Astro.props;
+const toc = [{ slug: 'why-it-matters', text: 'Why it matters' }, { slug: 'how-it-works', text: 'How it works' }, { slug: 'decisions-and-tradeoffs', text: 'Decisions and tradeoffs' }, { slug: 'principles-applied', text: 'Principles applied' }, { slug: 'evidence-boundary', text: 'Evidence boundary' }, { slug: 'connected-pathways', text: 'Connected pathways' }, { slug: 'what-comes-next', text: 'What comes next' }];
+---
+
+<BaseLayout title={title} description={description} canonicalPath={canonicalPath} type="article">
+  <article class="catalog-dossier container" data-capability-dossier>
+    <div class="catalog-dossier__grid">
+      <CatalogRail position={position} items={toc} observatoryHref={observatoryHref} />
+      <div class="catalog-dossier__reading">
+        <CapabilityDossierHero title={title} thesis={narrative.capabilityThesis} summary={description} status={status} />
+        <div class="catalog-dossier__body prose">
+          <CapabilityEquation friction={narrative.humanFriction} response={narrative.systemResponse} capability={narrative.capabilityExtended} />
+          <section id="why-it-matters"><h2>Why it matters</h2><p>{narrative.whyItMatters}</p></section>
+          <section id="how-it-works"><h2>How it works</h2><p>{narrative.howItWorks}</p></section>
+          <section id="decisions-and-tradeoffs"><h2>Decisions and tradeoffs</h2><p>{narrative.pivotalDecision}</p><p>{narrative.decisionTradeoff}</p></section>
+          <section id="principles-applied"><h2>Principles applied</h2><slot name="principles" /></section>
+          <section id="evidence-boundary"><h2>Evidence boundary</h2><slot name="evidence" />{sources.length > 0 && <p>Sources: {sources.map((source, index) => <>{index > 0 && ', '}<a href={source.href}>{source.label}</a></>)}</p>}</section>
+          <RelationshipPathways pathways={pathways} />
+          <section id="what-comes-next"><h2>What comes next</h2><p>{narrative.nextStep}</p></section>
+          <slot />
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .catalog-dossier { padding-block: var(--space-5) var(--space-8); }
+  .catalog-dossier__grid { display: grid; grid-template-columns: minmax(13rem, 17rem) minmax(0, var(--prose-width)); justify-content: center; gap: var(--space-7); }
+  .catalog-dossier__reading { min-width: 0; }
+  .catalog-dossier__body { margin-top: var(--space-6); }
+  @media (max-width: 767px) { .catalog-dossier__grid { display: block; } .catalog-dossier__grid > .catalog-rail { display: none; } }
+</style>

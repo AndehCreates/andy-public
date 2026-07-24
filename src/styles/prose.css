@@ -18,4 +18,6 @@
 .prose th { color: var(--text-primary); }
 .prose figure { margin-inline: 0; }
 .prose figcaption { margin-top: var(--space-2); color: var(--text-muted); font-size: var(--text-sm); }
-
+.prose > section { scroll-margin-top: var(--space-7); }
+.prose > section + section { margin-top: var(--space-8); }
+.prose > section > h2 { padding-bottom: var(--space-2); border-bottom: var(--border-width) solid var(--border-subtle); }

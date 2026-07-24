@@ -3,7 +3,11 @@ import { basename, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import fg from 'fast-glob';
 import matter from 'gray-matter';
-import { canonicalRelationId, validatePublicRelations } from '../src/lib/content/relations';
+import {
+  canonicalRelationId,
+  type RelationshipEdge,
+  validatePublicRelations,
+} from '../src/lib/content/relations';
 import { canPublish, type PublicReview, type SourceAvailability, type Visibility, validateSourcePolicy } from '../src/lib/content/publication';
 import { findPublicContentRisks } from '../src/lib/content/sanitization';
 import { projectPresentationFieldNames } from '../src/lib/content/presentation';
@@ -36,6 +40,7 @@ export type AuditedEntry = {
   sourceAvailability: SourceAvailability;
   sourceUrls: string[];
   relatedIds: string[];
+  relationshipEdges: RelationshipEdge[];
   projectId?: string;
   title: string;
   summary: string;
@@ -118,6 +123,9 @@ function asEntry(collection: ContentCollectionName, routeSlug: string, parsed: m
     sourceAvailability: data.sourceAvailability as SourceAvailability,
     sourceUrls: toStringArray(data.sourceUrls),
     relatedIds: toStringArray(data.relatedIds),
+    relationshipEdges: Array.isArray(data.relationshipEdges)
+      ? data.relationshipEdges.filter((edge): edge is RelationshipEdge => edge !== null && typeof edge === 'object')
+      : [],
     ...(collection === 'caseStudies' && typeof data.projectId === 'string' ? { projectId: data.projectId } : {}),
     title: typeof data.title === 'string' ? data.title : '',
     summary: typeof data.summary === 'string' ? data.summary : '',
@@ -223,6 +231,7 @@ export function auditEntries(
         ...entry.sourceUrls,
         ...(entry.presentationStrings ?? []),
         ...collectStrings(entry.signalPresentation),
+        ...entry.relationshipEdges.flatMap((edge) => [edge.annotation, edge.inverseAnnotation ?? '', edge.evidenceNote ?? '']),
         entry.body,
       ].join('\n'))) {
         violations.push(`${entry.id}: ${finding.rule}: ${finding.excerpt}`);

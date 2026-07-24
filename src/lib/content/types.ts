@@ -1,5 +1,7 @@
 import type { PublicReview, SourceAvailability, Visibility } from './publication';
+import type { RelationshipEdge } from './relations';
 import type { CapabilityId } from './taxonomy';
+import type { CapabilityNarrative, SystemProjection } from './catalog';
 
 export const projectStatusValues = ['active', 'stable', 'experimental', 'archived'] as const;
 export type ProjectStatus = (typeof projectStatusValues)[number];
@@ -23,4 +25,7 @@ export type ContentRecord = Publishable & {
   sourceUrls: string[];
   capabilities: CapabilityId[];
   relatedIds: string[];
+  relationshipEdges?: RelationshipEdge[];
+  capabilityNarrative?: CapabilityNarrative;
+  systemProjection?: SystemProjection;
 };

@@ -10,12 +10,23 @@ capabilities: [product-engineering, knowledge-context]
 relatedIds: []
 publishedAt: 2026-07-21
 updatedAt: 2026-07-21
-order: 4
+order: 6
 projectId: project-mathpad
 status: experimental
 workHook: Keep multi-line calculations readable as expressions and results change.
 visualMark: semantic-document
 technicalDifferentiator: A revisioned semantic document connects parsing, diagnostics, result alignment, and editor behavior through library-neutral ports.
+capabilityNarrative:
+  capabilityThesis: Keep calculations, diagnostics, and editor behavior coherent as a document changes.
+  humanFriction: Multi-line calculation work loses context when expressions, results, units, and errors drift apart.
+  whyItMatters: People need readable results and feedback to remain connected to the changing document.
+  systemResponse: Share a revisioned semantic document across parsing, diagnostics, result alignment, and editor behavior.
+  capabilityExtended: Coherent local-first calculation workspaces.
+  howItWorks: Library-neutral editor ports separate workspace-document state from the calculation-engine session.
+  pivotalDecision: Share a revisioned semantic document through library-neutral editor ports.
+  decisionTradeoff: Prioritize coherent parsing, diagnostics, result alignment, and accessible state communication over unsupported parity claims.
+  principleIds: [handbook:modular-architecture]
+  nextStep: Run the documented automated and browser checks together on a release candidate.
 ---
 
 ## What it solves
