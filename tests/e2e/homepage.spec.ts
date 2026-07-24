@@ -93,3 +93,16 @@ test('uses a concise professional opportunity signal and a clear lead system', a
   await expect(featuredSystems).toHaveCount(3);
   await expect(page.locator('#featured-systems .flagship-preview--lead')).toHaveCount(1);
 });
+
+test('keeps the systems layer as a complementary path beneath the flagship case studies', async ({ page }) => {
+  await page.goto('/');
+
+  const featured = page.locator('#featured-systems');
+  const systemsPath = page.locator('[data-systems-path]');
+
+  await expect(featured.locator('[data-flagship-preview]')).toHaveCount(3);
+  await expect(systemsPath.getByRole('heading', { level: 3, name: 'Cognitive Infrastructure' })).toBeVisible();
+  await expect(systemsPath.getByRole('link', { name: 'Explore Cognitive Infrastructure' }))
+    .toHaveAttribute('href', '/systems/cognitive-infrastructure/');
+  expect(await featured.evaluate((element) => element.compareDocumentPosition(document.querySelector('[data-systems-path]')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+});

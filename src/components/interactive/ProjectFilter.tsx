@@ -56,6 +56,15 @@ export default class ProjectFilter extends Component<Props, State> {
         </p>
       </header>
 
+      <aside className="systems-path" data-systems-path aria-labelledby="systems-path-heading">
+        <div>
+          <p className="systems-path__eyebrow">Connected system view</p>
+          <h2 id="systems-path-heading">See the responsibilities between projects</h2>
+          <p>Cognitive Infrastructure maps how reviewed projects relate while keeping durable context, governance, coordination, execution, and repository truth distinct.</p>
+        </div>
+        <a href="/systems/cognitive-infrastructure/">Explore Cognitive Infrastructure</a>
+      </aside>
+
       <div className="project-filter" aria-label="Filter projects by capability">
         <span className="project-filter__label">Filter by capability</span>
         <div className="project-filter__controls">

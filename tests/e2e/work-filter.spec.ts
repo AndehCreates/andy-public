@@ -30,6 +30,8 @@ test('keeps the complete Work list available without JavaScript', async ({ brows
   await expect(page.getByRole('link', { name: 'LifeOS' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Second Brain' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Nexus' })).toBeVisible();
+  await expect(page.locator('[data-systems-path]').getByRole('link', { name: 'Explore Cognitive Infrastructure' }))
+    .toHaveAttribute('href', '/systems/cognitive-infrastructure/');
 
   await context.close();
 });

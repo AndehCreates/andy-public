@@ -45,7 +45,7 @@ describe('ProjectFilter', () => {
     const user = userEvent.setup();
     render(<ProjectFilter projects={[...projects]} />);
 
-    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(3);
+    expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(screen.getByRole('status').textContent).toBe('3 projects shown');
 
     await user.click(screen.getByRole('button', { name: 'Product engineering' }));
@@ -57,7 +57,7 @@ describe('ProjectFilter', () => {
 
     await user.click(screen.getByRole('button', { name: 'Clear filter' }));
 
-    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(3);
+    expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(screen.getByRole('status').textContent).toBe('3 projects shown');
   });
 
