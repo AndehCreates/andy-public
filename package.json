@@ -7,10 +7,11 @@
     "check": "astro check",
     "test": "vitest run",
     "test:watch": "vitest",
+    "audit:evidence-candidates": "tsx scripts/audit-evidence-candidates.ts",
     "audit:content": "tsx scripts/audit-public-content.ts",
     "build:site": "astro build",
     "audit:dist": "node scripts/audit-dist.mjs",
-    "build": "npm run check && npm run test && npm run audit:content && npm run build:site && npm run audit:dist",
+    "build": "npm run check && npm run test && npm run audit:evidence-candidates && npm run audit:content && npm run build:site && npm run audit:dist",
     "preview": "astro preview --host 127.0.0.1",
     "test:e2e": "npm run build && playwright test",
     "verify": "npm run test:e2e"
