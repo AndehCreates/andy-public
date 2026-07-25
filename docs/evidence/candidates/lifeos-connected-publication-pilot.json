@@ -1,0 +1,28 @@
+{
+  "candidateId": "lifeos-connected-publication-pilot",
+  "projectId": "project-lifeos",
+  "objectiveId": "connected-publication-pilot",
+  "sourceRevision": "778f75dbea29db3894fb3ac6ae3ca52ce729d9b6",
+  "idempotencyKey": "lifeos-connected-publication-pilot:778f75dbea29db3894fb3ac6ae3ca52ce729d9b6",
+  "purpose": "Help a person resume meaningful work after interruption with less remembering and sequencing.",
+  "principles": [
+    "Preserve continuity without overriding user agency.",
+    "Make direct workspace intent legible in compact navigation."
+  ],
+  "system": "A compact workspace navigation control supports named direct-intent routes and returns from its navigator modal to the active workspace route.",
+  "build": "A focused navigation accessibility repair gives every compact direct-intent control an accessible name while preserving the active workspace route after the navigator closes.",
+  "evidence": "Local verification on the exact revision includes focused navigation tests, static checks, a full test suite, an independent code review, and a 375px responsive inspection confirming named compact navigation controls and return to an active workspace route.",
+  "boundaries": "The candidate is local-only and unpublished until explicit owner copy approval. No MSI or Tower verification is represented by this candidate. The invalid-route fallback behavior remains unproven by this evidence. It does not establish release, deployment, production availability, or broader Brain Bridge availability.",
+  "destinations": [
+    {
+      "collection": "projects",
+      "targetId": "project-lifeos"
+    },
+    {
+      "collection": "caseStudies",
+      "targetId": "case-study-lifeos"
+    }
+  ],
+  "state": "needs-shaping",
+  "publicSafety": "pending"
+}
