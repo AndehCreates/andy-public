@@ -1,7 +1,7 @@
 # Outcomes-first instrumented portfolio design
 
 **Date:** 2026-07-27  
-**Status:** Approved direction; awaiting written-spec review  
+**Status:** Approved direction; written-spec review completed 2026-07-28
 **Scope:** Homepage and reusable portfolio-surface visual language
 
 ## Intent
@@ -35,7 +35,7 @@ committed activity aligned with the time a person actually has.
 
 Approved short form:
 
-> Intentions, commitments, and time brought into a workable view.
+> Intentions, commitments, and time integrated into a smooth resilient workflow.
 
 Interruption recovery remains an important deeper detail: a continuity mechanism
 that helps the plan survive when real life changes it.
@@ -76,7 +76,7 @@ above. The three selected-system cards use concise verbs:
 | System | Verb | Public outcome |
 | --- | --- | --- |
 | Chief of Staff | Coordinate | AI-assisted work with human control intact. |
-| LifeOS | Align | Intentions, commitments, and time brought into a workable view. |
+| LifeOS | Integrate | Intentions, commitments, and time integrated into a smooth resilient workflow. |
 | Alpha Screener | Evaluate | Decision support that keeps uncertainty in view. |
 
 The hero module contains a section heading and three outcome rows. Each row has

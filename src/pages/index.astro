@@ -45,8 +45,9 @@ const principles = [
 type ReviewedOutcomeSystem = {
   id: 'chief-of-staff' | 'lifeos' | 'alpha-screener';
   sequenceLabel: '01' | '02' | '03';
-  verb: 'Coordinate' | 'Make' | 'Evaluate';
+  verb: 'Coordinate' | 'Integrate' | 'Evaluate';
   outcome: string;
+  heroOutcome?: string;
 };
 
 const reviewedOutcomeSystems: readonly ReviewedOutcomeSystem[] = [
@@ -59,8 +60,9 @@ const reviewedOutcomeSystems: readonly ReviewedOutcomeSystem[] = [
   {
     id: 'lifeos',
     sequenceLabel: '02',
-    verb: 'Make',
-    outcome: 'intentions workable in the time that is actually available.',
+    verb: 'Integrate',
+    outcome: 'intentions, commitments, and time into a smooth resilient workflow.',
+    heroOutcome: 'Intentions, commitments, and time integrated into a smooth resilient workflow.',
   },
   {
     id: 'alpha-screener',
@@ -119,7 +121,7 @@ const reviewedFeaturedProjects = featuredProjects
           <div class="home-hero__outcome-copy">
             <p class="home-hero__outcome-line">
               <strong data-outcome-system-name>{project.data.title}</strong>
-              <span>{reviewedOutcome.verb} {reviewedOutcome.outcome}</span>
+              <span>{reviewedOutcome.heroOutcome ?? `${reviewedOutcome.verb} ${reviewedOutcome.outcome}`}</span>
             </p>
           </div>
         </li>)}
@@ -249,7 +251,7 @@ const reviewedFeaturedProjects = featuredProjects
   .home-hero__outcome-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3); align-items: start; padding: var(--space-2) var(--space-3); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: color-mix(in srgb, var(--surface-sunken) 72%, var(--surface-raised)); }
   .home-hero__outcome-sequence { display: inline-flex; align-items: center; justify-content: center; min-width: 2.5rem; min-height: 2.5rem; border: var(--border-width) solid color-mix(in srgb, var(--accent-system) 42%, var(--border-subtle)); border-radius: var(--radius-sm); color: var(--accent-system); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700; letter-spacing: .08em; }
   .home-hero__outcome-copy { min-width: 0; }
-  .home-hero__outcome-line { margin: 0; color: var(--text-secondary); font-size: var(--text-base); }
+  .home-hero__outcome-line { margin: 0; color: var(--text-secondary); font-size: var(--text-base); line-height: 1.45; }
   .home-hero__outcome-line strong { color: var(--text-primary); font-size: var(--text-lg); font-weight: 650; }
   .home-hero__outcome-line span { color: inherit; }
   .eyebrow, .principles__number, .signals__grid article > p:first-child { margin: 0; color: var(--accent-system); font-size: var(--text-xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }

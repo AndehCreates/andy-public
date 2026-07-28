@@ -115,7 +115,7 @@ test('keeps the homepage outcomes module semantic and non-interactive', async ({
     - listitem:
       - paragraph:
         - strong: LifeOS
-        - text: Make intentions workable in the time that is actually available.
+        - text: Intentions, commitments, and time integrated into a smooth resilient workflow.
   `);
 
   const firstFeaturedPreview = page.locator('[data-flagship-preview]').first();

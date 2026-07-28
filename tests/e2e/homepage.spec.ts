@@ -51,7 +51,7 @@ test('opens with Andy\'s systems practice, one flagship action, and a reviewed o
     'Alpha Screener',
   ]);
   await expect(outcomesModule.locator('[data-outcome-system="lifeos"]')).toContainText(
-    'Make intentions workable in the time that is actually available.',
+    'Intentions, commitments, and time integrated into a smooth resilient workflow.',
   );
   await expect(outcomesModule).not.toContainText(/live|uptime|telemetry|updated \d+/i);
 
@@ -83,10 +83,10 @@ test('presents each featured system with an outcome-first summary, decision, evi
   ]);
 
   await expect(previews.locator('[data-feature-sequence]')).toHaveText(['01', '02', '03']);
-  await expect(previews.locator('[data-feature-verb]')).toHaveText(['Coordinate', 'Make', 'Evaluate']);
+  await expect(previews.locator('[data-feature-verb]')).toHaveText(['Coordinate', 'Integrate', 'Evaluate']);
   await expect(previews.locator('[data-feature-outcome]')).toHaveText([
     'AI-assisted work without losing review clarity or control of the decision boundary.',
-    'intentions workable in the time that is actually available.',
+    'intentions, commitments, and time into a smooth resilient workflow.',
     'uncertain research with clearer assumptions, tradeoffs, and space for human judgment.',
   ]);
 

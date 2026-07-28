@@ -30,7 +30,7 @@ export const resume = {
     },
     {
       title: 'LifeOS',
-      summary: 'A local-first workspace that brings intentions, commitments, and time into a workable view.',
+      summary: 'A local-first workspace for intentions, commitments, and time integrated into a smooth resilient workflow.',
       href: '/work/lifeos/',
     },
     {

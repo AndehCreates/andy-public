@@ -132,5 +132,6 @@ test('keeps the 1280px homepage opening frame within the viewport width', async 
 
   await expect(hero).toBeVisible();
   await expect(outcomesModule).toHaveCSS('transform', 'none');
+  await expect.poll(() => outcomesModule.locator('.home-hero__outcome-line').evaluateAll((lines) => lines.every((line) => line.getBoundingClientRect().height > 0))).toBe(true);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

@@ -33,7 +33,7 @@ The updated accessibility suite now characterizes the outcomes module and adjace
 - exactly one homepage `h1`
 - one labelled complementary landmark for the outcomes module via `What the work helps people do`
 - one list with three non-interactive outcome rows
-- one explicit ARIA-tree characterization for the LifeOS outcome row that exposes `LifeOS` plus `Make intentions workable in the time that is actually available.` while excluding the decorative `02` sequence marker
+- one explicit ARIA-tree characterization for the LifeOS outcome row that exposes `LifeOS` plus `Intentions, commitments, and time integrated into a smooth resilient workflow.` while excluding the decorative `02` sequence marker
 - no links or buttons inside the text-only outcome rows
 - outcome sequence markers hidden from assistive technology with `aria-hidden="true"`
 - featured-card rail markers hidden from assistive technology with `aria-hidden="true"`
@@ -46,16 +46,22 @@ The updated accessibility suite now characterizes the outcomes module and adjace
   - outcomes module before `#featured-systems`
   - no links or buttons inside outcome rows
   - no horizontal overflow on the homepage
-- Because those checks already existed and `npm run verify` passed them, no responsive test changes were required.
+- The 1280px opening-frame check also verifies that every outcome line has rendered height, guarding the repaired desktop text layout.
 
-## Manual Inspection Status
+## Manual Browser Inspection
 
-No manual browser inspection was performed in this task. This document claims automated evidence only.
+Manual inspection ran against the rebuilt production preview on 2026-07-28.
 
-Desktop and mobile confidence for Task 4 comes from Playwright coverage:
+| Route | Desktop (1280x720) | Mobile (375x812) | Result |
+| --- | --- | --- | --- |
+| `/` | Inspected hero hierarchy, outcome module, and opening frame. | Inspected stacked hero hierarchy and compact navigation. | Readable after correcting a zero-height outcome-line inheritance defect; no horizontal overflow. |
+| `/work/` | Inspected project atlas hierarchy, filters, and featured cards. | Inspected the compact filter layout. | Readable; no horizontal overflow. |
+| `/case-studies/lifeos/` | Inspected the approved workflow-first framing, evidence boundary, and system diagram. | Inspected the stacked case-study opening frame. | Readable; no horizontal overflow. |
+| `/systems/software-for-cognition/` | Inspected the system-map opening hierarchy. | Inspected the narrow reading layout. | Readable; no horizontal overflow. |
 
-- desktop and wide viewport checks in `tests/e2e/responsive.spec.ts`
-- mobile viewport checks at `375x812` and related route coverage in the full `npm run verify` suite
+The mobile `More` disclosure was opened in the production preview; it revealed the secondary `Handbook` link and did not introduce horizontal overflow.
+
+The inspection found that outcome text inherited `line-height: 0` from the instrument module at desktop width. The homepage now sets an explicit readable line height, with a 1280px browser assertion that each outcome line has rendered height.
 
 ## Known Limitations
 

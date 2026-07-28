@@ -35,7 +35,7 @@ test('publishes each approved flagship case study with its decision narrative', 
     {
       slug: 'lifeos',
       title: 'LifeOS',
-      hook: 'Intentions, commitments, and time brought into a workable view.',
+      hook: 'Intentions, commitments, and time integrated into a smooth resilient workflow.',
       decision: 'Extend the existing state and synchronization model through explicit domain contracts.',
     },
     {
@@ -71,18 +71,18 @@ test('publishes each approved flagship case study with its decision narrative', 
   }
 });
 
-test('frames LifeOS around intentions, commitments, and time across public career surfaces', async ({ page }) => {
+test('frames LifeOS as an integrated smooth resilient workflow across public career surfaces', async ({ page }) => {
   await page.goto('/work/lifeos/');
-  await expect(page.locator('main')).toContainText('Intentions, commitments, and time brought into a workable view.');
+  await expect(page.locator('main')).toContainText('Intentions, commitments, and time integrated into a smooth resilient workflow.');
   await expect(page.getByText('Updated July 28, 2026', { exact: true })).toBeVisible();
 
   await page.goto('/case-studies/lifeos/');
-  await expect(page.locator('[data-case-study-hero]')).toContainText('Intentions, commitments, and time brought into a workable view.');
+  await expect(page.locator('[data-case-study-hero]')).toContainText('Intentions, commitments, and time integrated into a smooth resilient workflow.');
   await expect(page.getByText('Updated July 28, 2026', { exact: true })).toBeVisible();
   await expect(page.locator('main')).toContainText('Interruption recovery remains a continuity mechanism');
 
   await page.goto('/resume/');
-  await expect(page.locator('main')).toContainText('intentions, commitments, and time');
+  await expect(page.locator('main')).toContainText('smooth resilient workflow');
 });
 
 test('keeps flagship safety boundaries explicit without adding unsupported implications', async ({ page }) => {
