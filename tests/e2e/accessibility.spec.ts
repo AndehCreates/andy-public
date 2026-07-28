@@ -104,12 +104,19 @@ test('keeps the homepage outcomes module semantic and non-interactive', async ({
   await expect(outcomeRows).toHaveCount(3);
 
   const firstOutcomeRow = outcomeRows.first();
-  await expect(firstOutcomeRow).toContainText('Chief of Staff');
-  await expect(firstOutcomeRow).toContainText('Coordinate AI-assisted work without losing review clarity or control of the decision boundary.');
   await expect(firstOutcomeRow.locator('.home-hero__outcome-sequence')).toHaveAttribute('aria-hidden', 'true');
   await expect(outcomesRegion.locator('[data-outcome-system] a')).toHaveCount(0);
   await expect(outcomesRegion.locator('[data-outcome-system]').getByRole('link')).toHaveCount(0);
   await expect(outcomesRegion.locator('[data-outcome-system]').getByRole('button')).toHaveCount(0);
+
+  const lifeOsOutcomeRow = outcomesRegion.locator('[data-outcome-system="lifeos"]');
+  await expect(lifeOsOutcomeRow.locator('.home-hero__outcome-sequence')).toHaveText('02');
+  await expect(lifeOsOutcomeRow).toMatchAriaSnapshot(`
+    - listitem:
+      - paragraph:
+        - strong: LifeOS
+        - text: Make intentions workable in the time that is actually available.
+  `);
 
   const firstFeaturedPreview = page.locator('[data-flagship-preview]').first();
   await expect(firstFeaturedPreview.locator('[data-feature-rail]')).toHaveAttribute('aria-hidden', 'true');

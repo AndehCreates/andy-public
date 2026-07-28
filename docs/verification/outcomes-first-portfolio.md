@@ -33,6 +33,7 @@ The updated accessibility suite now characterizes the outcomes module and adjace
 - exactly one homepage `h1`
 - one labelled complementary landmark for the outcomes module via `What the work helps people do`
 - one list with three non-interactive outcome rows
+- one explicit ARIA-tree characterization for the LifeOS outcome row that exposes `LifeOS` plus `Make intentions workable in the time that is actually available.` while excluding the decorative `02` sequence marker
 - no links or buttons inside the text-only outcome rows
 - outcome sequence markers hidden from assistive technology with `aria-hidden="true"`
 - featured-card rail markers hidden from assistive technology with `aria-hidden="true"`
