@@ -79,6 +79,7 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
           const capabilityIds = (card.dataset.projectCapabilities ?? '').split(' ').filter(Boolean);
           const isVisible = !selectedCapability || capabilityIds.includes(selectedCapability);
 
+          card.dataset.projectVisible = String(isVisible);
           card.hidden = !isVisible;
 
           if (isVisible) {
@@ -91,7 +92,7 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
         }
       };
 
-      root.addEventListener('click', (event) => {
+      const handleClick = (event) => {
         const target = event.target;
         if (!(target instanceof Element)) {
           return;
@@ -107,7 +108,16 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
         if (clearFilterButton instanceof HTMLButtonElement && !clearFilterButton.disabled) {
           applySelection(null);
         }
-      });
+      };
+
+      const handleHydrated = () => {
+        root.removeEventListener('click', handleClick);
+        delete root.dataset.projectFilterInlineActive;
+      };
+
+      root.dataset.projectFilterInlineActive = 'true';
+      root.addEventListener('click', handleClick);
+      root.addEventListener('project-filter:hydrated', handleHydrated, { once: true });
 
       applySelection(root.dataset.selectedCapability || null);
     })();

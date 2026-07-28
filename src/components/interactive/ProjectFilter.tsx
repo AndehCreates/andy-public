@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import { capabilities, type CapabilityId } from '@/lib/content/taxonomy';
 import type { VisualMark } from '@/lib/content/presentation';
 import type { ProjectStatus } from '@/lib/content/types';
@@ -51,18 +51,31 @@ interface State {
 }
 
 export default class ProjectFilter extends Component<Props, State> {
+  private readonly rootRef = createRef<HTMLElement>();
+
   override state: State = { selectedCapability: getInitialSelectedCapability() };
+
+  override componentDidMount() {
+    const root = this.rootRef.current;
+    if (!root) {
+      return;
+    }
+
+    root.dataset.projectFilterHydrated = 'true';
+    root.dispatchEvent(new CustomEvent('project-filter:hydrated'));
+  }
 
   override render() {
     const { projects } = this.props;
     const { selectedCapability } = this.state;
     const availableCapabilities = [...new Set(projects.flatMap((project) => project.capabilities))];
-    const visibleProjects = selectedCapability
-      ? projects.filter((project) => project.capabilities.includes(selectedCapability))
-      : projects;
+    const visibleProjects = projects.filter(
+      (project) => !selectedCapability || project.capabilities.includes(selectedCapability),
+    );
 
     return (
     <section
+      ref={this.rootRef}
       className="collection-index container"
       aria-labelledby="collection-heading"
       data-project-filter-root
@@ -103,13 +116,18 @@ export default class ProjectFilter extends Component<Props, State> {
       </div>
 
       <div className="collection-index__grid">
-        {visibleProjects.map((project) => (
+        {projects.map((project) => {
+          const isVisible = !selectedCapability || project.capabilities.includes(selectedCapability);
+
+          return (
           <article
             className="project-card"
             key={project.slug}
             aria-labelledby={`project-${project.slug}-title`}
             data-project-card
             data-project-capabilities={project.capabilities.join(' ')}
+            data-project-visible={String(isVisible)}
+            hidden={!isVisible}
           >
             <div className="project-card__meta">
               <span className="project-card__mark" data-visual-mark={project.visualMark} aria-hidden="true" />
@@ -123,7 +141,8 @@ export default class ProjectFilter extends Component<Props, State> {
               {project.capabilities.map((capability) => <li key={capability}><span className="capability-tag">{capabilities[capability]}</span></li>)}
             </ul>
           </article>
-        ))}
+          );
+        })}
       </div>
     </section>
     );

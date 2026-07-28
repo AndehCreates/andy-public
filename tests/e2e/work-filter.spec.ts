@@ -8,15 +8,70 @@ test('filters Work projects by keyboard without changing the URL and clears the 
   await productEngineering.focus();
   await page.keyboard.press('Enter');
 
+  const chiefOfStaffCard = page.locator('.project-card').filter({ hasText: 'Chief of Staff' });
+
   await expect(page).toHaveURL(/\/work\/$/);
+  await expect(page.locator('.project-card')).toHaveCount(5);
   await expect(productEngineering).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('status')).toHaveText('3 projects shown');
-  await expect(page.getByRole('heading', { level: 2, name: 'Chief of Staff' })).toHaveCount(0);
+  await expect(chiefOfStaffCard).toHaveAttribute('hidden', '');
 
   await page.getByRole('button', { name: 'Clear filter' }).click();
 
   await expect(page.getByRole('status')).toHaveText('5 projects shown');
   await expect(page.locator('.project-card')).toHaveCount(5);
+});
+
+test('preserves a pre-hydration filter selection after the React bundle hydrates', async ({ page }) => {
+  let releaseScripts: (() => void) | undefined;
+  const scriptsReleased = new Promise<void>((resolve) => {
+    releaseScripts = resolve;
+  });
+  const hydrationIssues: string[] = [];
+
+  await page.route('**/_astro/*.js', async (route) => {
+    await scriptsReleased;
+    await route.continue();
+  });
+
+  page.on('console', (message) => {
+    const text = message.text();
+    if (
+      message.type() === 'error' ||
+      /hydration|did not match|server rendered html|recoverable/i.test(text)
+    ) {
+      hydrationIssues.push(`${message.type()}: ${text}`);
+    }
+  });
+  page.on('pageerror', (error) => {
+    hydrationIssues.push(`pageerror: ${error.message}`);
+  });
+
+  await page.goto('/work/', { waitUntil: 'domcontentloaded' });
+
+  const productEngineering = page.getByRole('button', { name: 'Product engineering' });
+  const filterRoot = page.locator('[data-project-filter-root]');
+  await productEngineering.focus();
+  await page.keyboard.press('Enter');
+
+  const chiefOfStaffCard = page.locator('.project-card').filter({ hasText: 'Chief of Staff' });
+
+  await expect(filterRoot).toHaveAttribute('data-project-filter-inline-active', 'true');
+  await expect(page.locator('.project-card')).toHaveCount(5);
+  await expect(productEngineering).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('status')).toHaveText('3 projects shown');
+  await expect(chiefOfStaffCard).toHaveAttribute('hidden', '');
+
+  releaseScripts?.();
+  await page.waitForLoadState('networkidle');
+
+  await expect(filterRoot).toHaveAttribute('data-project-filter-hydrated', 'true');
+  await expect(filterRoot).not.toHaveAttribute('data-project-filter-inline-active', 'true');
+  await expect(page.locator('.project-card')).toHaveCount(5);
+  await expect(productEngineering).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('status')).toHaveText('3 projects shown');
+  await expect(chiefOfStaffCard).toHaveAttribute('hidden', '');
+  expect(hydrationIssues).toEqual([]);
 });
 
 test('keeps the complete Work list available without JavaScript', async ({ browser }) => {
