@@ -34,12 +34,14 @@
 
 - [ ] **Step 1: Add failing public-copy assertions**
 
-In `tests/e2e/homepage.spec.ts`, add an outcome assertion that expects the LifeOS outcome text and rejects the old recovery-first homepage phrase:
+The homepage outcome-selector assertion belongs to Task 2, which creates the
+semantic outcomes module. Task 1 should instead keep its homepage assertion
+limited to rejecting the old recovery-first phrase; add the selector and
+LifeOS outcome text assertion in Task 2 after the module exists.
+
+In `tests/e2e/homepage.spec.ts`, reject the old recovery-first homepage phrase:
 
 ```ts
-await expect(page.locator('[data-outcome-system="lifeos"]')).toContainText(
-  'Make intentions workable in the time that is actually available.',
-);
 await expect(page.locator('.home-hero__summary')).not.toContainText(
   'recovering context after interruption',
 );
@@ -94,6 +96,9 @@ const outcomes = page.locator('[data-outcomes-module]');
 await expect(outcomes.getByRole('heading', { name: 'What the work helps people do' })).toHaveCount(1);
 await expect(outcomes.locator('[data-outcome-system]')).toHaveCount(3);
 await expect(outcomes).toContainText(['Chief of Staff', 'LifeOS', 'Alpha Screener']);
+await expect(outcomes.locator('[data-outcome-system="lifeos"]')).toContainText(
+  'Make intentions workable in the time that is actually available.',
+);
 await expect(outcomes).not.toContainText(/live|uptime|telemetry|updated \d+/i);
 ```
 
