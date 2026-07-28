@@ -72,10 +72,46 @@ test('gives system diagrams one authoritative semantic representation', async ({
   await expect(diagram.locator('.system-diagram__relationship').first()).toContainText('sets boundaries');
 });
 
-test('keeps compact diagram components available to assistive technology', async ({ page }) => {
+test('keeps homepage decorative sequence accents hidden from assistive technology', async ({ page }) => {
   await page.goto('/');
 
-  const compactDiagram = page.locator('.home-hero .system-diagram--compact');
-  await expect(compactDiagram.locator('.system-diagram__components')).not.toHaveCSS('display', 'none');
-  await expect(compactDiagram.locator('.system-diagram__components li')).toHaveCount(4);
+  const outcomeSequences = page.locator('.home-hero__outcome-sequence');
+  await expect(outcomeSequences).toHaveCount(3);
+
+  for (let index = 0; index < await outcomeSequences.count(); index += 1) {
+    await expect(outcomeSequences.nth(index)).toHaveAttribute('aria-hidden', 'true');
+  }
+
+  const featuredRails = page.locator('[data-feature-rail]');
+  await expect(featuredRails).toHaveCount(3);
+
+  for (let index = 0; index < await featuredRails.count(); index += 1) {
+    await expect(featuredRails.nth(index)).toHaveAttribute('aria-hidden', 'true');
+  }
+});
+
+test('keeps the homepage outcomes module semantic and non-interactive', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('h1')).toHaveCount(1);
+
+  const outcomesRegion = page.getByRole('complementary', { name: 'What the work helps people do' });
+  await expect(outcomesRegion).toHaveCount(1);
+
+  const outcomesList = outcomesRegion.getByRole('list');
+  const outcomeRows = outcomesRegion.getByRole('listitem');
+  await expect(outcomesList).toHaveCount(1);
+  await expect(outcomeRows).toHaveCount(3);
+
+  const firstOutcomeRow = outcomeRows.first();
+  await expect(firstOutcomeRow).toContainText('Chief of Staff');
+  await expect(firstOutcomeRow).toContainText('Coordinate AI-assisted work without losing review clarity or control of the decision boundary.');
+  await expect(firstOutcomeRow.locator('.home-hero__outcome-sequence')).toHaveAttribute('aria-hidden', 'true');
+  await expect(outcomesRegion.locator('[data-outcome-system] a')).toHaveCount(0);
+  await expect(outcomesRegion.locator('[data-outcome-system]').getByRole('link')).toHaveCount(0);
+  await expect(outcomesRegion.locator('[data-outcome-system]').getByRole('button')).toHaveCount(0);
+
+  const firstFeaturedPreview = page.locator('[data-flagship-preview]').first();
+  await expect(firstFeaturedPreview.locator('[data-feature-rail]')).toHaveAttribute('aria-hidden', 'true');
+  await expect(firstFeaturedPreview.getByRole('link', { name: 'Chief of Staff', exact: true })).toHaveAccessibleName('Chief of Staff');
 });
