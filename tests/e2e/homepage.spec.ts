@@ -65,7 +65,7 @@ test('opens with Andy\'s systems practice, one flagship action, and a reviewed o
   }
 });
 
-test('presents each flagship as a distinct artifact preview with a direct case-study path', async ({ page }) => {
+test('presents each featured system with an outcome-first summary, decision, evidence, and direct case-study path', async ({ page }) => {
   await page.goto('/');
 
   const previews = page.locator('#featured-systems [data-flagship-preview]');
@@ -82,10 +82,19 @@ test('presents each flagship as a distinct artifact preview with a direct case-s
     '/case-studies/alpha-screener/',
   ]);
 
+  await expect(previews.locator('[data-feature-sequence]')).toHaveText(['01', '02', '03']);
+  await expect(previews.locator('[data-feature-verb]')).toHaveText(['Coordinate', 'Make', 'Evaluate']);
+  await expect(previews.locator('[data-feature-outcome]')).toHaveText([
+    'AI-assisted work without losing review clarity or control of the decision boundary.',
+    'intentions workable in the time that is actually available.',
+    'uncertain research with clearer assumptions, tradeoffs, and space for human judgment.',
+  ]);
+
   for (const preview of await previews.all()) {
-    await expect(preview.locator('[data-artifact-labels] li')).toHaveCount(3);
-    await expect(preview.getByText('Pivotal decision', { exact: true })).toBeVisible();
-    await expect(preview.getByText('Evidence boundary', { exact: true })).toBeVisible();
+    await expect(preview.getByText('Decision', { exact: true })).toBeVisible();
+    await expect(preview.getByText('Evidence', { exact: true })).toBeVisible();
+    await expect(preview.locator('[data-feature-rail]')).toHaveAttribute('aria-hidden', 'true');
+    await expect(preview).not.toContainText(/live|uptime|healthy|updated \d+|telemetry/i);
   }
 });
 
