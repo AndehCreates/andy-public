@@ -30,7 +30,7 @@ export const resume = {
     },
     {
       title: 'LifeOS',
-      summary: 'A local-first workspace for visible commitments, context, and recovery after interruption.',
+      summary: 'A local-first workspace that brings intentions, commitments, and time into a workable view.',
       href: '/work/lifeos/',
     },
     {

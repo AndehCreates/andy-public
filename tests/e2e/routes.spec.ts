@@ -35,7 +35,7 @@ test('publishes each approved flagship case study with its decision narrative', 
     {
       slug: 'lifeos',
       title: 'LifeOS',
-      hook: 'Make interruption recovery a first-class product behavior instead of relying on recall.',
+      hook: 'Intentions, commitments, and time brought into a workable view.',
       decision: 'Extend the existing state and synchronization model through explicit domain contracts.',
     },
     {
@@ -69,6 +69,18 @@ test('publishes each approved flagship case study with its decision narrative', 
       await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
     }
   }
+});
+
+test('frames LifeOS around intentions, commitments, and time across public career surfaces', async ({ page }) => {
+  await page.goto('/work/lifeos/');
+  await expect(page.locator('main')).toContainText('Intentions, commitments, and time brought into a workable view.');
+
+  await page.goto('/case-studies/lifeos/');
+  await expect(page.locator('[data-case-study-hero]')).toContainText('Intentions, commitments, and time brought into a workable view.');
+  await expect(page.locator('main')).toContainText('Interruption recovery remains a continuity mechanism');
+
+  await page.goto('/resume/');
+  await expect(page.locator('main')).toContainText('intentions, commitments, and time');
 });
 
 test('keeps flagship safety boundaries explicit without adding unsupported implications', async ({ page }) => {
