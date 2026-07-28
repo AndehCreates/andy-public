@@ -74,9 +74,11 @@ test('publishes each approved flagship case study with its decision narrative', 
 test('frames LifeOS around intentions, commitments, and time across public career surfaces', async ({ page }) => {
   await page.goto('/work/lifeos/');
   await expect(page.locator('main')).toContainText('Intentions, commitments, and time brought into a workable view.');
+  await expect(page.getByText('Updated July 28, 2026', { exact: true })).toBeVisible();
 
   await page.goto('/case-studies/lifeos/');
   await expect(page.locator('[data-case-study-hero]')).toContainText('Intentions, commitments, and time brought into a workable view.');
+  await expect(page.getByText('Updated July 28, 2026', { exact: true })).toBeVisible();
   await expect(page.locator('main')).toContainText('Interruption recovery remains a continuity mechanism');
 
   await page.goto('/resume/');
