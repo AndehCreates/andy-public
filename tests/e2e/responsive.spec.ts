@@ -100,10 +100,12 @@ test('prioritizes the homepage position and flagship action before its visual on
   const hero = page.locator('.home-hero');
   const position = hero.locator('.home-hero__position');
   const primaryAction = hero.getByRole('link', { name: 'Read case studies', exact: true });
-  const visual = hero.locator('.home-hero__visual');
+  const outcomesModule = hero.locator('[data-outcomes-module]');
+  const featuredSystems = page.locator('#featured-systems');
 
-  expect(await position.evaluate((element) => element.compareDocumentPosition(document.querySelector('.home-hero__visual')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
-  expect(await primaryAction.evaluate((element) => element.compareDocumentPosition(document.querySelector('.home-hero__visual')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+  expect(await position.evaluate((element) => element.compareDocumentPosition(document.querySelector('[data-outcomes-module]')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+  expect(await primaryAction.evaluate((element) => element.compareDocumentPosition(document.querySelector('[data-outcomes-module]')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
+  expect(await outcomesModule.evaluate((element) => element.compareDocumentPosition(document.querySelector('#featured-systems')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
 
   for (const action of await hero.locator('a').all()) {
     const bounds = await action.boundingBox();
@@ -112,6 +114,11 @@ test('prioritizes the homepage position and flagship action before its visual on
     expect(bounds!.width).toBeGreaterThanOrEqual(44);
   }
 
-  await expect(visual).toContainText('Human-owned decisions');
+  await expect(outcomesModule).toBeVisible();
+  await expect(outcomesModule.locator('[data-outcome-system]')).toHaveCount(3);
+  await expect(outcomesModule.locator('[data-outcome-system] a')).toHaveCount(0);
+  await expect(outcomesModule.locator('[data-outcome-system]').getByRole('link')).toHaveCount(0);
+  await expect(outcomesModule.locator('[data-outcome-system]').getByRole('button')).toHaveCount(0);
+  await expect(featuredSystems).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
