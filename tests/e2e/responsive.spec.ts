@@ -122,3 +122,15 @@ test('prioritizes the homepage position and flagship action before its visual on
   await expect(featuredSystems).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('keeps the 1280px homepage opening frame within the viewport width', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/');
+
+  const hero = page.locator('.home-hero');
+  const outcomesModule = hero.locator('[data-outcomes-module]');
+
+  await expect(hero).toBeVisible();
+  await expect(outcomesModule).toHaveCSS('transform', 'none');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});

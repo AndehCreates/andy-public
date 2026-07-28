@@ -98,6 +98,16 @@ test('presents each featured system with an outcome-first summary, decision, evi
   }
 });
 
+test('keeps reviewed outcome systems aligned with the current featured systems', async ({ page }) => {
+  await page.goto('/');
+
+  const outcomeSystems = page.locator('[data-outcomes-module] [data-outcome-system-name]');
+  const featuredSystems = page.locator('#featured-systems [data-flagship-preview] h3');
+
+  await expect(outcomeSystems).toHaveCount(await featuredSystems.count());
+  expect(await outcomeSystems.allTextContents()).toEqual(await featuredSystems.allTextContents());
+});
+
 test('uses a concise professional opportunity signal and a clear lead system', async ({ page }) => {
   await page.goto('/');
 

@@ -44,7 +44,6 @@ const principles = [
 
 type ReviewedOutcomeSystem = {
   id: 'chief-of-staff' | 'lifeos' | 'alpha-screener';
-  name: 'Chief of Staff' | 'LifeOS' | 'Alpha Screener';
   sequenceLabel: '01' | '02' | '03';
   verb: 'Coordinate' | 'Make' | 'Evaluate';
   outcome: string;
@@ -53,21 +52,18 @@ type ReviewedOutcomeSystem = {
 const reviewedOutcomeSystems: readonly ReviewedOutcomeSystem[] = [
   {
     id: 'chief-of-staff',
-    name: 'Chief of Staff',
     sequenceLabel: '01',
     verb: 'Coordinate',
     outcome: 'AI-assisted work without losing review clarity or control of the decision boundary.',
   },
   {
     id: 'lifeos',
-    name: 'LifeOS',
     sequenceLabel: '02',
     verb: 'Make',
     outcome: 'intentions workable in the time that is actually available.',
   },
   {
     id: 'alpha-screener',
-    name: 'Alpha Screener',
     sequenceLabel: '03',
     verb: 'Evaluate',
     outcome: 'uncertain research with clearer assumptions, tradeoffs, and space for human judgment.',
@@ -84,6 +80,10 @@ function getReviewedOutcome(projectId: string): ReviewedOutcomeSystem {
 
   return reviewedOutcome;
 }
+
+const reviewedFeaturedProjects = featuredProjects
+  .map((project) => ({ project, reviewedOutcome: getReviewedOutcome(project.id) }))
+  .sort((left, right) => left.reviewedOutcome.sequenceLabel.localeCompare(right.reviewedOutcome.sequenceLabel));
 
 ---
 
@@ -114,12 +114,12 @@ function getReviewedOutcome(projectId: string): ReviewedOutcomeSystem {
         <p>Three systems, framed by the practical outcome each one is meant to improve.</p>
       </div>
       <ol class="home-hero__outcomes-list">
-        {reviewedOutcomeSystems.map((system) => <li class="home-hero__outcome-row" data-outcome-system={system.id}>
-          <span class="home-hero__outcome-sequence" aria-hidden="true">{system.sequenceLabel}</span>
+        {reviewedFeaturedProjects.map(({ project, reviewedOutcome }) => <li class="home-hero__outcome-row" data-outcome-system={project.id}>
+          <span class="home-hero__outcome-sequence" aria-hidden="true">{reviewedOutcome.sequenceLabel}</span>
           <div class="home-hero__outcome-copy">
             <p class="home-hero__outcome-line">
-              <strong data-outcome-system-name>{system.name}</strong>
-              <span>{system.verb} {system.outcome}</span>
+              <strong data-outcome-system-name>{project.data.title}</strong>
+              <span>{reviewedOutcome.verb} {reviewedOutcome.outcome}</span>
             </p>
           </div>
         </li>)}
@@ -151,8 +151,7 @@ function getReviewedOutcome(projectId: string): ReviewedOutcomeSystem {
       <a href="/case-studies/">Read the case studies</a>
       </header>
     <div class="featured__grid">
-      {featuredProjects.map((project, index) => {
-        const reviewedOutcome = getReviewedOutcome(project.id);
+      {reviewedFeaturedProjects.map(({ project, reviewedOutcome }, index) => {
 
         return <article class:list={['flagship-preview', index === 0 && 'flagship-preview--lead']} data-flagship-preview data-theme={project.data.theme}>
         <div class="flagship-preview__eyebrow">
@@ -317,13 +316,12 @@ function getReviewedOutcome(projectId: string): ReviewedOutcomeSystem {
     .home-hero { grid-template-columns: minmax(0, .92fr) minmax(30rem, 1.08fr); align-items: start; min-height: auto; padding-block: var(--space-3); }
     .home-hero__position { gap: var(--space-3); }
     .home-hero__identity, .home-hero__summary { font-size: var(--text-base); }
-    .home-hero__outcomes { align-self: stretch; gap: var(--space-2); padding: var(--space-3); width: calc(100% / .88); transform: scale(.88); transform-origin: top left; animation: none; }
+    .home-hero__outcomes { align-self: start; gap: var(--space-2); padding: var(--space-3); animation: none; }
     .home-hero__outcomes-header { gap: var(--space-1); }
     .home-hero__outcomes-header h2 { font-size: var(--text-xl); line-height: 1.1; }
     .home-hero__outcomes-header > p:last-child { display: none; }
-    .home-hero__outcomes-list { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+    .home-hero__outcomes-list { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
     .home-hero__outcome-row { grid-template-columns: 2rem minmax(0, 1fr); gap: var(--space-2); padding: var(--space-2); }
-    .home-hero__outcome-row:first-child { grid-column: 1 / -1; }
     .home-hero__outcome-line { font-size: var(--text-sm); }
     .home-hero__outcome-line strong { margin-right: var(--space-2); font-size: var(--text-sm); }
   }
