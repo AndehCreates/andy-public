@@ -46,6 +46,7 @@ type ReviewedOutcomeSystem = {
   id: 'chief-of-staff' | 'lifeos' | 'alpha-screener';
   name: 'Chief of Staff' | 'LifeOS' | 'Alpha Screener';
   sequenceLabel: '01' | '02' | '03';
+  verb: 'Coordinate' | 'Make' | 'Evaluate';
   outcome: string;
 };
 
@@ -54,31 +55,35 @@ const reviewedOutcomeSystems: readonly ReviewedOutcomeSystem[] = [
     id: 'chief-of-staff',
     name: 'Chief of Staff',
     sequenceLabel: '01',
-    outcome: 'Coordinate AI-assisted work without losing review clarity or control of the decision boundary.',
+    verb: 'Coordinate',
+    outcome: 'AI-assisted work without losing review clarity or control of the decision boundary.',
   },
   {
     id: 'lifeos',
     name: 'LifeOS',
     sequenceLabel: '02',
-    outcome: 'Make intentions workable in the time that is actually available.',
+    verb: 'Make',
+    outcome: 'intentions workable in the time that is actually available.',
   },
   {
     id: 'alpha-screener',
     name: 'Alpha Screener',
     sequenceLabel: '03',
-    outcome: 'Evaluate uncertain research with clearer assumptions, tradeoffs, and space for human judgment.',
+    verb: 'Evaluate',
+    outcome: 'uncertain research with clearer assumptions, tradeoffs, and space for human judgment.',
   },
 ] as const;
 
-const reviewedOutcomeLookup = new Map(reviewedOutcomeSystems.map((system) => {
-  const [verb, ...outcomeWords] = system.outcome.split(' ');
+const reviewedOutcomeLookup = new Map(reviewedOutcomeSystems.map((system) => [system.id, system] as const));
 
-  return [system.id, {
-    sequenceLabel: system.sequenceLabel,
-    verb,
-    outcome: outcomeWords.join(' '),
-  }] as const;
-}));
+function getReviewedOutcome(projectId: string): ReviewedOutcomeSystem {
+  const reviewedOutcome = reviewedOutcomeLookup.get(projectId as ReviewedOutcomeSystem['id']);
+  if (!reviewedOutcome) {
+    throw new Error(`Missing reviewed homepage outcome for featured project "${projectId}".`);
+  }
+
+  return reviewedOutcome;
+}
 
 ---
 
@@ -114,7 +119,7 @@ const reviewedOutcomeLookup = new Map(reviewedOutcomeSystems.map((system) => {
           <div class="home-hero__outcome-copy">
             <p class="home-hero__outcome-line">
               <strong data-outcome-system-name>{system.name}</strong>
-              <span>{system.outcome}</span>
+              <span>{system.verb} {system.outcome}</span>
             </p>
           </div>
         </li>)}
@@ -144,10 +149,10 @@ const reviewedOutcomeLookup = new Map(reviewedOutcomeSystems.map((system) => {
         <p class="featured__intro">Three different systems, one shared standard: make the decision boundary as inspectable as the result.</p>
       </div>
       <a href="/case-studies/">Read the case studies</a>
-    </header>
+      </header>
     <div class="featured__grid">
       {featuredProjects.map((project, index) => {
-        const reviewedOutcome = reviewedOutcomeLookup.get(project.id as ReviewedOutcomeSystem['id']);
+        const reviewedOutcome = getReviewedOutcome(project.id);
 
         return <article class:list={['flagship-preview', index === 0 && 'flagship-preview--lead']} data-flagship-preview data-theme={project.data.theme}>
         <div class="flagship-preview__eyebrow">

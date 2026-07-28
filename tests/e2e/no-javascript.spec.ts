@@ -5,9 +5,16 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Work', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Read case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
-  await expect(page.locator('.home-hero .system-diagram')).toContainText('Human-owned decisions');
+  await expect(page.locator('[data-outcomes-module]')).toBeVisible();
+  await expect(page.locator('[data-outcome-system]')).toHaveCount(3);
   await expect(page.locator('#featured-systems [data-flagship-preview]')).toHaveCount(3);
-  await expect(page.locator('#featured-systems [data-artifact-labels]')).toHaveCount(3);
+  await expect(page.locator('#featured-systems [data-feature-sequence]')).toHaveText(['01', '02', '03']);
+  await expect(page.locator('#featured-systems [data-feature-verb]')).toHaveText(['Coordinate', 'Make', 'Evaluate']);
+  await expect(page.locator('#featured-systems [data-feature-outcome]')).toHaveText([
+    'AI-assisted work without losing review clarity or control of the decision boundary.',
+    'intentions workable in the time that is actually available.',
+    'uncertain research with clearer assumptions, tradeoffs, and space for human judgment.',
+  ]);
 
   await page.goto('/work/');
   await expect(page.locator('.project-card')).toHaveCount(5);
