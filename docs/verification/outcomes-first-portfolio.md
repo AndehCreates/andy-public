@@ -1,7 +1,7 @@
 # Outcomes-First Portfolio Verification
 
-**Recorded:** 2026-07-28 (America/Denver)  
-**Branch:** `codex/outcomes-first-instrumented-portfolio`  
+**Recorded:** 2026-07-28 (America/Denver)
+**Branch:** `codex/outcomes-first-instrumented-portfolio`
 **Commit at verification start:** `d2efbecfbf280de51f6873eaa74b82192b452f89`
 
 ## Scope

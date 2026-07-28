@@ -23,6 +23,22 @@ function projectCountLabel(count: number) {
   return `${count} ${count === 1 ? 'project' : 'projects'} shown`;
 }
 
+function getInitialSelectedCapability(): CapabilityId | null {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  const selectedCapability = document
+    .querySelector<HTMLElement>('[data-project-filter-root]')
+    ?.dataset.selectedCapability;
+
+  if (!selectedCapability || !(selectedCapability in capabilities)) {
+    return null;
+  }
+
+  return selectedCapability as CapabilityId;
+}
+
 const statusDisplayCopy: Record<ProjectStatus, string> = {
   active: 'Active system',
   stable: 'Stable system',
@@ -35,7 +51,7 @@ interface State {
 }
 
 export default class ProjectFilter extends Component<Props, State> {
-  override state: State = { selectedCapability: null };
+  override state: State = { selectedCapability: getInitialSelectedCapability() };
 
   override render() {
     const { projects } = this.props;
@@ -46,12 +62,17 @@ export default class ProjectFilter extends Component<Props, State> {
       : projects;
 
     return (
-    <section className="collection-index container" aria-labelledby="collection-heading">
+    <section
+      className="collection-index container"
+      aria-labelledby="collection-heading"
+      data-project-filter-root
+      data-selected-capability={selectedCapability ?? ''}
+    >
       <header className="collection-index__header">
         <p className="collection-index__eyebrow">Work</p>
         <h1 id="collection-heading">Project atlas</h1>
         <p>Reviewed systems with different jobs: coordinate AI work, preserve continuity, evaluate uncertain evidence, keep calculations coherent, and make simulations inspectable.</p>
-        <p className="collection-index__count" role="status" aria-live="polite">
+        <p className="collection-index__count" role="status" aria-live="polite" data-filter-count>
           {projectCountLabel(visibleProjects.length)}
         </p>
       </header>
@@ -64,12 +85,18 @@ export default class ProjectFilter extends Component<Props, State> {
               type="button"
               aria-pressed={selectedCapability === capability}
               key={capability}
+              data-filter-capability={capability}
               onClick={() => this.setState({ selectedCapability: capability })}
             >
               {capabilities[capability]}
             </button>
           ))}
-          <button type="button" onClick={() => this.setState({ selectedCapability: null })} disabled={!selectedCapability}>
+          <button
+            type="button"
+            data-filter-clear
+            onClick={() => this.setState({ selectedCapability: null })}
+            disabled={!selectedCapability}
+          >
             Clear filter
           </button>
         </div>
@@ -77,7 +104,13 @@ export default class ProjectFilter extends Component<Props, State> {
 
       <div className="collection-index__grid">
         {visibleProjects.map((project) => (
-          <article className="project-card" key={project.slug} aria-labelledby={`project-${project.slug}-title`}>
+          <article
+            className="project-card"
+            key={project.slug}
+            aria-labelledby={`project-${project.slug}-title`}
+            data-project-card
+            data-project-capabilities={project.capabilities.join(' ')}
+          >
             <div className="project-card__meta">
               <span className="project-card__mark" data-visual-mark={project.visualMark} aria-hidden="true" />
               <p className="project-card__status">{statusDisplayCopy[project.status]}</p>

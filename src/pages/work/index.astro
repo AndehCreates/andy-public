@@ -36,5 +36,80 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
   description="A project atlas of reviewed software and AI systems built around visible context, reliable decisions, and human control."
   canonicalPath="/work/"
 >
-  <ProjectFilter client:idle projects={projects} />
+  <ProjectFilter client:load projects={projects} />
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-project-filter-root]');
+      if (!(root instanceof HTMLElement)) {
+        return;
+      }
+
+      const filterButtons = [...root.querySelectorAll('[data-filter-capability]')];
+      const clearButton = root.querySelector('[data-filter-clear]');
+      const countNode = root.querySelector('[data-filter-count]');
+      const cards = [...root.querySelectorAll('[data-project-card]')];
+
+      const countLabel = (count) => `${count} ${count === 1 ? 'project' : 'projects'} shown`;
+
+      const applySelection = (selectedCapability) => {
+        root.dataset.selectedCapability = selectedCapability ?? '';
+
+        filterButtons.forEach((button) => {
+          if (!(button instanceof HTMLElement)) {
+            return;
+          }
+
+          button.setAttribute(
+            'aria-pressed',
+            String(button.dataset.filterCapability === selectedCapability),
+          );
+        });
+
+        if (clearButton instanceof HTMLButtonElement) {
+          clearButton.disabled = !selectedCapability;
+        }
+
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          if (!(card instanceof HTMLElement)) {
+            return;
+          }
+
+          const capabilityIds = (card.dataset.projectCapabilities ?? '').split(' ').filter(Boolean);
+          const isVisible = !selectedCapability || capabilityIds.includes(selectedCapability);
+
+          card.hidden = !isVisible;
+
+          if (isVisible) {
+            visibleCount += 1;
+          }
+        });
+
+        if (countNode instanceof HTMLElement) {
+          countNode.textContent = countLabel(visibleCount);
+        }
+      };
+
+      root.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+          return;
+        }
+
+        const capabilityButton = target.closest('[data-filter-capability]');
+        if (capabilityButton instanceof HTMLElement) {
+          applySelection(capabilityButton.dataset.filterCapability ?? null);
+          return;
+        }
+
+        const clearFilterButton = target.closest('[data-filter-clear]');
+        if (clearFilterButton instanceof HTMLButtonElement && !clearFilterButton.disabled) {
+          applySelection(null);
+        }
+      });
+
+      applySelection(root.dataset.selectedCapability || null);
+    })();
+  </script>
 </BaseLayout>
