@@ -30,7 +30,8 @@ test('presents the approved homepage narrative in order', async ({ page }) => {
 });
 
 test('opens with Andy\'s systems practice, one flagship action, and a reviewed outcomes module', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 720 });
+  const desktopViewport = { width: 1280, height: 720 };
+  await page.setViewportSize(desktopViewport);
   await page.goto('/');
 
   const hero = page.locator('.home-hero');
@@ -60,7 +61,7 @@ test('opens with Andy\'s systems practice, one flagship action, and a reviewed o
   ] as const) {
     const bounds = await element.boundingBox();
     expect(bounds, `${name} should be rendered`).not.toBeNull();
-    expect(bounds!.height, `${name} should have measurable rendered height`).toBeGreaterThan(0);
+    expect(bounds!.y + bounds!.height, `${name} should fit fully within the desktop viewport`).toBeLessThanOrEqual(desktopViewport.height);
   }
 });
 
