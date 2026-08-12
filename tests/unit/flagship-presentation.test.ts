@@ -11,7 +11,6 @@ const repoRoot = process.cwd();
 
 const flagshipExpectations = [
   ['chief-of-staff', 'authority', 'authority-boundaries'],
-  ['lifeos', 'continuity', 'continuity-reentry'],
   ['alpha-screener', 'evidence', 'evidence-gates'],
 ] as const;
 
@@ -24,7 +23,7 @@ function labelsById(diagram: DiagramConfiguration): Map<string, string> {
   return new Map(diagram.nodes.map((node) => [node.id, node.label]));
 }
 
-describe('flagship presentation mapping', () => {
+describe('public flagship presentation mapping', () => {
   it('resolves each flagship to one controlled theme and diagram configuration', () => {
     expect(flagshipThemeValues).toEqual(['authority', 'continuity', 'evidence']);
 
