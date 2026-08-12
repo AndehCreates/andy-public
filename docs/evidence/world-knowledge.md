@@ -10,7 +10,8 @@ intake, human review, curated graph records, and bounded read-only retrieval.
 - The current registered private source at `main` revision `5c0c02a`, observed
   on 2026-08-12.
 - Its current project overview and operating-model documentation.
-- Its current GitHub Actions record, which has no run attached to that revision.
+- A source-owned strict-validation run from an independent clean checkout of
+  that exact revision.
 
 ## Verified capabilities
 
@@ -34,9 +35,9 @@ intake, human review, curated graph records, and bounded read-only retrieval.
 
 - The reviewed documentation defines non-strict and strict validation for
   frontmatter, relations, links, source status, and placeholder language.
-- No current validation execution receipt was available for the inspected
-  revision.
-- No GitHub Actions run was attached to the inspected revision.
+- Strict validation passed for the inspected revision with zero strict warnings.
+- This is structural validation only; it does not establish corpus coverage,
+  citation completeness, retrieval quality, or research outcomes.
 
 ## Human or customer value
 
@@ -47,7 +48,8 @@ design intent, not evidence of research outcomes or adoption.
 ## Known limitations
 
 - Most seed material remains subject to source verification and human review.
-- Current validation execution was not independently observed.
+- Strict validation does not replace source verification, curation, or human
+  review of material claims.
 - No public preview, media selection, or public repository link is approved.
 
 ## Public-safe diagrams and media
@@ -60,18 +62,19 @@ internal source artifact until a separate public-safe presentation is approved.
 - Corpus size, coverage, accuracy, source quality, retrieval quality, or
   research outcomes.
 - Any operational-memory, decision-making, or autonomous-action claim.
-- Validation success, production readiness, adoption, or performance claims.
+- Production readiness, adoption, or performance claims.
 - Repository access, source links, corpus content, review-queue detail, or
   implementation and operational detail.
 
 ## Candidate project and case-study copy
 
-No public project entry or case study is proposed. A future review may consider
-a bounded project entry only after a current sanitized validation receipt and
-explicit public-safe framing are available.
+A bounded public-safe project framing is prepared for explicit owner review.
+It remains draft-only: no public project entry, case study, source link, media,
+or release claim is proposed.
 
 ## Review date and public-review decision
 
-Reconciled 2026-08-12. Public review is **pending**. This inventory does not
+Reconciled 2026-08-12 after strict validation at `5c0c02a`. Public review is
+**pending**. This inventory does not
 authorize a public route, project card, case study, source link, media, or
 publication claim.
