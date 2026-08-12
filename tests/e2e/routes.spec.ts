@@ -27,6 +27,21 @@ test('gives Fable’s public repository and site distinct source labels', async 
   );
 });
 
+test('publishes World Knowledge as a bounded private-source project without source links', async ({ page }) => {
+  await page.goto('/work/world-knowledge/');
+
+  await expect(page.getByRole('heading', { level: 1, name: 'World Knowledge' })).toHaveCount(1);
+  await expect(page.getByText('Knowledge & context systems', { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Project source' })).toHaveCount(0);
+  await expect(page.locator('main')).toContainText(/bounded read-only retrieval/i);
+  await expect(page.locator('main')).toContainText(/does not establish citation completeness, corpus quality, retrieval quality, or real-world outcomes/i);
+
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('/work/world-knowledge/');
+  await expect(page.getByRole('heading', { level: 1, name: 'World Knowledge' })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test('does not publish draft project routes', async ({ page }) => {
   for (const slug of ['adhd-tabs', 'creative-suite', 'android-lab', 'japanese-anime-inspired']) {
     const response = await page.goto(`/work/${slug}/`);

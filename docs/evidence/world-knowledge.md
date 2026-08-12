@@ -75,6 +75,5 @@ or release claim is proposed.
 ## Review date and public-review decision
 
 Reconciled 2026-08-12 after strict validation at `5c0c02a`. Public review is
-**pending**. This inventory does not
-authorize a public route, project card, case study, source link, media, or
-publication claim.
+**approved** for one listed project entry. The approval does not authorize a
+case study, source link, media, corpus content, or stronger publication claim.
