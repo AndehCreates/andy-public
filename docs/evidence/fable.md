@@ -55,9 +55,9 @@ Public to claim adoption, business impact, or production scale.
 
 ## Public-safe diagrams and media
 
-No new media or diagram is proposed in this intake. A future entry may link the
-public repository or site only after the review row below is explicitly
-approved.
+No new media or diagram is proposed. The approved entry may link the public
+repository and site as-is; it does not copy source code or expose private
+implementation context.
 
 ## Claims not currently supported
 
@@ -66,14 +66,20 @@ approved.
   checks.
 - Any private implementation, operational, or personal context.
 
-## Candidate project and case-study copy
+## Approved project copy
 
-Candidate project entry only: “Fable is a public interactive explanations
-project and site that turns complex ideas into small, inspectable experiences.”
-This sentence is a review candidate, not published content.
+Approved project entry: “Fable is a public interactive explanations project and
+site that turns complex ideas into small, inspectable experiences.” This
+approval covers the listed project entry and the two public links below; it does
+not approve a case study, system-map relationship, or additional media.
+
+Approved links:
+
+- Repository: `https://github.com/AndehCreates/fable`
+- Site: `https://andehcreates.github.io/fable/`
 
 ## Review date and public-review decision
 
-Reconciled 2026-08-11. Public review is **pending**. Do not create a public
-project entry until the normal Andy Public review checkpoint approves the
-framing, links, and any media.
+Reconciled 2026-08-11. The user explicitly approved the bounded listed project
+entry and its two public links on 2026-08-11. Public review is **approved** for
+that entry only; normal PR review and release review remain required.
