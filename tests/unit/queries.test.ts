@@ -20,14 +20,12 @@ it('selects only approved featured entries for homepage placements', () => {
 it('keeps homepage project features to the approved flagship set', () => {
   const projects = [
     { id: 'chief-of-staff', title: 'Chief of Staff', visibility: 'featured' as const, publicReview: 'approved' as const, order: 1 },
-    { id: 'lifeos', title: 'LifeOS', visibility: 'featured' as const, publicReview: 'approved' as const, order: 2 },
     { id: 'alpha-screener', title: 'Alpha Screener', visibility: 'featured' as const, publicReview: 'approved' as const, order: 3 },
     { id: 'future-feature', title: 'Future feature', visibility: 'featured' as const, publicReview: 'approved' as const, order: 0 },
   ];
 
   expect(approvedHomepageFeaturedProjects(projects).map(({ id }) => id)).toEqual([
     'chief-of-staff',
-    'lifeos',
     'alpha-screener',
   ]);
 });

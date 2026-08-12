@@ -6,7 +6,6 @@ const publicRoutes = [
   '/work/',
   '/work/chief-of-staff/',
   '/case-studies/chief-of-staff/',
-  '/case-studies/lifeos/',
   '/case-studies/alpha-screener/',
   '/systems/reliable-ai-work/',
   '/handbook/',

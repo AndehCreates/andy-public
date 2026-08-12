@@ -29,11 +29,6 @@ export const resume = {
       href: '/work/chief-of-staff/',
     },
     {
-      title: 'LifeOS',
-      summary: 'A local-first workspace for visible commitments, context, and recovery after interruption.',
-      href: '/work/lifeos/',
-    },
-    {
       title: 'Alpha Screener',
       summary: 'A research workspace that keeps signal quality, uncertainty, and review needs visible.',
       href: '/work/alpha-screener/',
