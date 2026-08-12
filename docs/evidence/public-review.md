@@ -1,7 +1,8 @@
 # Public review matrix
 
-Rows below record the completed human review. Visibility remains the publication
-selector: approved draft rows stay excluded from public routes.
+Rows below record the current human-review disposition. Visibility remains the
+publication selector: only approved rows may supply public content, and
+approved draft rows stay excluded from public routes.
 
 | Project ID | Evidence inventory | Source availability / commit | Proposed visibility | Public review | Approved framing / capability tags | Approved links and media | Explicitly excluded claims/details | Reviewer / date |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
