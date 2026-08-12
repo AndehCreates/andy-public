@@ -6,7 +6,7 @@ identity, commit, and inspection date are completed from the Task 5 inventories.
 | Project ID | Availability | Source availability | Observed public remote | Commit | Inspection date |
 | --- | --- | --- | --- | --- | --- |
 | project-chief-of-staff | available | local-only | none authorized | 884ecb0 | 2026-07-21 |
-| project-lifeos | available | public | https://github.com/AndehCreates/LifeOS | 7f50ad1 | 2026-07-21 |
+| project-lifeos | available | public | https://github.com/AndehCreates/LifeOS | b9bb4f0 | 2026-08-12 |
 | project-mathpad | available | public | https://github.com/AndehCreates/mathpad | 6704730 | 2026-07-21 |
 | project-arcade | available | public | https://github.com/AndehCreates/arcade | 0490ff0 | 2026-07-21 |
 | project-alpha-screener | available | public | https://github.com/AndehCreates/alpha-screener | 787aaef | 2026-07-21 |
