@@ -14,6 +14,19 @@ test('publishes the Work atlas and a reviewed project route with complete metada
   await expect(page.getByText('Updated July 21, 2026', { exact: true })).toBeVisible();
 });
 
+test('gives Fable’s public repository and site distinct source labels', async ({ page }) => {
+  await page.goto('/work/fable/');
+
+  await expect(page.getByRole('link', { name: 'Repository', exact: true })).toHaveAttribute(
+    'href',
+    'https://github.com/AndehCreates/fable',
+  );
+  await expect(page.getByRole('link', { name: 'Project site', exact: true })).toHaveAttribute(
+    'href',
+    'https://andehcreates.github.io/fable/',
+  );
+});
+
 test('does not publish draft project routes', async ({ page }) => {
   for (const slug of ['adhd-tabs', 'creative-suite', 'android-lab', 'japanese-anime-inspired']) {
     const response = await page.goto(`/work/${slug}/`);

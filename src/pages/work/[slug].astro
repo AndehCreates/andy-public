@@ -28,7 +28,16 @@ interface Props {
 const { project } = Astro.props;
 const { Content } = await render(project);
 const updatedAt = project.data.updatedAt;
-const sourceLinks = project.data.sourceUrls.map((href) => ({ label: 'Project source', href }));
+const sourceLinks = project.data.sourceUrls.map((href, index) => {
+  if (project.data.sourceUrls.length === 1) return { label: 'Project source', href };
+
+  return {
+    label: new URL(href).hostname === 'github.com'
+      ? 'Repository'
+      : index === 0 ? 'Project source' : 'Project site',
+    href,
+  };
+});
 ---
 
 <ArticleLayout
