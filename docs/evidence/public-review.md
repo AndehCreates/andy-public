@@ -1,7 +1,8 @@
 # Public review matrix
 
-Rows below record the completed human review. Visibility remains the publication
-selector: approved draft rows stay excluded from public routes.
+Rows below record the current human-review disposition. Visibility remains the
+publication selector: only approved rows may supply public content, and
+approved draft rows stay excluded from public routes.
 
 | Project ID | Evidence inventory | Source availability / commit | Proposed visibility | Public review | Approved framing / capability tags | Approved links and media | Explicitly excluded claims/details | Reviewer / date |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -15,3 +16,4 @@ selector: approved draft rows stay excluded from public routes.
 | project-android-lab | android-lab.md | local-only / 1f3186b | draft | approved | Device-sensor learning workbench; local infrastructure and edge, product engineering | None | Hardware validation, device IDs, production release or repository link | user / 2026-07-21 |
 | project-japanese-anime-inspired | japanese-anime-inspired.md | public / 6ebf6e8 | draft | approved | Audio-first language-learning design; human-centered design, interactive and creative systems | None | Shipped app, learning outcomes, audio provenance, anime IP association | user / 2026-07-21 |
 | project-fable | fable.md | public / 01c8e367f8a1b33ca5fa28ff27248f143669e071 | listed | approved | Public interactive explanations project and site; interactive and creative systems, product engineering | https://github.com/AndehCreates/fable; https://andehcreates.github.io/fable/ | Adoption, business outcomes, performance, and private implementation details | user / 2026-08-11 |
+| project-world-knowledge | world-knowledge.md | local-only / 5c0c02a | draft | pending | Governed reference-corpus and bounded-retrieval framing only | None | Repository link, corpus content, sources, review queue, operational-memory claims, validation or adoption claims | pending explicit review / 2026-08-12 |
