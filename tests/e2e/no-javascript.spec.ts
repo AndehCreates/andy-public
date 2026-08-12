@@ -10,10 +10,14 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.locator('#featured-systems [data-artifact-labels]')).toHaveCount(3);
 
   await page.goto('/work/');
-  await expect(page.locator('.project-card')).toHaveCount(6);
-  await expect(page.locator('.project-card [data-visual-mark]')).toHaveCount(6);
-  await expect(page.locator('.project-card__hook')).toHaveCount(6);
-  await expect(page.locator('.project-card__differentiator')).toHaveCount(6);
+  await expect(page.locator('.project-card')).toHaveCount(7);
+  await expect(page.locator('.project-card [data-visual-mark]')).toHaveCount(7);
+  await expect(page.locator('.project-card__hook')).toHaveCount(7);
+  await expect(page.locator('.project-card__differentiator')).toHaveCount(7);
+
+  await page.goto('/work/world-knowledge/');
+  await expect(page.getByRole('heading', { level: 1, name: 'World Knowledge' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Project source' })).toHaveCount(0);
 
   await page.goto('/case-studies/chief-of-staff/');
   await expect(page.locator('[data-case-study-hero]')).toContainText('Coordinate AI-assisted work');
