@@ -30,4 +30,17 @@ describe('auditDist', () => {
       expect.stringContaining('internal/draft marker'),
     ]));
   });
+
+  test('resolves project-site links below an explicit deployment base', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'andy-public-dist-audit-'));
+    fixtureRoots.push(root);
+    await mkdir(join(root, 'work'), { recursive: true });
+    await writeFile(join(root, 'index.html'), '<a href="/andy-public/work/">Work</a><img src="/andy-public/media.svg">');
+    await writeFile(join(root, 'work', 'index.html'), '<a href="/andy-public/">Home</a>');
+    await writeFile(join(root, 'media.svg'), '<svg xmlns="http://www.w3.org/2000/svg" />');
+
+    const result = await auditDist(root, '/andy-public');
+
+    expect(result.errors).toEqual([]);
+  });
 });

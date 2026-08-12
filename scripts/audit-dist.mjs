@@ -20,8 +20,16 @@ function isIgnoredReference(reference) {
   return !reference || reference.startsWith('#') || reference.startsWith('//') || /^(?:[a-z][a-z\d+.-]*:)/i.test(reference);
 }
 
-function candidateTargets(root, sourceFile, reference) {
-  const pathname = decodeURIComponent(reference.split(/[?#]/, 1)[0]);
+function normalizeBasePath(basePath) {
+  if (!basePath || basePath === '/') return '';
+  return `/${basePath.replace(/^\/+|\/+$/g, '')}`;
+}
+
+function candidateTargets(root, sourceFile, reference, basePath) {
+  let pathname = decodeURIComponent(reference.split(/[?#]/, 1)[0]);
+  if (basePath && (pathname === basePath || pathname.startsWith(`${basePath}/`))) {
+    pathname = pathname.slice(basePath.length) || '/';
+  }
   if (!pathname || pathname.endsWith('/')) {
     return [resolve(root, `.${pathname}`, 'index.html')];
   }
@@ -63,10 +71,12 @@ function referencesIn(html) {
 
 /**
  * @param {string} outputRoot
+ * @param {string} [basePath]
  * @returns {Promise<DistAuditResult>}
  */
-export async function auditDist(outputRoot) {
+export async function auditDist(outputRoot, basePath = process.env.PUBLIC_SITE_BASE) {
   const root = resolve(outputRoot);
+  const deploymentBase = normalizeBasePath(basePath);
   const files = await htmlFiles(root);
   const errors = [];
 
@@ -82,7 +92,7 @@ export async function auditDist(outputRoot) {
 
     for (const reference of referencesIn(html)) {
       if (isIgnoredReference(reference)) continue;
-      const candidates = candidateTargets(root, filePath, reference);
+      const candidates = candidateTargets(root, filePath, reference, deploymentBase);
       if (candidates.some((candidate) => candidate === root || candidate.startsWith(`${root}${sep}`)) && await Promise.all(candidates.map(exists)).then((matches) => matches.some(Boolean))) continue;
       errors.push(`${label}: missing local target: ${reference}`);
     }

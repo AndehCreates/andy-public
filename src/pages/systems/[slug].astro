@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
 import { publicEntries } from '@/lib/content/queries';
+import { withBase } from '@/config/site';
 
 const collectionRoute = {
   projects: '/work/',
@@ -36,7 +37,7 @@ async function relatedPublicEntries(ids: string[]): Promise<RelatedEntry[]> {
       publicReview: entry.data.publicReview,
     }]).length === 1;
 
-    return isPublic ? [{ id: relatedId, title: entry.data.title, href: `${collectionRoute[collectionName]}${entry.id}/` }] : [];
+    return isPublic ? [{ id: relatedId, title: entry.data.title, href: withBase(`${collectionRoute[collectionName]}${entry.id}/`) }] : [];
   });
 }
 

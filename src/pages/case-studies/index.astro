@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { featuredEntries } from '@/lib/content/queries';
 import { capabilities } from '@/lib/content/taxonomy';
+import { withBase } from '@/config/site';
 
 const studies = featuredEntries((await getCollection('caseStudies')).map((entry) => ({
   visibility: entry.data.visibility,
@@ -28,9 +29,9 @@ const studies = featuredEntries((await getCollection('caseStudies')).map((entry)
       {studies.map((study) => (
         <article class="case-study-card">
           <p>{capabilities[study.data.capabilities.at(0) ?? 'ai-systems']}</p>
-          <h2><a href={`/case-studies/${study.id}/`}>{study.data.title}</a></h2>
+          <h2><a href={withBase(`/case-studies/${study.id}/`)}>{study.data.title}</a></h2>
           <p>{study.data.summary}</p>
-          <a href={`/work/${study.data.projectId.replace('project-', '')}/`}>View related project</a>
+          <a href={withBase(`/work/${study.data.projectId.replace('project-', '')}/`)}>View related project</a>
         </article>
       ))}
     </div>

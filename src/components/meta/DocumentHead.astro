@@ -1,5 +1,5 @@
 ---
-import { site } from '@/config/site';
+import { site, withBase } from '@/config/site';
 
 interface Props {
   title?: string;
@@ -20,8 +20,10 @@ const {
   type = 'website',
   robots,
 } = Astro.props;
-const canonical = new URL(canonicalPath, Astro.site ?? Astro.url);
-const imageUrl = image ? new URL(image, canonical).href : undefined;
+const canonical = new URL(withBase(canonicalPath), Astro.site ?? Astro.url);
+const imageUrl = image
+  ? new URL(/^https?:\/\//.test(image) ? image : withBase(image), canonical).href
+  : undefined;
 ---
 
 <meta charset="utf-8" />

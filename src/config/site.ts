@@ -5,6 +5,13 @@ function normalizePath(pathname: string): string {
   return pathname.replace(/\/+$/, '') || '/';
 }
 
+export function withBase(pathname: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
+
+  return `${base}${path}` || '/';
+}
+
 export function isActiveNavigationPath(currentPath: string, navigationHref: string): boolean {
   const current = normalizePath(currentPath);
   const navigation = normalizePath(navigationHref);
@@ -18,12 +25,12 @@ export const site = {
     'Evidence-led software and AI systems built to strengthen human capability.',
   opportunityLabel: 'Open to roles and collaboration',
   navigation: [
-    { label: 'Home', href: '/' },
-    { label: 'Work', href: '/work/' },
-    { label: 'Systems', href: '/systems/' },
-    { label: 'Handbook', href: '/handbook/' },
-    { label: 'Signal Library', href: '/signals/' },
-    { label: 'About', href: '/about/' },
-    { label: `R${eAcute}sum${eAcute}`, href: '/resume/' },
+    { label: 'Home', href: withBase('/') },
+    { label: 'Work', href: withBase('/work/') },
+    { label: 'Systems', href: withBase('/systems/') },
+    { label: 'Handbook', href: withBase('/handbook/') },
+    { label: 'Signal Library', href: withBase('/signals/') },
+    { label: 'About', href: withBase('/about/') },
+    { label: `R${eAcute}sum${eAcute}`, href: withBase('/resume/') },
   ],
 } as const;

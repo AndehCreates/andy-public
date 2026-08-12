@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/config/site';
 ---
 
 <BaseLayout
@@ -14,9 +15,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     <h1 id="not-found-heading">Page not found</h1>
     <p>The page you requested is not available. You can continue with the public work and notes below.</p>
     <nav aria-label="Suggested destinations">
-      <a href="/work/">Work</a>
-      <a href="/systems/">Systems</a>
-      <a href="/signals/">Signal Library</a>
+      <a href={withBase('/work/')}>Work</a>
+      <a href={withBase('/systems/')}>Systems</a>
+      <a href={withBase('/signals/')}>Signal Library</a>
     </nav>
   </section>
 </BaseLayout>

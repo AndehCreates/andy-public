@@ -52,3 +52,43 @@ it('isolates Vite optimized dependencies between development and production', ()
   expect(readCacheDir('development')).toBe('node_modules/.vite-development');
   expect(readCacheDir('production')).toBe('node_modules/.vite-production');
 });
+
+it('uses an explicit public base path for project-site deployments', () => {
+  const configUrl = pathToFileURL(resolve(process.cwd(), 'astro.config.mjs')).href;
+  const readDeploymentConfig = () =>
+    JSON.parse(
+      execFileSync(
+        process.execPath,
+        [
+          '--input-type=module',
+          '--eval',
+          `import config from '${configUrl}'; console.log(JSON.stringify({ site: config.site, base: config.base }));`,
+        ],
+        {
+          encoding: 'utf8',
+          env: {
+            ...process.env,
+            PUBLIC_SITE_URL: 'https://andehcreates.github.io',
+            PUBLIC_SITE_BASE: '/andy-public',
+          },
+        },
+      ),
+    );
+
+  expect(readDeploymentConfig()).toEqual({
+    site: 'https://andehcreates.github.io',
+    base: '/andy-public',
+  });
+});
+
+it('keeps the Pages deployment workflow scoped to verified static output', async () => {
+  const workflow = await readFile(resolve(process.cwd(), '.github/workflows/deploy-pages.yml'), 'utf8');
+
+  expect(workflow).toContain('PUBLIC_SITE_URL: https://andehcreates.github.io');
+  expect(workflow).toContain('PUBLIC_SITE_BASE: /andy-public');
+  expect(workflow).toContain('npm run build');
+  expect(workflow).toContain('actions/upload-pages-artifact@v4');
+  expect(workflow).toContain('actions/deploy-pages@v4');
+  expect(workflow).toContain('path: ./dist');
+  expect(workflow).toContain('branches: [codex/public-ai-systems-portfolio-v1]');
+});
