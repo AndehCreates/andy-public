@@ -48,8 +48,8 @@ Public to claim adoption, business impact, or production scale.
 
 ## Known limitations
 
-- No Andy Public project entry, case study, system-map relationship, media
-  selection, or broader editorial claim has been approved for Fable yet.
+- No Fable case study, system-map relationship, media selection, or broader
+  editorial claim has been approved.
 - The recorded checks are source-owned validation evidence; they do not prove
   audience comprehension, adoption, or business outcomes.
 
