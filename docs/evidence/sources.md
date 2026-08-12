@@ -14,3 +14,4 @@ identity, commit, and inspection date are completed from the Task 5 inventories.
 | project-creative-suite | available | local-only | none observed | 53824f1 | 2026-07-21 |
 | project-android-lab | available | local-only | none observed | 1f3186b | 2026-07-21 |
 | project-japanese-anime-inspired | available | public | https://github.com/AndehCreates/japanese-anime-inspired | 6ebf6e8 | 2026-07-21 |
+| project-fable | available | public | https://github.com/AndehCreates/fable | 01c8e367f8a1b33ca5fa28ff27248f143669e071 | 2026-08-11 |
