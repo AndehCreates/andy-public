@@ -5,6 +5,7 @@ import CaseStudyHero from '@/components/content/CaseStudyHero.astro';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
 import { canPublish } from '@/lib/content/publication';
 import { featuredEntries } from '@/lib/content/queries';
+import { withBase } from '@/config/site';
 
 export async function getStaticPaths() {
   const [entries, projects] = await Promise.all([
@@ -67,7 +68,7 @@ const sourceLinks = study.data.sourceAvailability === 'public'
     {study.data.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
   </ul>
   <Content />
-  <p class="related-project"><a href={`/work/${study.data.projectId.replace('project-', '')}/`}>View the related project</a></p>
+  <p class="related-project"><a href={withBase(`/work/${study.data.projectId.replace('project-', '')}/`)}>View the related project</a></p>
 </ArticleLayout>
 
 <style>

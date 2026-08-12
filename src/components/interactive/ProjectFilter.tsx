@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { withBase } from '@/config/site';
 import { capabilities, type CapabilityId } from '@/lib/content/taxonomy';
 import type { VisualMark } from '@/lib/content/presentation';
 import type { ProjectStatus } from '@/lib/content/types';
@@ -82,7 +83,7 @@ export default class ProjectFilter extends Component<Props, State> {
               <span className="project-card__mark" data-visual-mark={project.visualMark} aria-hidden="true" />
               <p className="project-card__status">{statusDisplayCopy[project.status]}</p>
             </div>
-            <h2 id={`project-${project.slug}-title`}><a href={`/work/${project.slug}/`}>{project.title}</a></h2>
+            <h2 id={`project-${project.slug}-title`}><a href={withBase(`/work/${project.slug}/`)}>{project.title}</a></h2>
             <p className="project-card__hook">{project.workHook}</p>
             <p className="project-card__summary">{project.summary}</p>
             <p className="project-card__differentiator"><span>Technical idea</span>{project.technicalDifferentiator}</p>

@@ -1,6 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { publicEntries } from '@/lib/content/queries';
+import { withBase } from '@/config/site';
 
 type FeedEntry = {
   id: string;
@@ -20,15 +21,16 @@ export async function GET(context: { site?: URL }) {
     ...signals.map((entry) => ({ id: entry.id, collection: 'signals' as const, title: entry.data.title, summary: entry.data.summary, publishedAt: entry.data.publishedAt, updatedAt: entry.data.updatedAt, visibility: entry.data.visibility, publicReview: entry.data.publicReview })),
   ];
   const publicFeedEntries = publicEntries(entries).sort((a, b) => (b.publishedAt ?? b.updatedAt).getTime() - (a.publishedAt ?? a.updatedAt).getTime());
+  const feedSite = new URL(withBase('/'), context.site ?? 'http://localhost:4321');
 
   return rss({
     title: 'Andy — AI Systems',
     description: 'New handbook principles and annotated Signal Library entries.',
-    site: context.site ?? 'http://localhost:4321',
+    site: feedSite,
     items: publicFeedEntries.map((entry) => ({
       title: entry.title,
       description: entry.summary,
-      link: `/${entry.collection}/${entry.id}/`,
+      link: withBase(`/${entry.collection}/${entry.id}/`),
       pubDate: entry.publishedAt ?? entry.updatedAt,
     })),
   });

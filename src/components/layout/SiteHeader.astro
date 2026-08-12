@@ -1,5 +1,5 @@
 ---
-import { isActiveNavigationPath, site } from '@/config/site';
+import { isActiveNavigationPath, site, withBase } from '@/config/site';
 
 const currentPath = Astro.url.pathname;
 const primaryNavigation = site.navigation.filter((item) => ['Home', 'Work', 'Systems', 'About'].includes(item.label));
@@ -8,7 +8,7 @@ const secondaryNavigation = site.navigation.filter((item) => !primaryNavigation.
 
 <header class="site-header">
   <div class="container site-header__inner">
-    <a class="site-header__brand" href="/" aria-label={`${site.title} home`}>{site.title}</a>
+    <a class="site-header__brand" href={withBase('/')} aria-label={`${site.title} home`}>{site.title}</a>
     <nav class="site-header__desktop-nav" aria-label="Primary navigation">
       <ul class="site-header__nav site-header__nav--desktop">
         {site.navigation.map((item) => (

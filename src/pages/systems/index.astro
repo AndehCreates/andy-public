@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { publicEntries } from '@/lib/content/queries';
 import { capabilities } from '@/lib/content/taxonomy';
+import { withBase } from '@/config/site';
 
 const systems = publicEntries((await getCollection('systems')).map((entry) => ({
   visibility: entry.data.visibility,
@@ -28,9 +29,9 @@ const systems = publicEntries((await getCollection('systems')).map((entry) => ({
       {systems.map((system) => (
         <article class="system-card">
           <p>{capabilities[system.data.capabilities.at(0) ?? 'ai-systems']}</p>
-          <h2><a href={`/systems/${system.id}/`}>{system.data.title}</a></h2>
+          <h2><a href={withBase(`/systems/${system.id}/`)}>{system.data.title}</a></h2>
           <p>{system.data.summary}</p>
-          <a href={`/systems/${system.id}/`}>Read the map</a>
+          <a href={withBase(`/systems/${system.id}/`)}>Read the map</a>
         </article>
       ))}
     </div>

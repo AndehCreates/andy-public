@@ -20,8 +20,16 @@ function isIgnoredReference(reference) {
   return !reference || reference.startsWith('#') || reference.startsWith('//') || /^(?:[a-z][a-z\d+.-]*:)/i.test(reference);
 }
 
-function candidateTargets(root, sourceFile, reference) {
-  const pathname = decodeURIComponent(reference.split(/[?#]/, 1)[0]);
+function normalizeBasePath(basePath) {
+  if (!basePath || basePath === '/') return '';
+  return `/${basePath.replace(/^\/+|\/+$/g, '')}`;
+}
+
+function candidateTargets(root, sourceFile, reference, basePath) {
+  let pathname = decodeURIComponent(reference.split(/[?#]/, 1)[0]);
+  if (basePath && (pathname === basePath || pathname.startsWith(`${basePath}/`))) {
+    pathname = pathname.slice(basePath.length) || '/';
+  }
   if (!pathname || pathname.endsWith('/')) {
     return [resolve(root, `.${pathname}`, 'index.html')];
   }
@@ -40,51 +48,73 @@ async function exists(filePath) {
   }
 }
 
-async function htmlFiles(root) {
+async function outputFiles(root) {
   const entries = await readdir(root, { withFileTypes: true });
   const nested = await Promise.all(entries.map(async (entry) => {
     const entryPath = resolve(root, entry.name);
-    if (entry.isDirectory()) return htmlFiles(entryPath);
-    return entry.isFile() && entry.name.endsWith('.html') ? [entryPath] : [];
+    if (entry.isDirectory()) return outputFiles(entryPath);
+    return entry.isFile() && (entry.name.endsWith('.html') || entry.name.endsWith('.xml')) ? [entryPath] : [];
   }));
   return nested.flat();
 }
 
-function referencesIn(html) {
+function referencesIn(document, includeXmlText) {
   const references = [];
-  for (const match of html.matchAll(localAttribute)) references.push(match[1]);
-  for (const match of html.matchAll(srcSetAttribute)) {
+  for (const match of document.matchAll(localAttribute)) references.push(match[1]);
+  for (const match of document.matchAll(srcSetAttribute)) {
     for (const item of match[1].split(',')) references.push(item.trim().split(/\s+/, 1)[0]);
   }
+  if (includeXmlText) {
+    for (const match of document.matchAll(/<(?:atom:)?(?:link|loc)\b[^>]*>([^<]+)<\/(?:atom:)?(?:link|loc)>/gi)) references.push(match[1]);
+  }
   return references;
+}
+
+function sameOriginPath(reference, siteUrl) {
+  if (!siteUrl) return reference;
+  try {
+    const url = new URL(reference);
+    return url.origin === new URL(siteUrl).origin ? `${url.pathname}${url.search}${url.hash}` : reference;
+  } catch {
+    return reference;
+  }
 }
 
 /** @typedef {{ files: string[], errors: string[] }} DistAuditResult */
 
 /**
  * @param {string} outputRoot
+ * @param {string} [basePath]
+ * @param {string} [siteUrl]
  * @returns {Promise<DistAuditResult>}
  */
-export async function auditDist(outputRoot) {
+export async function auditDist(outputRoot, basePath = process.env.PUBLIC_SITE_BASE, siteUrl = process.env.PUBLIC_SITE_URL) {
   const root = resolve(outputRoot);
-  const files = await htmlFiles(root);
+  const deploymentBase = normalizeBasePath(basePath);
+  const files = await outputFiles(root);
   const errors = [];
 
   for (const filePath of files) {
-    const html = await readFile(filePath, 'utf8');
+    const document = await readFile(filePath, 'utf8');
     const label = displayPath(root, filePath);
 
     for (const [rule, pattern] of sanitizerRules) {
       const matcher = new RegExp(pattern.source, pattern.flags);
-      for (const match of html.matchAll(matcher)) errors.push(`${label}: ${rule}: ${match[0]}`);
+      for (const match of document.matchAll(matcher)) errors.push(`${label}: ${rule}: ${match[0]}`);
     }
-    for (const match of html.matchAll(internalMarker)) errors.push(`${label}: internal/draft marker: ${match[0]}`);
+    for (const match of document.matchAll(internalMarker)) errors.push(`${label}: internal/draft marker: ${match[0]}`);
 
-    for (const reference of referencesIn(html)) {
+    const isXml = filePath.endsWith('.xml');
+    for (const rawReference of referencesIn(document, isXml)) {
+      const reference = isXml ? sameOriginPath(rawReference, siteUrl) : rawReference;
+      if (isXml && deploymentBase && reference.startsWith('/') && !(reference === deploymentBase || reference.startsWith(`${deploymentBase}/`))) {
+        errors.push(`${label}: missing deployment base: ${rawReference}`);
+        continue;
+      }
       if (isIgnoredReference(reference)) continue;
-      const candidates = candidateTargets(root, filePath, reference);
+      const candidates = candidateTargets(root, filePath, reference, deploymentBase);
       if (candidates.some((candidate) => candidate === root || candidate.startsWith(`${root}${sep}`)) && await Promise.all(candidates.map(exists)).then((matches) => matches.some(Boolean))) continue;
-      errors.push(`${label}: missing local target: ${reference}`);
+      errors.push(`${label}: missing local target: ${rawReference}`);
     }
   }
 

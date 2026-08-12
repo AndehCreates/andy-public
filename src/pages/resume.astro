@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { resume } from '@/data/resume';
+import { withBase } from '@/config/site';
 ---
 
 <BaseLayout
@@ -36,7 +37,7 @@ import { resume } from '@/data/resume';
       <div class="resume__systems">
         {resume.selectedSystems.map((system) => (
           <section>
-            <h3><a href={system.href}>{system.title}</a></h3>
+            <h3><a href={withBase(system.href)}>{system.title}</a></h3>
             <p>{system.summary}</p>
           </section>
         ))}

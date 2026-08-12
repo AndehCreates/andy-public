@@ -1,5 +1,6 @@
 ---
 import CapabilityTag from './CapabilityTag.astro';
+import { withBase } from '@/config/site';
 import type { CapabilityId } from '@/lib/content/taxonomy';
 
 export interface ProjectCardViewModel {
@@ -19,7 +20,7 @@ const { project } = Astro.props;
 
 <article class="project-card">
   <p class="project-card__status">{project.status}</p>
-  <h2><a href={`/work/${project.slug}/`}>{project.title}</a></h2>
+  <h2><a href={withBase(`/work/${project.slug}/`)}>{project.title}</a></h2>
   <p class="project-card__summary">{project.summary}</p>
   <ul class="project-card__capabilities" aria-label="Capabilities">
     {project.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}

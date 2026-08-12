@@ -4,6 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
 import { approvedHomepageFeaturedProjects, publicEntries } from '@/lib/content/queries';
 import { evidenceStateLabels } from '@/lib/content/presentation';
+import { withBase } from '@/config/site';
 
 const [projects, handbook, signals] = await Promise.all([
   getCollection('projects'),
@@ -72,11 +73,11 @@ const portfolioSignalMap = {
       <h1 id="home-title">Software that strengthens human capability.</h1>
       <p class="home-hero__identity">Andy builds evidence-led AI systems and human-centered software through a practice of explicit authority, durable context, and bounded validation.</p>
       <div class="home-hero__actions">
-        <a class="action action--primary" href="/case-studies/">Read case studies</a>
+        <a class="action action--primary" href={withBase('/case-studies/')}>Read case studies</a>
       </div>
       <p class="home-hero__summary">Systems for coordinating AI-assisted work, recovering context after interruption, and evaluating uncertain evidence while keeping authority, tradeoffs, and validation limits visible.</p>
       <nav class="home-hero__secondary" aria-label="Secondary homepage actions">
-        <a href="/handbook/">Explore the handbook</a>
+        <a href={withBase('/handbook/')}>Explore the handbook</a>
         <a href="mailto:hello@andehcreates.com">Contact Andy</a>
       </nav>
       <p class="opportunity">Open to roles and thoughtful collaboration.</p>
@@ -116,7 +117,7 @@ const portfolioSignalMap = {
         <h2 id="featured-heading">Featured systems</h2>
         <p class="featured__intro">Three different systems, one shared standard: make the decision boundary as inspectable as the result.</p>
       </div>
-      <a href="/case-studies/">Read the case studies</a>
+      <a href={withBase('/case-studies/')}>Read the case studies</a>
     </header>
     <div class="featured__grid">
       {featuredProjects.map((project, index) => <article class:list={['flagship-preview', index === 0 && 'flagship-preview--lead']} data-flagship-preview data-theme={project.data.theme}>
@@ -128,7 +129,7 @@ const portfolioSignalMap = {
         </div>
         <div class="flagship-preview__heading">
           <p class="flagship-preview__status">{project.data.status}</p>
-          <h3><a href={`/case-studies/${project.id}/`}>{project.data.title}</a></h3>
+          <h3><a href={withBase(`/case-studies/${project.id}/`)}>{project.data.title}</a></h3>
         </div>
         <p class="flagship-preview__hook">{project.data.caseStudyHook}</p>
         <dl class="flagship-preview__details">
@@ -141,7 +142,7 @@ const portfolioSignalMap = {
             <dd><strong>{evidenceStateLabels[project.data.evidenceSummary!.evidenceState]}</strong> · {project.data.evidenceSummary!.evidenceScope}</dd>
           </div>
         </dl>
-        <a class="flagship-preview__link" href={`/case-studies/${project.id}/`}>Explore the case study</a>
+        <a class="flagship-preview__link" href={withBase(`/case-studies/${project.id}/`)}>Explore the case study</a>
       </article>)}
     </div>
   </section>
@@ -156,11 +157,11 @@ const portfolioSignalMap = {
       <div class="signals__grid">
         {signalTeasers.map((signal) => <article>
           <p>{signal.data.kind.replace('-', ' ')}</p>
-          <h3><a href={`/signals/${signal.id}/`}>{signal.data.title}</a></h3>
+          <h3><a href={withBase(`/signals/${signal.id}/`)}>{signal.data.title}</a></h3>
           <p>{signal.data.summary}</p>
         </article>)}
       </div>
-      <a class="action action--signal" href="/signals/">Visit the Signal Library</a>
+      <a class="action action--signal" href={withBase('/signals/')}>Visit the Signal Library</a>
     </div>
   </section>
 
@@ -175,16 +176,16 @@ const portfolioSignalMap = {
         <h3>Engineering handbook</h3>
         <p>Principles, failure modes, and practical checklists for building systems that remain inspectable as their context changes.</p>
         <ul>
-          {handbookTeasers.map((entry) => <li><a href={`/handbook/${entry.id}/`}>{entry.data.title}</a></li>)}
+          {handbookTeasers.map((entry) => <li><a href={withBase(`/handbook/${entry.id}/`)}>{entry.data.title}</a></li>)}
         </ul>
-        <a href="/handbook/">Explore the handbook</a>
+        <a href={withBase('/handbook/')}>Explore the handbook</a>
       </article>
       <article>
         <p class="eyebrow">Full project atlas</p>
         <h3>Work across systems</h3>
         <p>See supporting projects, system maps, and the wider set of experiments that sharpen the central practice.</p>
-        <a href="/work/">View all work</a>
-        <a href="/systems/">Browse system maps</a>
+        <a href={withBase('/work/')}>View all work</a>
+        <a href={withBase('/systems/')}>Browse system maps</a>
       </article>
     </div>
   </section>

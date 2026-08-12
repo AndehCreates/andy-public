@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { publicEntries } from '@/lib/content/queries';
 import { capabilities } from '@/lib/content/taxonomy';
+import { withBase } from '@/config/site';
 
 const signals = publicEntries((await getCollection('signals')).map((entry) => ({
   title: entry.data.title,
@@ -35,9 +36,9 @@ const signalGroups = [
           <div class="signals__grid">
             {entries.map((entry) => <article>
               <p>{kindLabel[entry.data.kind]} - {capabilities[entry.data.capabilities.at(0) ?? 'ai-systems']}</p>
-              <h3><a href={`/signals/${entry.id}/`}>{entry.data.title}</a></h3>
+              <h3><a href={withBase(`/signals/${entry.id}/`)}>{entry.data.title}</a></h3>
               <p>{entry.data.summary}</p>
-              <a href={`/signals/${entry.id}/`}>Read the annotation</a>
+              <a href={withBase(`/signals/${entry.id}/`)}>Read the annotation</a>
             </article>)}
           </div>
         </section>;
