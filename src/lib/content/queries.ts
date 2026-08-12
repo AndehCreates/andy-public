@@ -10,7 +10,7 @@ export function featuredEntries<T extends Publishable>(entries: T[]): T[] {
 }
 
 /** The approved V1 homepage features only these flagship systems. */
-export const approvedHomepageProjectIds = ['chief-of-staff', 'lifeos', 'alpha-screener'] as const;
+export const approvedHomepageProjectIds = ['chief-of-staff', 'alpha-screener'] as const;
 
 export function approvedHomepageFeaturedProjects<T extends Publishable & { id: string }>(entries: T[]): T[] {
   const approvedIds = new Set<string>(approvedHomepageProjectIds);

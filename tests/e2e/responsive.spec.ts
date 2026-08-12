@@ -10,7 +10,7 @@ test('preserves reachable public content and navigation across supported viewpor
     await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
     await expect(page.locator('.project-card').first()).toBeVisible();
     await expect(page.locator('.project-card').last()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'LifeOS', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Fable', exact: true })).toBeVisible();
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
 });
@@ -79,7 +79,7 @@ test('keeps each flagship opening ahead of long-form sections without horizontal
   for (const width of widths) {
     await page.setViewportSize({ width, height: width <= 768 ? 900 : 720 });
 
-    for (const slug of ['chief-of-staff', 'lifeos', 'alpha-screener']) {
+    for (const slug of ['chief-of-staff', 'alpha-screener']) {
       await page.goto(`/case-studies/${slug}/`);
 
       const hero = page.locator('[data-case-study-hero]');
