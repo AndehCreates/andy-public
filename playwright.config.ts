@@ -2,6 +2,12 @@ import { defineConfig, devices } from '@playwright/test';
 
 const verificationPort = 4342;
 const verificationBaseUrl = `http://127.0.0.1:${verificationPort}`;
+// Managed hosts may supply a compatible system Chromium without changing the
+// suite, while local development and CI keep Playwright's default browser.
+const chromiumExecutablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?.trim();
+const browserLaunchOverride = chromiumExecutablePath
+  ? { launchOptions: { executablePath: chromiumExecutablePath } }
+  : {};
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -18,6 +24,7 @@ export default defineConfig({
   use: {
     baseURL: verificationBaseUrl,
     trace: 'retain-on-failure',
+    ...browserLaunchOverride,
   },
   projects: [
     {

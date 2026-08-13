@@ -81,3 +81,17 @@ both development and production-preview servers.
 
 Do not invent commands before Task 1 creates the package scripts. The executable
 commands and expected URLs are defined in the implementation plan.
+
+## Managed browser selection
+
+Browser verification uses Playwright's managed Chromium by default, including
+in local development and CI. A managed host that provides its own compatible
+Chromium can select it without changing the test command or suite:
+
+```sh
+PLAYWRIGHT_CHROMIUM_EXECUTABLE=/absolute/path/to/chromium npm run test:e2e
+```
+
+The override applies to both the standard Chromium project and the
+JavaScript-disabled project. An unset or blank value preserves Playwright's
+default executable resolution.
