@@ -2,10 +2,12 @@ import { defineConfig, devices } from '@playwright/test';
 
 const verificationPort = 4342;
 const verificationBaseUrl = `http://127.0.0.1:${verificationPort}`;
+const chromiumExecutable = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE;
 
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
+  workers: 1,
   reporter: 'list',
   webServer: {
     command: `npm run preview -- --port ${verificationPort}`,
@@ -18,6 +20,7 @@ export default defineConfig({
   use: {
     baseURL: verificationBaseUrl,
     trace: 'retain-on-failure',
+    ...(chromiumExecutable ? { launchOptions: { executablePath: chromiumExecutable } } : {}),
   },
   projects: [
     {
