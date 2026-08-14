@@ -86,7 +86,8 @@ async function readEntries(): Promise<AuditedEntry[]> {
   });
 
   return Promise.all(files.filter(isAuditableContentFile).map(async (filePath) => {
-    const collection = collectionDirectories.find(([, directory]) => filePath.includes(`${directory}\\`) || filePath.includes(`${directory}/`))?.[0];
+    const relativePath = filePath.slice(contentRoot.length + 1).replaceAll('\\', '/');
+    const collection = collectionDirectories.find(([, directory]) => relativePath.startsWith(`${directory}/`))?.[0];
     if (!collection) throw new Error(`Unable to determine collection for ${filePath}.`);
     const raw = await readFile(filePath, 'utf8');
     return asEntry(collection, matter(raw));
