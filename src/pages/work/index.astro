@@ -36,5 +36,5 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
   description="A project atlas of reviewed software and AI systems built around visible context, reliable decisions, and human control."
   canonicalPath="/work/"
 >
-  <ProjectFilter client:idle projects={projects} />
+  <ProjectFilter client:load projects={projects} />
 </BaseLayout>
