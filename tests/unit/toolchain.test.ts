@@ -87,8 +87,8 @@ it('keeps the Pages deployment workflow scoped to verified static output', async
   expect(workflow).toContain('PUBLIC_SITE_URL: https://andehcreates.github.io');
   expect(workflow).toContain('PUBLIC_SITE_BASE: /andy-public');
   expect(workflow).toContain('npm run build');
-  expect(workflow).toContain('actions/upload-pages-artifact@v4');
-  expect(workflow).toContain('actions/deploy-pages@v4');
+  expect(workflow).toContain('actions/upload-pages-artifact@v5');
+  expect(workflow).toContain('actions/deploy-pages@v5');
   expect(workflow).toContain('path: ./dist');
   expect(workflow).toContain('branches: [codex/public-ai-systems-portfolio-v1]');
 });
