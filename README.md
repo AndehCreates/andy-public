@@ -13,23 +13,38 @@ two things:
 
 ## Current state
 
-The product direction and implementation sequence are approved. The application
-has **not** been scaffolded yet, so there is no real portfolio dev server in this
-repository today. The previous visual companion is a design aid, not the product.
+The portfolio is implemented as a static-first Astro 6 application with strict
+TypeScript, typed content collections, MDX, automated content/output audits,
+unit tests, and Playwright browser coverage. Repository-owned content currently
+includes projects, case studies, cross-project system maps, handbook entries,
+and Signal Library entries.
 
-The next implementation run starts with Task 1 of the plan, builds through the
-sanitized evidence inventory in Task 5, and then stops for the required human
-review before any project or case-study claims are published in Task 6.
+A GitHub Pages workflow builds and deploys the portfolio from
+`codex/public-ai-systems-portfolio-v1`. The repository containing a built
+application does not imply that a local development or preview server is
+currently running; use the package scripts below and verify the reported URL in
+the current session when a runtime handoff is required.
+
+Public portfolio membership is deliberately separate from internal project
+management. A project being registered with Chief of Staff, present in another
+portfolio registry, or available as source does **not** publish it here. New or
+changed public project and case-study claims still require source-backed
+evidence plus the repository's explicit editorial/privacy review before their
+publication state is advanced.
 
 ## Canonical documents
 
 - [Product and design specification](docs/superpowers/specs/2026-07-21-public-ai-systems-portfolio-design.md)
 - [Executable implementation plan](docs/superpowers/plans/2026-07-21-public-ai-systems-portfolio.md)
-- [Implementation handoff](docs/IMPLEMENTATION_HANDOFF.md)
+- [Implementation handoff](docs/IMPLEMENTATION_HANDOFF.md) — historical
+  pre-scaffold implementation handoff; preserve it as provenance rather than
+  treating its repository snapshot as current runtime state
 - [Documentation index](docs/README.md)
 - [Repository instructions](AGENTS.md)
 
-When documents disagree, use the authority order in `AGENTS.md`.
+When documents disagree, use the authority order in `AGENTS.md`. For current
+implementation behavior, inspect the repository, content contracts, tests, and
+build output rather than relying on an older status snapshot.
 
 ## Product direction
 
@@ -38,7 +53,7 @@ content. Its core surfaces are:
 
 - a focused homepage led by "Software that strengthens human capability";
 - a project atlas covering flagship and supporting work;
-- three evidence-backed case studies with diagrams;
+- evidence-backed case studies with diagrams;
 - a short engineering handbook describing principles and repeatable patterns;
 - a Signal Library for useful resources, homelab notes, and adjacent interests;
 - About and resume surfaces that present a nontraditional path honestly and
@@ -59,8 +74,8 @@ which tradeoffs remain, and what comes next.
 
 ## Implementation contract
 
-- Use Astro 6, strict TypeScript, typed content collections, MDX, and static
-  output as specified in the plan.
+- Keep the Astro 6 application static-first, with strict TypeScript, typed
+  content collections, MDX, and static output.
 - Keep core content and navigation usable without client JavaScript.
 - Treat publication state, source availability, and public review as separate
   concepts.
@@ -69,15 +84,31 @@ which tradeoffs remain, and what comes next.
 - Keep local source-location mappings untracked and outside public content.
 - Preserve the calm dark visual direction; use progressive enhancement only
   where it materially improves the experience.
-- End implementation with working development and production-preview URLs, not
-  only a successful build.
+- For runtime handoff work, verify real development and production-preview URLs
+  rather than treating a successful build as a running server.
 
-## Expected verification
+## Development and verification
 
-Once the application is scaffolded, the plan requires type and Astro checks,
-unit tests, content audits, production builds, browser tests, accessibility
-checks, no-JavaScript coverage, responsive inspection, and smoke tests against
-both development and production-preview servers.
+Install the checked-in dependency set with:
 
-Do not invent commands before Task 1 creates the package scripts. The executable
-commands and expected URLs are defined in the implementation plan.
+```bash
+npm ci
+```
+
+Use the repository-owned scripts rather than commands copied from historical
+plans:
+
+```bash
+npm run dev            # Astro development server on loopback
+npm run check          # Astro / TypeScript checks
+npm run test           # Vitest suite
+npm run audit:content  # public-content contract audit
+npm run build          # check + test + content audit + static build + dist audit
+npm run preview        # production preview on loopback
+npm run verify         # full build plus Playwright end-to-end verification
+```
+
+The full browser/accessibility/no-JavaScript gates remain appropriate when
+changing public behavior or making a runtime-completion claim. Documentation-only
+changes should use the narrowest relevant repository checks plus Git diff
+validation unless a broader gate is required by the change.
