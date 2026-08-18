@@ -16,14 +16,14 @@ const studies = featuredEntries((await getCollection('caseStudies')).map((entry)
 
 <BaseLayout
   title="Case studies | Andy — AI Systems"
-  description="Three evidence-led case studies of systems designed around visible decisions, human control, and bounded validation."
+  description="Evidence-led case studies of systems designed around visible decisions, human control, and bounded validation."
   canonicalPath="/case-studies/"
 >
   <section class="case-studies container" aria-labelledby="case-studies-heading">
     <header class="case-studies__header">
       <p>Evidence-led systems work</p>
       <h1 id="case-studies-heading">Case studies</h1>
-      <p>See how three systems handle a different source of uncertainty: distributed authority, interrupted context, and incomplete market evidence. Each study separates what was designed, what was tested, and what remains unproven.</p>
+      <p>See how public systems handle uncertainty through distributed authority and incomplete market evidence. Each study separates what was designed, what was tested, and what remains unproven.</p>
     </header>
     <div class="case-studies__grid">
       {studies.map((study) => (

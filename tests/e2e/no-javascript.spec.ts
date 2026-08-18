@@ -6,14 +6,14 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.getByRole('link', { name: 'Work', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Read case studies', exact: true })).toHaveAttribute('href', '/case-studies/');
   await expect(page.locator('.home-hero .system-diagram')).toContainText('Human-owned decisions');
-  await expect(page.locator('#featured-systems [data-flagship-preview]')).toHaveCount(3);
-  await expect(page.locator('#featured-systems [data-artifact-labels]')).toHaveCount(3);
+  await expect(page.locator('#featured-systems [data-flagship-preview]')).toHaveCount(2);
+  await expect(page.locator('#featured-systems [data-artifact-labels]')).toHaveCount(2);
 
   await page.goto('/work/');
-  await expect(page.locator('.project-card')).toHaveCount(7);
-  await expect(page.locator('.project-card [data-visual-mark]')).toHaveCount(7);
-  await expect(page.locator('.project-card__hook')).toHaveCount(7);
-  await expect(page.locator('.project-card__differentiator')).toHaveCount(7);
+  await expect(page.locator('.project-card')).toHaveCount(6);
+  await expect(page.locator('.project-card [data-visual-mark]')).toHaveCount(6);
+  await expect(page.locator('.project-card__hook')).toHaveCount(6);
+  await expect(page.locator('.project-card__differentiator')).toHaveCount(6);
 
   await page.goto('/work/world-knowledge/');
   await expect(page.getByRole('heading', { level: 1, name: 'World Knowledge' })).toBeVisible();
@@ -32,8 +32,17 @@ test('keeps navigation and public reading surfaces available without JavaScript'
   await expect(page.getByRole('heading', { level: 2, name: 'How to read this map' })).toBeVisible();
   await expect(page.locator('main')).toContainText('Related public work');
 
+  await page.goto('/systems/human-capability-ecosystem/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Human capability ecosystem' })).toBeVisible();
+  await expect(page.locator('.system-diagram__relationship')).toHaveCount(8);
+  await expect(page.locator('main')).toContainText('understanding itself creates capability and option-value');
+
   await page.goto('/handbook/');
   await expect(page.getByRole('heading', { level: 1, name: 'Engineering handbook' })).toBeVisible();
+
+  await page.goto('/handbook/exposure-and-option-value/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Exposure and option-value' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Learning leverage heuristic' })).toBeVisible();
 
   await page.goto('/signals/');
   await expect(page.getByRole('heading', { level: 1, name: 'Signal Library' })).toBeVisible();

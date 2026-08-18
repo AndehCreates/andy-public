@@ -59,6 +59,13 @@ content. Its core surfaces are:
 - About and resume surfaces that present a nontraditional path honestly and
   professionally.
 
+Within the wider Human Capability Ecosystem, this repository is the public
+translation and experimentation surface: it projects public-safe mental models,
+tests whether their explanations are understood, and routes questions or
+contradictions back as reviewed learning candidates. It is not the reference
+authority, and public response never mutates upstream knowledge or intent
+automatically. See the [public learning-loop doctrine](docs/human-capability-public-learning-loop.md).
+
 The editorial standard is straightforward: every public artifact must explain
 what it solves, who benefits, how decisions were made, how it was validated,
 which tradeoffs remain, and what comes next.

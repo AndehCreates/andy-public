@@ -43,7 +43,7 @@ test('publishes World Knowledge as a bounded private-source project without sour
 });
 
 test('does not publish draft project routes', async ({ page }) => {
-  for (const slug of ['adhd-tabs', 'creative-suite', 'android-lab', 'japanese-anime-inspired']) {
+  for (const slug of ['lifeos', 'adhd-tabs', 'creative-suite', 'android-lab', 'japanese-anime-inspired']) {
     const response = await page.goto(`/work/${slug}/`);
     expect(response?.status()).toBe(404);
   }
@@ -59,12 +59,6 @@ test('publishes each approved flagship case study with its decision narrative', 
       title: 'Chief of Staff',
       hook: 'Coordinate AI-assisted work without taking authority from the systems that execute it.',
       decision: 'Keep runtime, context, and repository authority distributed rather than centralizing them in the coordination layer.',
-    },
-    {
-      slug: 'lifeos',
-      title: 'LifeOS',
-      hook: 'Make interruption recovery a first-class product behavior instead of relying on recall.',
-      decision: 'Extend the existing state and synchronization model through explicit domain contracts.',
     },
     {
       slug: 'alpha-screener',
@@ -100,9 +94,6 @@ test('publishes each approved flagship case study with its decision narrative', 
 });
 
 test('keeps flagship safety boundaries explicit without adding unsupported implications', async ({ page }) => {
-  await page.goto('/case-studies/lifeos/');
-  await expect(page.locator('main')).not.toContainText(/diagnos|clinical|treat(?:ment)?|productivity (?:gain|increase|improvement)/i);
-
   await page.goto('/case-studies/alpha-screener/');
   await expect(page.locator('[data-case-study-hero]')).toContainText(/uncertainty|evidence gate/i);
   await expect(page.locator('main')).toContainText('not investment advice');
@@ -121,9 +112,10 @@ test('publishes public system maps with text explanations, legends, and validate
   await expect(page.getByRole('heading', { level: 1, name: 'System maps' })).toHaveCount(1);
 
   for (const system of [
-    { slug: 'reliable-ai-work', title: 'Reliable AI work' },
-    { slug: 'software-for-cognition', title: 'Software for cognition' },
-    { slug: 'intelligence-at-the-edge', title: 'Intelligence at the edge' },
+    { slug: 'reliable-ai-work', title: 'Reliable AI work', relatedCount: 2 },
+    { slug: 'software-for-cognition', title: 'Software for cognition', relatedCount: 1 },
+    { slug: 'intelligence-at-the-edge', title: 'Intelligence at the edge', relatedCount: 2 },
+    { slug: 'human-capability-ecosystem', title: 'Human capability ecosystem', relatedCount: 2 },
   ]) {
     await page.goto(`/systems/${system.slug}/`);
     await expect(page.getByRole('heading', { level: 1, name: system.title })).toHaveCount(1);
@@ -131,7 +123,7 @@ test('publishes public system maps with text explanations, legends, and validate
     await expect(page.getByRole('heading', { level: 2, name: 'How to read this map' })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 2, name: 'Map legend' })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 2, name: 'Related public work' })).toHaveCount(1);
-    await expect.poll(() => page.locator('.system-relations a').count()).toBeGreaterThanOrEqual(2);
+    await expect.poll(() => page.locator('.system-relations a').count()).toBeGreaterThanOrEqual(system.relatedCount);
   }
 });
 
@@ -143,10 +135,17 @@ test('publishes approved handbook principles, Signal Library entries, and a newe
   await expect(page.getByRole('heading', { level: 2, name: 'Product engineering' })).toHaveCount(1);
   await expect(page.getByRole('heading', { level: 2, name: 'Evaluation & reliability' })).toHaveCount(1);
   await expect(page.locator('.handbook__group').filter({ has: page.getByRole('heading', { level: 2, name: 'Knowledge & context systems' }) })).toContainText('Grounded knowledge');
+  await expect(page.locator('.handbook__group').filter({ has: page.getByRole('heading', { level: 2, name: 'Knowledge & context systems' }) })).toContainText('Exposure and option-value');
 
   await page.goto('/handbook/grounded-knowledge/');
   await expect(page.getByRole('heading', { level: 1, name: 'Grounded knowledge' })).toHaveCount(1);
   for (const section of ['Principle', 'When it matters', 'Reusable pattern', 'Failure mode', 'Practical checklist', 'Related public systems']) {
+    await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
+  }
+
+  await page.goto('/handbook/exposure-and-option-value/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Exposure and option-value' })).toHaveCount(1);
+  for (const section of ['The exposure gap', 'Minimum value theorem', 'Learning leverage heuristic', 'Claim discipline']) {
     await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
   }
 

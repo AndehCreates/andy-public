@@ -115,7 +115,7 @@ const portfolioSignalMap = {
       <div>
         <p class="eyebrow">Selected work</p>
         <h2 id="featured-heading">Featured systems</h2>
-        <p class="featured__intro">Three different systems, one shared standard: make the decision boundary as inspectable as the result.</p>
+        <p class="featured__intro">Two evidence-backed systems, one shared standard: make the decision boundary as inspectable as the result.</p>
       </div>
       <a href={withBase('/case-studies/')}>Read the case studies</a>
     </header>
@@ -282,6 +282,7 @@ const portfolioSignalMap = {
   }
   @media (min-width: 64rem) {
     .home-hero { grid-template-columns: minmax(0, .92fr) minmax(30rem, 1.08fr); }
+    .home-hero__position { gap: var(--space-3); }
     .home-hero__visual :global(.system-diagram--compact) { padding: var(--space-4); }
     .home-hero__visual :global(.system-diagram--compact .system-diagram__header > p:last-child) { margin-top: var(--space-1); font-size: var(--text-sm); }
     .home-hero__visual :global(.system-diagram--compact .system-diagram__visual) { margin-top: var(--space-3); padding: var(--space-2); }

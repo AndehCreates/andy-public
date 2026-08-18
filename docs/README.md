@@ -10,6 +10,7 @@ public portfolio.
 | [`superpowers/specs/2026-07-21-public-ai-systems-portfolio-design.md`](superpowers/specs/2026-07-21-public-ai-systems-portfolio-design.md) | Approved | Mission, positioning, information architecture, content model, visual direction, quality bar, and V1 boundaries |
 | [`superpowers/plans/2026-07-21-public-ai-systems-portfolio.md`](superpowers/plans/2026-07-21-public-ai-systems-portfolio.md) | Approved and executable | Ordered implementation tasks, file map, test strategy, human checkpoint, and runtime handoff |
 | [`IMPLEMENTATION_HANDOFF.md`](IMPLEMENTATION_HANDOFF.md) | Active | Current repository state and instructions for the next implementation task |
+| [`human-capability-public-learning-loop.md`](human-capability-public-learning-loop.md) | Active doctrine | Public translation authority, feedback-as-candidate boundaries, concern routing, and bounded upstream learning |
 
 Repository-wide operating rules live in [`../AGENTS.md`](../AGENTS.md). The
 mission and concise orientation live in [`../README.md`](../README.md).
