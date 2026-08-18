@@ -115,6 +115,7 @@ test('publishes public system maps with text explanations, legends, and validate
     { slug: 'reliable-ai-work', title: 'Reliable AI work', relatedCount: 2 },
     { slug: 'software-for-cognition', title: 'Software for cognition', relatedCount: 1 },
     { slug: 'intelligence-at-the-edge', title: 'Intelligence at the edge', relatedCount: 2 },
+    { slug: 'human-capability-ecosystem', title: 'Human capability ecosystem', relatedCount: 2 },
   ]) {
     await page.goto(`/systems/${system.slug}/`);
     await expect(page.getByRole('heading', { level: 1, name: system.title })).toHaveCount(1);
@@ -134,10 +135,17 @@ test('publishes approved handbook principles, Signal Library entries, and a newe
   await expect(page.getByRole('heading', { level: 2, name: 'Product engineering' })).toHaveCount(1);
   await expect(page.getByRole('heading', { level: 2, name: 'Evaluation & reliability' })).toHaveCount(1);
   await expect(page.locator('.handbook__group').filter({ has: page.getByRole('heading', { level: 2, name: 'Knowledge & context systems' }) })).toContainText('Grounded knowledge');
+  await expect(page.locator('.handbook__group').filter({ has: page.getByRole('heading', { level: 2, name: 'Knowledge & context systems' }) })).toContainText('Exposure and option-value');
 
   await page.goto('/handbook/grounded-knowledge/');
   await expect(page.getByRole('heading', { level: 1, name: 'Grounded knowledge' })).toHaveCount(1);
   for (const section of ['Principle', 'When it matters', 'Reusable pattern', 'Failure mode', 'Practical checklist', 'Related public systems']) {
+    await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
+  }
+
+  await page.goto('/handbook/exposure-and-option-value/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Exposure and option-value' })).toHaveCount(1);
+  for (const section of ['The exposure gap', 'Minimum value theorem', 'Learning leverage heuristic', 'Claim discipline']) {
     await expect(page.getByRole('heading', { level: 2, name: section })).toHaveCount(1);
   }
 

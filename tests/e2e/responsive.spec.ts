@@ -45,7 +45,7 @@ test('prioritizes core navigation while preserving secondary routes in a native 
 
 test('keeps long-form code and table content horizontally reachable', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
-  await page.goto('/handbook/evaluation-driven-development/');
+  await page.goto('/handbook/exposure-and-option-value/');
 
   const overflowContainers = page.locator('.prose pre, .prose table');
   for (let index = 0; index < await overflowContainers.count(); index += 1) {
@@ -54,6 +54,23 @@ test('keeps long-form code and table content horizontally reachable', async ({ p
     const metrics = await container.evaluate((element) => ({ clientWidth: element.clientWidth, scrollWidth: element.scrollWidth }));
     expect(metrics.scrollWidth).toBeGreaterThanOrEqual(metrics.clientWidth);
   }
+});
+
+test('reflows the public capability loop without clipping its recursive relationships', async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto('/systems/human-capability-ecosystem/');
+
+  const diagram = page.locator('.system-diagram');
+  await expect(diagram.locator('.system-diagram__visual')).toBeHidden();
+  await expect(diagram.locator('.system-diagram__relationship')).toHaveCount(8);
+  await expect(diagram.locator('.system-diagram__relationship').first()).toContainText('supports meaningful contact');
+  await expect(diagram.locator('.system-diagram__relationship').last()).toContainText('returns reviewed learning candidates');
+
+  const metrics = await diagram.evaluate((element) => ({
+    clientWidth: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+  }));
+  expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth);
 });
 
 test('reflows diagrams into an ordered relationship sequence without internal scrolling', async ({ page }) => {

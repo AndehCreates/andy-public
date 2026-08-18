@@ -1,0 +1,80 @@
+---
+id: human-capability-ecosystem
+title: Human capability ecosystem
+summary: A public model of how knowledge, exposure, practice, bounded augmentation, evidence, reflection, and translation can compound human capability.
+visibility: listed
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [knowledge-context, human-centered-design, ai-systems]
+relatedIds: [handbook:exposure-and-option-value, systems:software-for-cognition]
+publishedAt: 2026-08-17
+updatedAt: 2026-08-17
+order: 4
+systemId: human-capability-ecosystem
+---
+
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## How to read this map
+
+This is a public model of capability development, not a map of private infrastructure or a claim that learning always follows one sequence. Its key thesis is direct: **understanding itself creates capability and option-value**. Meaningful exposure changes what a person can notice, imagine, question, and choose before it produces a practiced skill or visible outcome.
+
+The loop begins with grounded reference knowledge and mental models, makes them available through orientation and explanation, and leaves room for deliberate practice when a person wants it. AI and agents can extend search, synthesis, rehearsal, and execution inside explicit boundaries. Action then meets consequences, producing evidence for reflection, learning, and repair. Public translation exposes the model to questions and contradictions; those responses can become reviewed learning candidates rather than automatic truth.
+
+<SystemDiagram
+  title="Human capability ecosystem"
+  description="A public-safe capability loop from grounded knowledge through exposure, practice, bounded augmentation, action, reflection, and public learning candidates."
+  nodes={[
+    { label: 'Grounded knowledge', description: 'Maintains inspectable reference knowledge, provenance, and mental models without pretending that a summary is the authority.' },
+    { label: 'Exposure and orientation', description: 'Makes unfamiliar possibilities meaningful enough to notice, navigate, and investigate.' },
+    { label: 'Understanding', description: 'Builds a usable model that expands what a person can consider and choose.' },
+    { label: 'Deliberate practice', description: 'Turns selected understanding into skill through experimentation and rehearsal when that investment is desired.' },
+    { label: 'Bounded augmentation', description: 'Uses AI or agents to extend cognition and execution while preserving scope, provenance, review, and human authorship.' },
+    { label: 'Action and evidence', description: 'Moves intent into reality, where consequences and observable results can challenge the model.' },
+    { label: 'Reflection and repair', description: 'Interprets evidence, learns from mismatch, and repairs the model, practice, or system.' },
+    { label: 'Public translation', description: 'Explains the model publicly and receives questions, comprehension gaps, resonance, and contradictions as learning candidates.' },
+  ]}
+  edges={[
+    { from: 'Grounded knowledge', to: 'Exposure and orientation', label: 'supports meaningful contact' },
+    { from: 'Exposure and orientation', to: 'Understanding', label: 'changes what is thinkable' },
+    { from: 'Understanding', to: 'Deliberate practice', label: 'makes practice selectable' },
+    { from: 'Deliberate practice', to: 'Bounded augmentation', label: 'reveals useful leverage' },
+    { from: 'Bounded augmentation', to: 'Action and evidence', label: 'helps move intent into reality' },
+    { from: 'Action and evidence', to: 'Reflection and repair', label: 'produces consequences to inspect' },
+    { from: 'Reflection and repair', to: 'Public translation', label: 'improves the explanation' },
+    { from: 'Public translation', to: 'Grounded knowledge', label: 'returns reviewed learning candidates' },
+  ]}
+/>
+
+## Map legend
+
+- **Nodes** name generic responsibilities. They do not prescribe an institution, product, or control plane.
+- **Arrows** show possible leverage and accountable handoffs, not a guaranteed causal sequence.
+- **The return path** represents recursion: evidence and public response may improve the next model only after provenance-aware review.
+
+## Understanding before performance
+
+The exposure gap is the distance between what exists and what a person has had a fair chance to encounter in a meaningful form. Closing it matters even when no course, habit, or project follows. A better concept can reveal choices, failure modes, collaborators, or future learning paths that were previously unavailable to thought.
+
+Practice still matters when fluent performance is the goal. The distinction is that practice should not be the admission price for every useful idea. Systems can create value by helping someone understand enough to orient, decide, or preserve an option for later.
+
+## Human authorship and bounded augmentation
+
+The aim is broader than placing safety boundaries around AI. Capability systems should compound human leverage across knowledge, cognition, exposure, understanding, practice, and action while helping move intent into reality without quietly becoming the author of the person's aims. Useful augmentation can retrieve references, compare interpretations, generate alternatives, rehearse consequences, or execute a bounded task. The person retains authority over purpose, consequential choices, and what becomes durable.
+
+Guardrails are enabling constraints in this model. Provenance, explicit scope, review boundaries, reversibility, and visible uncertainty make ambitious synthesis more usable because people can inspect it, challenge it, and recover from error. They are not a demand to make the idea smaller or blander.
+
+## A public-safe north star
+
+One north-star framing is **increasing integrated freedom within reality**: expanding a person's ability to perceive options, understand constraints, choose coherently, and act effectively while remaining accountable to evidence and consequences. This is a normative synthesis and design direction, not an established scientific fact or a promise that every intervention increases freedom.
+
+## Evidence and learning boundary
+
+This map synthesizes design principles from public systems work; it does not establish a universal theory of cognition or learning. Its value should be tested through source review, comprehension questions, qualitative critique, deliberate experiments, and observed transfer into real decisions or practice. Public resonance can point to a useful question, but popularity, agreement, and engagement are not canonical evidence.
+
+The next step is therefore disciplined iteration: identify where the explanation changes understanding, where it confuses categories, and where action produces evidence that requires repair. Route those findings to the responsibility that can evaluate them, then publish a revised projection only through the public review boundary.
+
+## What this connects
+
+The [Exposure and option-value](../../handbook/exposure-and-option-value/) handbook entry offers a practical selection heuristic. [Software for cognition](../../systems/software-for-cognition/) shows a narrower loop for context, interruption, and deliberate re-entry.
