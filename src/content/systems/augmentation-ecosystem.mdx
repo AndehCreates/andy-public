@@ -1,0 +1,125 @@
+---
+id: augmentation-ecosystem
+title: Augmentation ecosystem
+summary: A public-safe map of how the portfolio composes understanding, intention, capability, execution, evidence, and learning without centralizing authority.
+visibility: listed
+publicReview: approved
+sourceAvailability: local-only
+sourceUrls: []
+capabilities: [human-centered-design, ai-systems, knowledge-context, evaluation-reliability]
+relatedIds: [systems:human-capability-ecosystem, projects:world-knowledge, projects:fable, projects:mathpad, projects:chief-of-staff, projects:arcade]
+publishedAt: 2026-08-21
+updatedAt: 2026-08-21
+order: 5
+systemId: augmentation-ecosystem
+---
+
+import SystemDiagram from '@/components/diagrams/SystemDiagram.astro';
+
+## How to read this map
+
+This is a **public architecture model**, not an operational inventory. It explains the kinds of responsibilities that compose the portfolio and how value can move between them. It intentionally omits private runtime topology, device placement, credentials, live state, unpublished systems, and deployment claims.
+
+The central engineering thesis is that useful infrastructure should help humans and human-agent systems **understand reality, form intentions, enable capability, act, observe outcomes, learn, and compound what becomes possible next**. The aim is not maximum computation. It is durable outcome value from scarce attention, time, compute, coordination, and maintenance.
+
+<SystemDiagram
+  title="A compounding augmentation loop"
+  description="A public-safe architecture loop from understanding reality through intention, capability, action, evidence, learning, and reusable capability."
+  nodes={[
+    { label: 'Understand reality', description: 'Use grounded reference knowledge, evidence, context, and explicit uncertainty to build a better model of the situation.' },
+    { label: 'Form intention', description: 'Keep purpose, priorities, constraints, and consequential choices attributable to the people or bounded authorities that own them.' },
+    { label: 'Enable capability', description: 'Bring together skills, tools, supports, interfaces, and computational leverage that make a chosen action more viable.' },
+    { label: 'Act', description: 'Translate bounded intent into execution while keeping ownership, scope, and recovery paths visible.' },
+    { label: 'Observe outcomes', description: 'Check the resulting state rather than treating a plan, output, or agent report as completion by itself.' },
+    { label: 'Learn', description: 'Reconcile evidence with the model, preserve uncertainty, and route lessons to the responsibility that can evaluate them.' },
+    { label: 'Compound', description: 'Turn reviewed lessons into reusable knowledge, interfaces, automation, practices, or invariants that make future work easier.' },
+  ]}
+  edges={[
+    { from: 'Understand reality', to: 'Form intention', label: 'improves the choice space' },
+    { from: 'Form intention', to: 'Enable capability', label: 'selects useful support' },
+    { from: 'Enable capability', to: 'Act', label: 'makes action more viable' },
+    { from: 'Act', to: 'Observe outcomes', label: 'creates consequences to inspect' },
+    { from: 'Observe outcomes', to: 'Learn', label: 'supplies evidence' },
+    { from: 'Learn', to: 'Compound', label: 'promotes reviewed lessons' },
+    { from: 'Compound', to: 'Understand reality', label: 'improves the next cycle' },
+  ]}
+/>
+
+## Two complementary views
+
+The [Human capability ecosystem](../human-capability-ecosystem/) asks the human-facing question: how can knowledge, exposure, understanding, practice, bounded augmentation, action, evidence, and reflection expand meaningful capability?
+
+This map asks the engineering question one level higher: **what kinds of systems and boundaries let many projects participate in that loop without becoming one centralized application or authority?**
+
+The two views should stay close without collapsing into each other. A human-development model is not an infrastructure topology, and an infrastructure component does not get to define what a person should value or become.
+
+## Four public territories
+
+The public portfolio groups work by the problem space it helps illuminate. These territories are editorial orientation, not private system ownership or deployment boundaries.
+
+### Human Understanding
+
+**Question:** How can people encounter better reference knowledge, explanations, perspectives, and mental models before they are expected to perform?
+
+Public examples include [World Knowledge](../../work/world-knowledge/), which keeps reference material and provenance inspectable, and [Fable](../../work/fable/), which turns bounded ideas into interactive explanations. The [Human capability ecosystem](../human-capability-ecosystem/) shows the broader theory-of-change view.
+
+### Augmentation Systems
+
+**Question:** How can software extend cognition and execution while keeping purpose and consequential choices human-owned?
+
+[MathPad](../../work/mathpad/) is a public example: a local-first cognitive tool whose revisioned semantic document keeps calculations, results, diagnostics, and context coherent while the person remains responsible for what to investigate or conclude.
+
+### Complex-System Infrastructure
+
+**Question:** How can distributed human-agent work stay inspectable when context, execution, evaluation, and recovery cross multiple boundaries?
+
+[Chief of Staff](../../work/chief-of-staff/) is the public exemplar here. Its visible value is not that it centralizes everything; it demonstrates typed coordination and evidence boundaries while runtime, source, memory, and verification responsibilities remain separate.
+
+### Applied Research / Proving Grounds
+
+**Question:** How do we test whether the architecture still works when outcomes are uncertain and the model can be wrong?
+
+[Arcade Workbench](../../work/arcade/) is a bounded public proving ground for deterministic simulation, observable tuning, reproducible runs, and explicit telemetry. Proving grounds matter because a principle that never meets falsifiable outcomes can become architecture theater.
+
+## Foundations, expressions, and proving grounds
+
+The same portfolio can be understood through three project characters:
+
+- **Foundations** create reusable capability, reference material, interfaces, or infrastructure that can make many later outcomes cheaper or safer.
+- **Expressions** turn shared capabilities into experiences that create direct human or organizational value.
+- **Proving grounds** put ideas into bounded domains where evidence can support, refine, or falsify them.
+
+A project can contribute to more than one character, but giving it one primary home reduces conceptual drift. Reuse should justify a foundation; human value should justify an expression; observable evidence should justify a proving ground.
+
+## Authority is composability
+
+The architecture depends on a simple rule: **capability does not automatically confer authority**.
+
+That means:
+
+- presenting information does not make the renderer the source of truth;
+- executing a task does not make the executor the owner of purpose or approval;
+- remembering context does not make memory a universal factual record;
+- retrieving evidence does not make retrieval a verdict;
+- coordinating work does not make the coordinator the owner of every system it touches;
+- learning from an outcome does not allow a lesson to mutate another system silently.
+
+Instead, systems exchange explicit projections, evidence, or reviewed artifacts. The destination can accept, reject, revise, or defer them while preserving source identity and uncertainty.
+
+## Compounding rather than accumulating
+
+The portfolio is intended to accumulate **capability capital**, not just projects. A good outcome leaves something behind that makes future outcomes easier: a reusable interface, a verified pattern, a better source-aware corpus, an automation, a safer default, an explanatory model, or an invariant that removes a recurring failure mode.
+
+That changes the leverage question from “How much work did the system perform?” to “What durable ability exists now that did not exist before?” Human attention is treated as especially scarce: remembering, reconstructing context, routing routine work, checking hygiene, and detecting drift are strong candidates for system support, while purpose, judgment, taste, values, and consequential uncertainty remain places for deliberate human involvement.
+
+## Public/private boundary
+
+This public map is intentionally incomplete. It does **not** claim that every internal component is publicly available, deployed together, or represented here. It does not expose private hosts, device layout, local paths, runtime status, infrastructure addresses, credentials, or internal control topology.
+
+Public projects appear only when their own publication and evidence boundaries permit it. A public relation means “these ideas help explain each other,” not “these systems are synchronizing live state.” Private implementation claims require their own evidence and review; they are not inferred from this diagram.
+
+## Evidence and learning boundary
+
+This architecture is a design model, not proof that the portfolio automatically produces better human outcomes. Its value should be tested through repository evidence, bounded experiments, usability and comprehension review, operational outcomes, failure analysis, and whether shared foundations actually reduce future effort without creating more maintenance than they save.
+
+When evidence contradicts the model, the model should change. When a repeated lesson survives review, it can become documentation, policy, automation, or an invariant. That is the compounding loop the architecture is designed to support.
