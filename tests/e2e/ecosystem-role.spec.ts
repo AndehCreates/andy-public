@@ -13,12 +13,6 @@ const publicProjects = [
     proof: /explicit lifecycle, ownership, and evidence boundaries/i,
     boundary: /Does not own repository truth/i,
   },
-  {
-    path: '/work/alpha-screener/',
-    world: 'Applied Research / Proving Grounds',
-    proof: /deterministic ranking, data-trust checks, and explicit promotion gates/i,
-    boundary: /Does not execute trades/i,
-  },
 ] as const;
 
 for (const project of publicProjects) {
@@ -37,12 +31,12 @@ for (const project of publicProjects) {
 }
 
 test('case studies inherit ecosystem context from the related public project', async ({ page }) => {
-  await page.goto('/case-studies/alpha-screener/');
+  await page.goto('/case-studies/chief-of-staff/');
 
   const role = page.locator('.ecosystem-role');
   await expect(role).toHaveCount(1);
-  await expect(role.getByRole('heading', { level: 2, name: 'Applied Research / Proving Grounds' })).toBeVisible();
-  await expect(role).toContainText(/Does not execute trades/i);
+  await expect(role.getByRole('heading', { level: 2, name: 'Complex-System Infrastructure' })).toBeVisible();
+  await expect(role).toContainText(/Does not own repository truth/i);
 });
 
 test('draft project routes remain unpublished after adding optional ecosystem metadata', async ({ page }) => {
