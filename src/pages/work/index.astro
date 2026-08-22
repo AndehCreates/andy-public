@@ -27,6 +27,7 @@ const projects = publicEntries((await getCollection('projects')).map(projectForP
       visualMark,
       technicalDifferentiator,
       capabilities: entry.data.capabilities,
+      ...(entry.data.world ? { world: entry.data.world } : {}),
     };
   });
 ---
