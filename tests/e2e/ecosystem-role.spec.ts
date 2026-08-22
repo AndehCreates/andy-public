@@ -8,10 +8,28 @@ const publicProjects = [
     boundary: /Retrieval is not factual authority/i,
   },
   {
+    path: '/work/fable/',
+    world: 'Human Understanding',
+    proof: /small self-contained explanation can keep its model, controls, and explanatory surface close enough/i,
+    boundary: /do not establish audience comprehension/i,
+  },
+  {
+    path: '/work/mathpad/',
+    world: 'Augmentation Systems',
+    proof: /revisioned semantic document can keep parsing, diagnostics, result alignment, and editor behavior synchronized/i,
+    boundary: /does not establish complete compatibility/i,
+  },
+  {
     path: '/work/chief-of-staff/',
     world: 'Complex-System Infrastructure',
     proof: /explicit lifecycle, ownership, and evidence boundaries/i,
     boundary: /Does not own repository truth/i,
+  },
+  {
+    path: '/work/arcade/',
+    world: 'Applied Research / Proving Grounds',
+    proof: /seeded runs, restart-only tuning, shared simulation contracts, and visible telemetry/i,
+    boundary: /supports an experiment and workbench rather than a released game product/i,
   },
 ] as const;
 
