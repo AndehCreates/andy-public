@@ -20,9 +20,9 @@ export function isActiveNavigationPath(currentPath: string, navigationHref: stri
 }
 
 export const site = {
-  title: `Andy ${emDash} AI Systems`,
+  title: `Andy ${emDash} Human Capability Systems`,
   description:
-    'Evidence-led software and AI systems built to strengthen human capability.',
+    'Evidence-led software and AI systems that help people understand, act, learn, and compound capability.',
   opportunityLabel: 'Open to roles and collaboration',
   navigation: [
     { label: 'Home', href: withBase('/') },
