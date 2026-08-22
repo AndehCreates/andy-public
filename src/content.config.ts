@@ -6,6 +6,20 @@ import { reviewValues, sourceAvailabilityValues, visibilityValues } from '@/lib/
 import { addProjectPresentationIssues, projectPresentationFields } from '@/lib/content/presentation';
 import { projectStatusValues } from '@/lib/content/types';
 
+const portfolioWorldValues = [
+  'Human Understanding',
+  'Augmentation Systems',
+  'Complex-System Infrastructure',
+  'Applied Research / Proving Grounds',
+] as const;
+
+const ecosystemRoleFields = {
+  world: z.enum(portfolioWorldValues).optional(),
+  ecosystemRole: z.string().trim().min(1).optional(),
+  whatItProves: z.string().trim().min(1).optional(),
+  boundaries: z.array(z.string().trim().min(1)).min(1).optional(),
+};
+
 const baseFields = {
   id: z.string().min(2).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: z.string().min(2),
@@ -26,6 +40,7 @@ const projects = defineCollection({
   schema: z.object({
     ...baseFields,
     ...projectPresentationFields,
+    ...ecosystemRoleFields,
     projectId: z.string().min(2),
     status: z.enum(projectStatusValues),
   }).superRefine(addProjectPresentationIssues),
