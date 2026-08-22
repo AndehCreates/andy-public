@@ -14,6 +14,7 @@ export interface ProjectFilterProject {
   visualMark: VisualMark;
   technicalDifferentiator: string;
   capabilities: readonly CapabilityId[];
+  world?: string;
 }
 
 interface Props {
@@ -51,7 +52,7 @@ export default class ProjectFilter extends Component<Props, State> {
       <header className="collection-index__header">
         <p className="collection-index__eyebrow">Work</p>
         <h1 id="collection-heading">Project atlas</h1>
-        <p>Reviewed systems with different jobs: coordinate AI work, preserve continuity, evaluate uncertain evidence, keep calculations coherent, and make simulations inspectable.</p>
+        <p>Territories show the larger problem space each project explores; capability filters show the kind of work it exercises. Projects without reviewed territory metadata remain visible without being forced into a category.</p>
         <p className="collection-index__count" role="status" aria-live="polite">
           {projectCountLabel(visibleProjects.length)}
         </p>
@@ -83,6 +84,7 @@ export default class ProjectFilter extends Component<Props, State> {
               <span className="project-card__mark" data-visual-mark={project.visualMark} aria-hidden="true" />
               <p className="project-card__status">{statusDisplayCopy[project.status]}</p>
             </div>
+            {project.world && <p className="project-card__world">{project.world}</p>}
             <h2 id={`project-${project.slug}-title`}><a href={withBase(`/work/${project.slug}/`)}>{project.title}</a></h2>
             <p className="project-card__hook">{project.workHook}</p>
             <p className="project-card__summary">{project.summary}</p>

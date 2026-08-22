@@ -32,7 +32,7 @@ test('keeps the complete Work list available without JavaScript', async ({ brows
   await context.close();
 });
 
-test('presents all listed project purposes, technical ideas, and lifecycle labels before filtering', async ({ page }) => {
+test('presents purposes, territories, technical ideas, and lifecycle labels before filtering', async ({ page }) => {
   await page.goto('/work/');
 
   const cards = page.locator('.project-card');
@@ -40,11 +40,19 @@ test('presents all listed project purposes, technical ideas, and lifecycle label
   await expect(cards.locator('[data-visual-mark]')).toHaveCount(6);
   await expect(cards.locator('.project-card__hook')).toHaveCount(6);
   await expect(cards.locator('.project-card__differentiator')).toHaveCount(6);
+  await expect(cards.locator('.project-card__world')).toHaveCount(5);
 
   const marks = await cards.locator('[data-visual-mark]').evaluateAll((elements) =>
     elements.map((element) => element.getAttribute('data-visual-mark')),
   );
   expect(new Set(marks).size).toBe(4);
+
+  await expect(cards.filter({ hasText: 'World Knowledge' }).locator('.project-card__world')).toHaveText('Human Understanding');
+  await expect(cards.filter({ hasText: 'Fable' }).locator('.project-card__world')).toHaveText('Human Understanding');
+  await expect(cards.filter({ hasText: 'MathPad' }).locator('.project-card__world')).toHaveText('Augmentation Systems');
+  await expect(cards.filter({ hasText: 'Chief of Staff' }).locator('.project-card__world')).toHaveText('Complex-System Infrastructure');
+  await expect(cards.filter({ hasText: 'Arcade Workbench' }).locator('.project-card__world')).toHaveText('Applied Research / Proving Grounds');
+  await expect(cards.filter({ hasText: 'Alpha Screener' }).locator('.project-card__world')).toHaveCount(0);
 
   await expect(cards.filter({ hasText: 'Chief of Staff' }).locator('.project-card__status')).toHaveText('Active system');
   await expect(cards.filter({ hasText: 'MathPad' }).locator('.project-card__status')).toHaveText('Exploratory system');
