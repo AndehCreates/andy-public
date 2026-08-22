@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import CapabilityTag from '@/components/content/CapabilityTag.astro';
+import EcosystemRole from '@/components/content/EcosystemRole.astro';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
 import { publicEntries } from '@/lib/content/queries';
 
@@ -53,6 +54,12 @@ const sourceLinks = project.data.sourceUrls.map((href, index) => {
       {project.data.capabilities.map((capability) => <li><CapabilityTag capability={capability} /></li>)}
     </ul>
   </div>
+  <EcosystemRole
+    world={project.data.world}
+    ecosystemRole={project.data.ecosystemRole}
+    whatItProves={project.data.whatItProves}
+    boundaries={project.data.boundaries}
+  />
   <Content />
 </ArticleLayout>
 
