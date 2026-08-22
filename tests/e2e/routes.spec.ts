@@ -188,18 +188,18 @@ test('publishes honest career surfaces with route-specific social metadata', asy
     {
       path: '/about/',
       heading: 'About Andy',
-      title: 'About Andy | AI Systems',
+      title: 'About Andy | Human Capability Systems',
       description: /nontraditional path|human capability/i,
       canonical: /\/about\/$/,
-      imageAlt: 'About Andy and a practice of building human-centered AI systems.',
+      imageAlt: 'About Andy and a practice of building human capability systems, including AI-assisted software.',
     },
     {
       path: '/resume/',
       heading: 'Resume',
-      title: 'Resume | Andy - AI Systems',
+      title: 'Resume | Andy - Human Capability Systems',
       description: /systems|software/i,
       canonical: /\/resume\/$/,
-      imageAlt: 'Andy - AI Systems resume, with capabilities and selected systems.',
+      imageAlt: 'Andy - Human Capability Systems resume, with capabilities and selected systems.',
     },
   ] as const;
 
@@ -217,10 +217,10 @@ test('publishes honest career surfaces with route-specific social metadata', asy
   const notFound = await page.goto('/not-a-real-route/');
   expect(notFound?.status()).toBe(404);
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toHaveCount(1);
-  await expect(page).toHaveTitle('Page not found | Andy - AI Systems');
+  await expect(page).toHaveTitle('Page not found | Andy - Human Capability Systems');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/404\/$/);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/social-card\.svg$/);
-  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', 'Page not found on Andy - AI Systems.');
+  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', 'Page not found on Andy - Human Capability Systems.');
   for (const label of ['Work', 'Systems', 'Signal Library']) {
     await expect(page.getByRole('navigation', { name: 'Suggested destinations' }).getByRole('link', { name: label, exact: true })).toHaveCount(1);
   }
