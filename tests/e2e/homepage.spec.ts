@@ -7,12 +7,21 @@ test('presents the approved homepage narrative in order', async ({ page }) => {
 
   const sectionHeadings = page.locator('main > section:not(.home-hero) h2');
   await expect(sectionHeadings).toHaveText([
+    'Four territories for building capability',
     'Engineering principles',
     'Featured systems',
     'Signal Library',
     'Handbook and wider work',
     'Start a conversation',
   ]);
+  await expect(page.locator('#capability-territories h3')).toHaveText([
+    'Human Understanding',
+    'Augmentation Systems',
+    'Complex-System Infrastructure',
+    'Applied Research / Proving Grounds',
+  ]);
+  await expect(page.locator('#capability-territories')).toContainText('Territories frame the questions. Projects are artifacts. Case studies show evidence. Systems maps explain relationships.');
+  await expect(page.getByRole('link', { name: 'Human Capability Ecosystem map', exact: true }).first()).toHaveAttribute('href', '/systems/human-capability-ecosystem/');
 
   await expect(page.locator('#principles h3')).toHaveText([
     'Grounded knowledge',
@@ -37,7 +46,7 @@ test('opens with Andy\'s systems practice, one flagship action, and a meaningful
   const primaryAction = hero.getByRole('link', { name: 'Read case studies', exact: true });
   const signalMap = hero.locator('.system-diagram');
 
-  await expect(hero.getByText(/Andy builds evidence-led AI systems/i)).toBeVisible();
+  await expect(hero.getByText(/Andy builds evidence-led software, including AI systems/i)).toBeVisible();
   await expect(primaryAction).toHaveAttribute('href', '/case-studies/');
   await expect(hero.getByRole('link', { name: 'Explore the handbook', exact: true })).toHaveAttribute('href', '/handbook/');
   await expect(hero.getByRole('link', { name: 'Contact Andy', exact: true })).toHaveAttribute('href', 'mailto:hello@andehcreates.com');

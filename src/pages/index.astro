@@ -44,6 +44,42 @@ const principles = [
   ['Evaluation-driven development', 'Tests, observed behavior, and visible failure modes matter more than a convincing demo.'],
 ] as const;
 
+const territories = [
+  {
+    title: 'Human Understanding',
+    question: 'How can people encounter better reference knowledge and mental models before they are expected to perform?',
+    capability: 'Grounded reference, orientation, and usable understanding.',
+    links: [
+      { label: 'Human Capability Ecosystem map', href: '/systems/human-capability-ecosystem/' },
+      { label: 'World Knowledge', href: '/work/world-knowledge/' },
+    ],
+  },
+  {
+    title: 'Augmentation Systems',
+    question: 'How can software extend cognition and execution while keeping purpose, context, and consequential choices human-owned?',
+    capability: 'Continuity, re-entry, and bounded augmentation.',
+    links: [
+      { label: 'Software for cognition map', href: '/systems/software-for-cognition/' },
+    ],
+  },
+  {
+    title: 'Complex-System Infrastructure',
+    question: 'How can complex AI-assisted work stay inspectable when authority, context, execution, evaluation, and recovery are distributed?',
+    capability: 'Explicit boundaries, accountable handoffs, and recoverable work.',
+    links: [
+      { label: 'Reliable AI work map', href: '/systems/reliable-ai-work/' },
+    ],
+  },
+  {
+    title: 'Applied Research / Proving Grounds',
+    question: 'How can uncertain signals become better next questions without being mistaken for decisions or outcomes?',
+    capability: 'Decision support, visible uncertainty, and bounded experiments.',
+    links: [
+      { label: 'Alpha Screener case study', href: '/case-studies/alpha-screener/' },
+    ],
+  },
+] as const;
+
 const portfolioSignalMap = {
   title: 'From system signals to human-owned decisions',
   description: 'Three recurring concerns organize the practice: authority stays bounded, continuity preserves context, and evidence makes validation limits visible.',
@@ -69,9 +105,9 @@ const portfolioSignalMap = {
 >
   <section class="home-hero container" aria-labelledby="home-title">
     <div class="home-hero__position">
-      <p class="eyebrow">Evidence-led AI systems</p>
+      <p class="eyebrow">Human capability systems</p>
       <h1 id="home-title">Software that strengthens human capability.</h1>
-      <p class="home-hero__identity">Andy builds evidence-led AI systems and human-centered software through a practice of explicit authority, durable context, and bounded validation.</p>
+      <p class="home-hero__identity">Andy builds evidence-led software, including AI systems, through a practice of explicit authority, durable context, and bounded validation.</p>
       <div class="home-hero__actions">
         <a class="action action--primary" href={withBase('/case-studies/')}>Read case studies</a>
       </div>
@@ -93,6 +129,26 @@ const portfolioSignalMap = {
         headingLevel={2}
         compact
       />
+    </div>
+  </section>
+
+  <section id="capability-territories" class="territories container" aria-labelledby="territories-heading">
+    <header class="section-heading territories__header">
+      <p class="eyebrow">A public practice map</p>
+      <h2 id="territories-heading">Four territories for building capability</h2>
+      <p>The portfolio is organized around problem spaces rather than an operational inventory. The <a href={withBase('/systems/human-capability-ecosystem/')}>Human Capability Ecosystem map</a> is the parent conceptual spine: it connects understanding, augmentation, action, evidence, and reflection without exposing private topology.</p>
+      <p>Territories frame the questions. Projects are artifacts. Case studies show evidence. Systems maps explain relationships. The handbook captures reusable principles. “AI systems” is a technical descriptor within that larger human-capability practice, not the portfolio’s only identity.</p>
+    </header>
+    <div class="territories__grid">
+      {territories.map((territory, index) => <article class="territory">
+        <p class="territory__number">0{index + 1}</p>
+        <h3>{territory.title}</h3>
+        <p class="territory__question">{territory.question}</p>
+        <p class="territory__capability"><span>Capability</span>{territory.capability}</p>
+        <ul aria-label={`${territory.title} public evidence`}>
+          {territory.links.map((link) => <li><a href={withBase(link.href)}>{link.label}</a></li>)}
+        </ul>
+      </article>)}
     </div>
   </section>
 
@@ -226,12 +282,24 @@ const portfolioSignalMap = {
   .home-hero__secondary a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; color: var(--text-secondary); font-size: var(--text-sm); text-underline-offset: .2em; }
   .home-hero__secondary a:hover { color: var(--text-primary); }
   .opportunity { margin: var(--space-3) 0 0; color: var(--text-muted); font-size: var(--text-sm); }
-  .principles, .featured, .paths { padding-block: var(--space-9); }
+  .territories, .principles, .featured, .paths { padding-block: var(--space-9); }
   .section-heading { display: grid; gap: var(--space-3); max-width: 50rem; margin-bottom: var(--space-6); }
   .section-heading--split { max-width: none; justify-content: space-between; }
   .section-heading--split > a { color: var(--accent-system); }
   .featured__intro { max-width: 42rem; margin: var(--space-3) 0 0; color: var(--text-secondary); }
-  .principles__grid, .featured__grid, .paths__grid, .signals__grid { display: grid; gap: var(--space-4); }
+  .principles__grid, .featured__grid, .paths__grid, .signals__grid, .territories__grid { display: grid; gap: var(--space-4); }
+  .territories { border-top: var(--border-width) solid var(--border-subtle); }
+  .territories__header { max-width: 56rem; }
+  .territories__header > p:not(.eyebrow) { margin: 0; color: var(--text-secondary); font-size: var(--text-lg); }
+  .territories__header a, .territory a { color: var(--accent-system); }
+  .territory { display: grid; align-content: start; gap: var(--space-3); min-height: 100%; padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .territory__number { margin: 0; color: var(--accent-human); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700; }
+  .territory h3 { font-size: var(--text-xl); }
+  .territory__question, .territory__capability { margin: 0; color: var(--text-secondary); }
+  .territory__question { color: var(--text-primary); }
+  .territory__capability { display: grid; gap: var(--space-1); }
+  .territory__capability span { color: var(--accent-system); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .territory ul { display: grid; gap: var(--space-2); margin: auto 0 0; padding-top: var(--space-2); padding-left: var(--space-4); }
   .principles article, .paths article, .signals__grid article { display: grid; align-content: start; gap: var(--space-3); padding: var(--space-5); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-raised); }
   .principles article > p:last-child, .signals__grid article > p:last-child, .paths article > p:not(.eyebrow) { font-size: var(--text-base); }
   .paths article ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; list-style: none; }
@@ -304,6 +372,7 @@ const portfolioSignalMap = {
     }
   }
   @media (min-width: 48rem) {
+    .territories__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .principles__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .featured__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .flagship-preview--lead { grid-column: 1 / -1; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
