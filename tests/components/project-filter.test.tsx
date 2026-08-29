@@ -84,7 +84,7 @@ describe('ProjectFilter', () => {
     screen.getByRole('button', { name: 'Product engineering' }).focus();
     await user.keyboard('{Enter}');
 
-    expect(screen.getByRole('button', { name: 'Product engineering' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Product engineering' }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByRole('status').textContent).toBe('2 projects shown');
   });
 
