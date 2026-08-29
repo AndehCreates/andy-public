@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, type KeyboardEvent } from 'react';
 import { withBase } from '@/config/site';
 import { capabilities, type CapabilityId } from '@/lib/content/taxonomy';
 import type { VisualMark } from '@/lib/content/presentation';
@@ -38,6 +38,17 @@ interface State {
 export default class ProjectFilter extends Component<Props, State> {
   override state: State = { selectedCapability: null };
 
+  private selectCapability = (capability: CapabilityId | null) => {
+    this.setState({ selectedCapability: capability });
+  };
+
+  private handleCapabilityKeyDown = (event: KeyboardEvent<HTMLButtonElement>, capability: CapabilityId) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.selectCapability(capability);
+    }
+  };
+
   override render() {
     const { projects } = this.props;
     const { selectedCapability } = this.state;
@@ -65,12 +76,13 @@ export default class ProjectFilter extends Component<Props, State> {
               type="button"
               aria-pressed={selectedCapability === capability}
               key={capability}
-              onClick={() => this.setState({ selectedCapability: capability })}
+              onClick={() => this.selectCapability(capability)}
+              onKeyDown={(event) => this.handleCapabilityKeyDown(event, capability)}
             >
               {capabilities[capability]}
             </button>
           ))}
-          <button type="button" onClick={() => this.setState({ selectedCapability: null })} disabled={!selectedCapability}>
+          <button type="button" onClick={() => this.selectCapability(null)} disabled={!selectedCapability}>
             Clear filter
           </button>
         </div>

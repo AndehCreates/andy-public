@@ -77,6 +77,17 @@ describe('ProjectFilter', () => {
     expect(screen.queryByText(/^experimental$/i)).toBeNull();
   });
 
+  it('applies a capability filter from keyboard activation', async () => {
+    const user = userEvent.setup();
+    render(<ProjectFilter projects={[...projects]} />);
+
+    screen.getByRole('button', { name: 'Product engineering' }).focus();
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByRole('button', { name: 'Product engineering' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('status').textContent).toBe('2 projects shown');
+  });
+
   it('keeps capability tags visually distinct in the filter island', () => {
     const stylesheet = readFileSync(
       resolve(process.cwd(), 'src/components/interactive/ProjectFilter.css'),
