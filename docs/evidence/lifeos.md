@@ -7,10 +7,10 @@ Pending review: a local-first product system for externalizing work, time, conte
 ## Authoritative sources inspected
 
 - Project ID: `project-lifeos`; observed public remote: `https://github.com/AndehCreates/LifeOS`.
-- Observed repository commit: `7f50ad1` (`fix(ri): read learning deposit kind field`, 2026-07-20).
-- `README.md`, `docs/specs.md`, and `2026-07-14-architecture-deepening-program-design.md`.
-- Primary implementation surfaces: `main.tsx`, `App.tsx`, `store.ts`, and `schemas.ts`.
-- Package scripts, current test surfaces, and the eight most recent commits.
+- Observed repository commit: `b9bb4f0` (`fix(test): isolate bridge fetches in unit tests`, 2026-08-12).
+- `README.md`, current package scripts, current test surfaces, and the merged PR #82 validation record.
+- Primary implementation surfaces: `main.tsx`, `App.tsx`, `store.ts`, `schemas.ts`, `src/tests/setup.ts`, and `src/tests/bridgeTestIsolation.test.ts`.
+- Current `main` history through the merged test-isolation change; no private checkout paths are included here.
 
 ## Verified capabilities
 
@@ -18,6 +18,7 @@ Pending review: a local-first product system for externalizing work, time, conte
 - Supports workflow-state and time-aware planning concepts alongside focus, capture, transition, and re-entry-oriented flows.
 - Uses schema validation for application state and explicit contracts for user-confirmed adjustments and human interventions.
 - Includes local-first persistence and synchronization architecture through existing state, Dexie, and Yjs surfaces.
+- Isolates fire-and-forget bridge captures in ordinary tests and rejects unexpected HTTP; live observability smoke uses an explicit native-fetch opt-in.
 
 ## Verified system decisions
 
@@ -28,9 +29,12 @@ Pending review: a local-first product system for externalizing work, time, conte
 
 ## Validation evidence
 
-- `npm run lint` completed successfully with `tsc --noEmit` on the inspected commit.
-- The repository contains a Vitest test suite and recent commits that include baseline assertions and workspace-continuity repairs.
-- Source inspection confirmed typed schemas for application state, adjustment proposals, delegated policies, human interventions, and planning artifacts.
+- `npm run workspace:doctor` completed successfully on the inspected branch.
+- `npm run lint` completed successfully with `tsc --noEmit`.
+- `npm test` passed with 186 files passed, 1 skipped; 1,798 tests passed, 7 skipped.
+- `npm run build` passed; the existing large-bundle warning remains.
+- Current-worktree development/proxy and production-preview smoke checks passed for the app root, bridge state, read-only `/brain/exec`, built assets, and WebSocket path.
+- The opt-in observability smoke reached native HTTP but was environment-limited by unavailable MCP/provider services and the separate `/hermes/api/health` gateway route; no readiness or production claim is made from it.
 
 ## Human or customer value
 
@@ -39,7 +43,7 @@ Pending review: LifeOS is designed to lower the cognitive cost of planning and r
 ## Known limitations
 
 - The inspected repository is a single-page application; this inventory does not establish production deployment, cross-device reliability, or accessibility outcomes.
-- The README describes product intent and many surfaces, but this review did not execute end-to-end user scenarios or a full test suite.
+- Runtime smoke covered app, proxy, preview, and WebSocket paths, but this inventory does not establish production deployment, cross-device reliability, or accessibility outcomes.
 - Local persistence and synchronization introduce durability and conflict-handling concerns that require continued scenario-based validation.
 
 ## Public-safe diagrams and media
@@ -60,4 +64,4 @@ Pending public review: “LifeOS explores software as external executive support
 
 ## Review date and public-review decision
 
-Reviewed 2026-07-21. `publicationState: featured`; `sourceAvailability: public`; `publicReview: approved by user`; reviewed narrative and approved repository link are authorized.
+Previous review record: 2026-07-21. Current refresh: `publicationState: draft`; `sourceAvailability: public`; `publicReview: pending refreshed user approval` against `b9bb4f0`. The repository link and candidate framing remain reviewable but are not authorized for promotion by this refresh alone.
